@@ -1,0 +1,6 @@
+// Create a session
+curl -X POST -H "Content-Type: application/json" -d '{ "capabilities": { "alwaysMatch": { "webSocketUrl
+": true } } }' localhost:4444/session
+
+// Delete a session after exporting SESSION_ID
+curl -X DELETE localhost:4444/session/$SESSION_ID
