@@ -1,9 +1,13 @@
-use webdriverbidi::capabilities::{CapabilitiesBuilder, Capability};
-use webdriverbidi::commands_tmp::{get_tree_command, navigate_command};
-use webdriverbidi::http_session::{close_session, start_session};
-use webdriverbidi::session::OxibidiSession;
 use tokio;
+use webdriverbidi::capabilities::{CapabilitiesBuilder, Capability};
+use webdriverbidi::commands_tmp::get_tree_command;
+use webdriverbidi::http_session::{close_session, start_session};
+use webdriverbidi::session::WebDriverBiDiSession;
 
+use webdriverbidi::commands::browsing_context::NavigateCommand;
+use webdriverbidi::models::remote::browsing_context::{
+    Navigate, NavigateParameters, ReadinessState,
+};
 #[tokio::main]
 async fn main() {
     // Base URL of the WebDriver server (GeckoDriver, ChromeDriver or MSEdgeDriver)
@@ -21,7 +25,7 @@ async fn main() {
     println!("WebSocket URL: {}", session.websocket_url);
 
     // Step 2: Connect to the WebSocket
-    let mut bidi_session = OxibidiSession::new(session.websocket_url.clone())
+    let mut bidi_session = WebDriverBiDiSession::new(session.websocket_url.clone())
         .await
         .expect("Failed to connect to WebSocket");
 
@@ -40,7 +44,15 @@ async fn main() {
 
     // Step 4: Extract browsingContextId and navigate
     if let Some(context_id) = response["result"]["contexts"][0]["context"].as_str() {
-        let navigate = navigate_command(2, context_id, "https://www.rust-lang.org/");
+        let navigate_params = NavigateParameters::new(
+            context_id.to_string(),
+            "https://www.rust-lang.org/".to_string(),
+            Some(ReadinessState::Complete),
+        );
+        let navigate = Navigate::new(navigate_params);
+        let navigate_command = NavigateCommand::new(2, navigate);
+        let navigate = serde_json::to_value(navigate_command).unwrap();
+        // let navigate = navigate_command(2, context_id, "https://www.rust-lang.org/", Some(ReadinessState::Complete));
         bidi_session
             .send_command(navigate)
             .await

@@ -334,7 +334,7 @@ pub mod browser {
         x: JsInt,
         y: JsInt,
     }
-    
+
     #[derive(Serialize, Deserialize, Debug)]
     #[serde(rename_all = "lowercase")]
     pub enum ClientWindowInfoState {
@@ -345,7 +345,7 @@ pub mod browser {
     }
 
     pub type UserContext = String;
-    
+
     #[derive(Serialize, Deserialize, Debug)]
     pub struct UserContextInfo {
         #[serde(rename = "userContext")]
@@ -398,7 +398,7 @@ pub mod browsing_context {
     use super::*;
 
     pub type BrowsingContext = String;
-    
+
     pub type InfoList = Vec<Info>;
 
     #[derive(Serialize, Deserialize, Debug)]

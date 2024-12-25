@@ -1,6 +1,6 @@
 [package]
 name = "webdriverbidi"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Taha Hachana <tahahachana@gmail.com>"]
 description = "A Rust library for browser automation using the WebDriver BiDi protocol. Webdriverbidi allows you to manage browser sessions, interact with pages, and listen to events through a WebSocket-based interface."

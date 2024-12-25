@@ -245,9 +245,9 @@ pub enum BrowserCommand {
 
 pub mod browser {
     use super::*;
-    
+
     pub type ClientWindow = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ClientWindowInfo {
         active: bool,
@@ -259,7 +259,7 @@ pub mod browser {
         x: JsInt,
         y: JsInt,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum ClientWindowState {
@@ -268,57 +268,57 @@ pub mod browser {
         Minimized,
         Normal,
     }
-    
+
     pub type UserContext = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct UserContextInfo {
         #[serde(rename = "userContext")]
         user_context: UserContext,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Close {
         method: String,
         params: EmptyParams,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CreateUserContext {
         method: String,
         params: EmptyParams,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetClientWindows {
         method: String,
         params: EmptyParams,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetUserContexts {
         method: String,
         params: EmptyParams,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemoveUserContext {
         method: String,
         params: RemoveUserContextParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemoveUserContextParameters {
         #[serde(rename = "userContext")]
         user_context: UserContext,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetClientWindowState {
         method: String,
         params: SetClientWindowStateParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetClientWindowStateParameters {
         #[serde(rename = "clientWindow")]
@@ -326,18 +326,18 @@ pub mod browser {
         #[serde(rename = "clientWindowNamedState")]
         client_window_named_state: ClientWindowNamedOrRectState,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum ClientWindowNamedOrRectState {
         ClientWindowNamedState(ClientWindowNamedState),
         ClientWindowRectState(ClientWindowRectState),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ClientWindowNamedState {
         state: ClientWindowState,
     }
-       
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ClientWindowRectState {
         state: String,
@@ -372,9 +372,9 @@ pub enum BrowsingContextCommand {
 
 pub mod browsing_context {
     use super::*;
-    
+
     pub type BrowsingContext = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum Locator {
         AccessibilityLocator(AccessibilityLocator),
@@ -382,14 +382,14 @@ pub mod browsing_context {
         InnerTextLocator(InnerTextLocator),
         XPathLocator(XPathLocator),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AccessibilityLocator {
         #[serde(rename = "type")]
         locator_type: String,
         value: AccessibilityLocatorValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AccessibilityLocatorValue {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -397,14 +397,14 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         role: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CssLocator {
         #[serde(rename = "type")]
         locator_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct InnerTextLocator {
         #[serde(rename = "type")]
@@ -417,23 +417,23 @@ pub mod browsing_context {
         #[serde(rename = "maxDepth", skip_serializing_if = "Option::is_none")]
         max_depth: Option<JsUint>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum InnerTextLocatorMatchType {
         Full,
         Partial,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct XPathLocator {
         #[serde(rename = "type")]
         locator_type: String,
         value: String,
     }
-    
+
     // pub type Navigation = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum ReadinessState {
@@ -441,7 +441,7 @@ pub mod browsing_context {
         Interactive,
         None,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum UserPromptType {
@@ -450,24 +450,24 @@ pub mod browsing_context {
         Confirm,
         Prompt,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Activate {
         method: String,
         params: ActivateParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ActivateParameters {
         context: BrowsingContext,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CaptureScreenshot {
         method: String,
         params: CaptureScreenshotParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CaptureScreenshotParameters {
         context: BrowsingContext,
@@ -478,14 +478,14 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         clip: Option<ClipRectangle>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum CaptureScreenshotParametersOrigin {
         Document,
         Viewport,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ImageFormat {
         #[serde(rename = "type")]
@@ -493,20 +493,20 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         quality: Option<f32>, // 0.0..1.0
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum ClipRectangle {
         BoxClipRectangle(BoxClipRectangle),
         ElementClipRectangle(ElementClipRectangle),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ElementClipRectangle {
         #[serde(rename = "type")]
         clip_rectangle_type: String,
         element: script::SharedReference,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct BoxClipRectangle {
         #[serde(rename = "type")]
@@ -516,33 +516,33 @@ pub mod browsing_context {
         width: f32,
         height: f32,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Close {
         method: String,
         params: CloseParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CloseParameters {
         context: BrowsingContext,
         #[serde(rename = "promptUnload", skip_serializing_if = "Option::is_none")]
         prompt_unload: Option<bool>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Create {
         method: String,
         params: CreateParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum CreateType {
         Tab,
         Window,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CreateParameters {
         #[serde(rename = "type")]
@@ -554,13 +554,13 @@ pub mod browsing_context {
         #[serde(rename = "userContext", skip_serializing_if = "Option::is_none")]
         user_context: Option<browser::UserContext>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetTree {
         method: String,
         params: GetTreeParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetTreeParameters {
         #[serde(rename = "maxDepth", skip_serializing_if = "Option::is_none")]
@@ -568,13 +568,13 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         root: Option<BrowsingContext>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct HandleUserPrompt {
         method: String,
         params: HandleUserPromptParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct HandleUserPromptParameters {
         context: BrowsingContext,
@@ -583,45 +583,63 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         user_text: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct LocateNodes {
         method: String,
         params: LocateNodesParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct LocateNodesParameters {
         context: BrowsingContext,
         locator: Locator,
         #[serde(rename = "maxNodeCount", skip_serializing_if = "Option::is_none")]
         max_node_count: Option<JsUint>,
-        #[serde(rename = "serializationOptions", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "serializationOptions",
+            skip_serializing_if = "Option::is_none"
+        )]
         serialization_options: Option<script::SerializationOptions>,
         #[serde(rename = "startNodes", skip_serializing_if = "Option::is_none")]
         start_nodes: Option<Vec<script::SharedReference>>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Navigate {
-        method: String,
-        params: NavigateParameters,
+        pub method: String, // "browsingContext.navigate"
+        pub params: NavigateParameters,
     }
-    
+
+    impl Navigate {
+        pub fn new(params: NavigateParameters) -> Self {
+            Self {
+                method: "browsingContext.navigate".to_string(),
+                params,
+            }
+        }
+    }
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NavigateParameters {
-        context: BrowsingContext,
-        url: String,
+        pub context: BrowsingContext,
+        pub url: String,
         #[serde(skip_serializing_if = "Option::is_none")]
-        wait: Option<ReadinessState>,
+        pub wait: Option<ReadinessState>,
     }
-    
+
+    impl NavigateParameters {
+        pub fn new(context: BrowsingContext, url: String, wait: Option<ReadinessState>) -> Self {
+            Self { context, url, wait }
+        }
+    }
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Print {
         method: String,
         params: PrintParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PrintParameters {
         context: BrowsingContext,
@@ -640,20 +658,20 @@ pub mod browsing_context {
         #[serde(rename = "shrinkToFit", skip_serializing_if = "Option::is_none")]
         shrink_to_fit: Option<bool>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum PrintParametersOrientation {
         Landscape,
         Portrait,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum JsUintOrText {
         JsUint(JsUint),
         Text(String),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PrintMarginParameters {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -665,7 +683,7 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         top: Option<f32>, // 0.0..
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PrintPageParameters {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -673,13 +691,13 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<f32>, // 0.0352..
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Reload {
         method: String,
         params: ReloadParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ReloadParameters {
         context: BrowsingContext,
@@ -688,13 +706,13 @@ pub mod browsing_context {
         #[serde(skip_serializing_if = "Option::is_none")]
         wait: Option<ReadinessState>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetViewport {
         method: String,
         params: SetViewportParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetViewportParameters {
         context: BrowsingContext,
@@ -703,19 +721,19 @@ pub mod browsing_context {
         #[serde(rename = "devicePixelRatio", skip_serializing_if = "Option::is_none")]
         device_pixel_ratio: Option<f32>, // 0.0..
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Viewport {
         width: JsUint,
         height: JsUint,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct TraverseHistory {
         method: String,
         params: TraverseHistoryParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct TraverseHistoryParameters {
         context: BrowsingContext,
@@ -739,7 +757,7 @@ pub enum NetworkCommand {
 
 pub mod network {
     use super::*;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AuthCredentials {
         #[serde(rename = "type")]
@@ -747,27 +765,27 @@ pub mod network {
         username: String,
         password: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum BytesValue {
         StringValue(StringValue),
         Base64Value(Base64Value),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct StringValue {
         #[serde(rename = "type")]
         string_value_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Base64Value {
         #[serde(rename = "type")]
         base64_value_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum SameSite {
@@ -775,7 +793,7 @@ pub mod network {
         Lax,
         None,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Cookie {
         name: String,
@@ -792,23 +810,23 @@ pub mod network {
         expiry: Option<JsUint>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CookieHeader {
         name: String,
         value: BytesValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Header {
         name: String,
         value: BytesValue,
     }
-    
+
     pub type Intercept = String;
-    
+
     pub type Request = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetCookieHeader {
         name: String,
@@ -828,13 +846,13 @@ pub mod network {
         #[serde(skip_serializing_if = "Option::is_none")]
         secure: Option<bool>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum UrlPattern {
         UrlPatternPattern(UrlPatternPattern),
         UrlPatternString(UrlPatternString),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct UrlPatternPattern {
         #[serde(rename = "type")]
@@ -850,20 +868,20 @@ pub mod network {
         #[serde(skip_serializing_if = "Option::is_none")]
         search: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct UrlPatternString {
         #[serde(rename = "type")]
         url_pattern_string_type: String,
         pattern: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AddIntercept {
         method: String,
         params: AddInterceptParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AddInterceptParameters {
         phases: Vec<InterceptPhase>,
@@ -872,7 +890,7 @@ pub mod network {
         #[serde(skip_serializing_if = "Option::is_none")]
         url_patterns: Option<Vec<UrlPattern>>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum InterceptPhase {
         #[serde(rename = "beforeRequestSent")]
@@ -882,13 +900,13 @@ pub mod network {
         #[serde(rename = "authRequired")]
         AuthRequired,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueRequest {
         method: String,
         params: ContinueRequestParameters,
-    } 
-  
+    }
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueRequestParameters {
         request: Request,
@@ -903,13 +921,13 @@ pub mod network {
         #[serde(skip_serializing_if = "Option::is_none")]
         url: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueResponse {
         method: String,
         params: ContinueResponseParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueResponseParameters {
         request: Request,
@@ -924,61 +942,61 @@ pub mod network {
         #[serde(rename = "statusCode", skip_serializing_if = "Option::is_none")]
         status_code: Option<JsUint>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueWithAuth {
         method: String,
         params: ContinueWithAuthParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueWithAuthParameters {
         request: Request,
         #[serde(flatten, skip_serializing_if = "Option::is_none")]
         auth_option: Option<ContinueWithAuthOption>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum ContinueWithAuthOption {
         Credentials(ContinueWithAuthCredentials),
         NoCredentials(ContinueWithAuthNoCredentials),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueWithAuthCredentials {
         action: String,
         credentials: AuthCredentials,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContinueWithAuthNoCredentials {
         action: NoCredentialsAction,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum NoCredentialsAction {
         Default,
         Cancel,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct FailRequest {
         method: String,
         params: FailRequestParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct FailRequestParameters {
         request: Request,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ProvideResponse {
         method: String,
         params: ProvideResponseParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ProvideResponseParameters {
         request: Request,
@@ -993,31 +1011,31 @@ pub mod network {
         #[serde(rename = "statusCode", skip_serializing_if = "Option::is_none")]
         status_code: Option<JsUint>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemoveIntercept {
         method: String,
         params: RemoveInterceptParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemoveInterceptParameters {
         intercept: Intercept,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetCacheBehavior {
         method: String,
         params: SetCacheBehaviorParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetCacheBehaviorParameters {
         cache_behavior: CacheBehavior,
         #[serde(skip_serializing_if = "Option::is_none")]
         contexts: Option<Vec<browsing_context::BrowsingContext>>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum CacheBehavior {
@@ -1040,31 +1058,34 @@ pub enum ScriptCommand {
 
 pub mod script {
     use super::*;
-    
+
     pub type Channel = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ChannelValue {
         #[serde(rename = "type")]
         channel_value_type: String,
         value: ChannelProperties,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ChannelProperties {
         channel: Channel,
-        #[serde(rename = "serializationOptions", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "serializationOptions",
+            skip_serializing_if = "Option::is_none"
+        )]
         serialization_options: Option<SerializationOptions>,
         #[serde(skip_serializing_if = "Option::is_none")]
         ownership: Option<ResultOwnership>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum EvaluateResult {
         EvaluateResultSuccess(EvaluateResultSuccess),
         EvaluateResultException(EvaluateResultException),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct EvaluateResultSuccess {
         #[serde(rename = "type")]
@@ -1072,7 +1093,7 @@ pub mod script {
         result: RemoteValue,
         realm: Realm,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct EvaluateResultException {
         #[serde(rename = "type")]
@@ -1081,7 +1102,7 @@ pub mod script {
         exception_details: ExceptionDetails,
         realm: Realm,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ExceptionDetails {
         #[serde(rename = "columnNumber")]
@@ -1093,11 +1114,11 @@ pub mod script {
         stack_trace: StackTrace,
         text: String,
     }
-    
+
     pub type Handle = String;
-    
+
     pub type InternalId = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum LocalValue {
         RemoteReference(RemoteReference),
@@ -1110,70 +1131,70 @@ pub mod script {
         RegExpLocalValue(RegExpLocalValue),
         SetLocalValue(SetLocalValue),
     }
-    
+
     pub type ListLocalValue = Vec<LocalValue>;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ArrayLocalValue {
         #[serde(rename = "type")]
         array_local_value_type: String,
         value: ListLocalValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct DateLocalValue {
         #[serde(rename = "type")]
         date_local_value_type: String,
         value: String,
     }
-    
+
     pub type MappingLocalValue = Vec<(LocalValueOrText, LocalValue)>;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum LocalValueOrText {
         LocalValue(LocalValue),
         Text(String),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct MapLocalValue {
         #[serde(rename = "type")]
         map_local_value_type: String,
         value: MappingLocalValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ObjectLocalValue {
         #[serde(rename = "type")]
         object_local_value_type: String,
         value: MappingLocalValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RegExpValue {
         pattern: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         flags: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RegExpLocalValue {
         #[serde(rename = "type")]
         regexp_local_value_type: String,
         value: RegExpValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetLocalValue {
         #[serde(rename = "type")]
         set_local_value_type: String,
         value: ListLocalValue,
     }
-    
+
     pub type PreloadScript = String;
-    
+
     pub type Realm = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum PrimitiveProtocolValue {
         UndefinedValue(UndefinedValue),
@@ -1183,26 +1204,26 @@ pub mod script {
         BooleanValue(BooleanValue),
         BigIntValue(BigIntValue),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct UndefinedValue {
         #[serde(rename = "type")]
         undefined_value_type: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NullValue {
         #[serde(rename = "type")]
         null_value_type: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct StringValue {
         #[serde(rename = "type")]
         string_value_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum SpecialNumber {
         NaN,
@@ -1212,34 +1233,34 @@ pub mod script {
         #[serde(rename = "-Infinity")]
         NegativeInfinity,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NumberValue {
         #[serde(rename = "type")]
         number_value_type: String,
         value: NumberOrSpecialNumber,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum NumberOrSpecialNumber {
         Number(f64),
         SpecialNumber(SpecialNumber),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct BooleanValue {
         #[serde(rename = "type")]
         boolean_value_type: String,
         value: bool,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct BigIntValue {
         #[serde(rename = "type")]
         bigint_value_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum RealmType {
         #[serde(rename = "window")]
@@ -1259,13 +1280,13 @@ pub mod script {
         #[serde(rename = "worklet")]
         Worklet,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum RemoteReference {
         SharedReference(SharedReference),
         RemoteObjectReference(RemoteObjectReference),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SharedReference {
         #[serde(rename = "sharedId")]
@@ -1274,7 +1295,7 @@ pub mod script {
         handle: Option<Handle>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemoteObjectReference {
         handle: Handle,
@@ -1282,7 +1303,7 @@ pub mod script {
         shared_id: Option<SharedId>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum RemoteValue {
         PrimitiveProtocolValue(PrimitiveProtocolValue),
@@ -1307,17 +1328,17 @@ pub mod script {
         NodeRemoteValue(NodeRemoteValue),
         WindowProxyRemoteValue(WindowProxyRemoteValue),
     }
-    
+
     pub type ListRemoteValue = Vec<RemoteValue>;
-    
+
     pub type MappingRemoteValue = Vec<(RemoteValueOrText, RemoteValue)>;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum RemoteValueOrText {
         RemoteValue(RemoteValue),
         Text(String),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SymbolRemoteValue {
         #[serde(rename = "type")]
@@ -1327,7 +1348,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ArrayRemoteValue {
         #[serde(rename = "type")]
@@ -1339,7 +1360,7 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         value: Option<ListRemoteValue>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ObjectRemoteValue {
         #[serde(rename = "type")]
@@ -1351,7 +1372,7 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         value: Option<MappingRemoteValue>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct FunctionRemoteValue {
         #[serde(rename = "type")]
@@ -1361,7 +1382,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RegExpRemoteValue {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1371,7 +1392,7 @@ pub mod script {
         #[serde(flatten)]
         reg_exp_local_value: RegExpLocalValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct DateRemoteValue {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1381,7 +1402,7 @@ pub mod script {
         #[serde(flatten)]
         date_local_value: DateLocalValue,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct MapRemoteValue {
         #[serde(rename = "type")]
@@ -1392,7 +1413,7 @@ pub mod script {
         internal_id: Option<InternalId>,
         value: Option<MappingRemoteValue>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetRemoteValue {
         #[serde(rename = "type")]
@@ -1403,7 +1424,7 @@ pub mod script {
         internal_id: Option<InternalId>,
         value: Option<ListRemoteValue>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct WeakMapRemoteValue {
         #[serde(rename = "type")]
@@ -1413,7 +1434,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct WeakSetRemoteValue {
         #[serde(rename = "type")]
@@ -1423,7 +1444,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GeneratorRemoteValue {
         #[serde(rename = "type")]
@@ -1433,7 +1454,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ErrorRemoteValue {
         #[serde(rename = "type")]
@@ -1443,7 +1464,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ProxyRemoteValue {
         #[serde(rename = "type")]
@@ -1453,7 +1474,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PromiseRemoteValue {
         #[serde(rename = "type")]
@@ -1463,7 +1484,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct TypedArrayRemoteValue {
         #[serde(rename = "type")]
@@ -1473,7 +1494,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ArrayBufferRemoteValue {
         #[serde(rename = "type")]
@@ -1483,7 +1504,7 @@ pub mod script {
         #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NodeListRemoteValue {
         #[serde(rename = "type")]
@@ -1495,7 +1516,7 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         value: Option<ListRemoteValue>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct HTMLCollectionRemoteValue {
         #[serde(rename = "type")]
@@ -1507,7 +1528,7 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         value: Option<ListRemoteValue>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NodeRemoteValue {
         #[serde(rename = "type")]
@@ -1521,7 +1542,7 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         value: Option<Box<NodeProperties>>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NodeProperties {
         #[serde(rename = "nodeType")]
@@ -1545,14 +1566,14 @@ pub mod script {
         #[serde(rename = "shadowRoot")]
         shadow_root: Option<Option<NodeRemoteValue>>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum NodePropertiesMode {
         Open,
         Closed,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct WindowProxyRemoteValue {
         #[serde(rename = "type")]
@@ -1563,19 +1584,19 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         internal_id: Option<InternalId>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct WindowProxyProperties {
         context: browsing_context::BrowsingContext,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum ResultOwnership {
         Root,
         None,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SerializationOptions {
         #[serde(rename = "maxDomDepth", skip_serializing_if = "Option::is_none")]
@@ -1585,7 +1606,7 @@ pub mod script {
         #[serde(rename = "includeShadowTree", skip_serializing_if = "Option::is_none")]
         include_shadow_tree: Option<IncludeShadowTree>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum IncludeShadowTree {
@@ -1593,9 +1614,9 @@ pub mod script {
         Open,
         All,
     }
-    
+
     pub type SharedId = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct StackFrame {
         #[serde(rename = "columnNumber")]
@@ -1606,37 +1627,37 @@ pub mod script {
         line_number: JsUint,
         url: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct StackTrace {
         #[serde(rename = "callFrames")]
         call_frames: Vec<StackFrame>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RealmTarget {
         realm: Realm,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ContextTarget {
         context: browsing_context::BrowsingContext,
         #[serde(skip_serializing_if = "Option::is_none")]
         sandbox: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum Target {
         ContextTarget(ContextTarget),
         RealmTarget(RealmTarget),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AddPreloadScript {
         method: String,
         params: AddPreloadScriptParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct AddPreloadScriptParameters {
         #[serde(rename = "functionDeclaration")]
@@ -1648,25 +1669,25 @@ pub mod script {
         #[serde(skip_serializing_if = "Option::is_none")]
         sandbox: Option<String>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Disown {
         method: String,
         params: DisownParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct DisownParameters {
         handles: Vec<Handle>,
         target: Target,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CallFunction {
         method: String,
         params: CallFunctionParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CallFunctionParameters {
         #[serde(rename = "functionDeclaration")]
@@ -1687,13 +1708,13 @@ pub mod script {
         #[serde(rename = "userActivation", skip_serializing_if = "Option::is_none")]
         user_activation: Option<bool>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Evaluate {
         method: String,
         params: EvaluateParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct EvaluateParameters {
         expression: String,
@@ -1709,13 +1730,13 @@ pub mod script {
         #[serde(rename = "userActivation", skip_serializing_if = "Option::is_none")]
         user_activation: Option<bool>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetRealms {
         method: String,
         params: GetRealmsParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetRealmsParameters {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1724,13 +1745,13 @@ pub mod script {
         #[serde(rename = "type")]
         realm_type: Option<RealmType>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemovePreloadScript {
         method: String,
         params: RemovePreloadScriptParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct RemovePreloadScriptParameters {
         script: PreloadScript,
@@ -1748,7 +1769,7 @@ pub enum StorageCommand {
 
 pub mod storage {
     use super::*;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PartionKey {
         #[serde(rename = "userContext", skip_serializing_if = "Option::is_none")]
@@ -1757,13 +1778,13 @@ pub mod storage {
         source_origin: Option<String>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetCookies {
         method: String,
         params: GetCookiesParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct CookieFilter {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1786,14 +1807,14 @@ pub mod storage {
         expiry: Option<JsUint>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct BrowsingContextPartitionDescriptor {
         #[serde(rename = "type")]
         browsing_context_partition_descriptor_type: String,
         context: browsing_context::BrowsingContext,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct StorageKeyPartitionDescriptor {
         #[serde(rename = "type")]
@@ -1804,13 +1825,13 @@ pub mod storage {
         source_origin: Option<String>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum PartitionDescriptor {
         BrowsingContextPartitionDescriptor(BrowsingContextPartitionDescriptor),
         StorageKeyPartitionDescriptor(StorageKeyPartitionDescriptor),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetCookiesParameters {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1818,13 +1839,13 @@ pub mod storage {
         #[serde(skip_serializing_if = "Option::is_none")]
         partition: Option<PartitionDescriptor>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetCookie {
         method: String,
         params: SetCookieParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PartialCookie {
         name: String,
@@ -1842,20 +1863,20 @@ pub mod storage {
         expiry: Option<JsUint>,
         extensible: Extensible,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetCookieParameters {
         cookie: PartialCookie,
         #[serde(skip_serializing_if = "Option::is_none")]
         partition: Option<PartitionDescriptor>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct DeleteCookies {
         method: String,
         params: DeleteCookiesParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct DeleteCookiesParameters {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1876,26 +1897,26 @@ pub enum InputCommand {
 
 pub mod input {
     use super::*;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ElementOrigin {
         #[serde(rename = "type")]
         element_origin_type: String,
         element: script::SharedReference,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PerformActions {
         method: String,
         params: PerformActionsParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PerformActionsParameters {
         context: browsing_context::BrowsingContext,
         actions: Vec<SourceActions>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum SourceActions {
         NoneSourceActions(NoneSourceActions),
@@ -1903,7 +1924,7 @@ pub mod input {
         PointerSourceActions(PointerSourceActions),
         WheelSourceActions(WheelSourceActions),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct NoneSourceActions {
         #[serde(rename = "type")]
@@ -1911,9 +1932,9 @@ pub mod input {
         id: String,
         actions: Vec<NoneSourceAction>,
     }
-    
+
     pub type NoneSourceAction = PauseAction;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct KeySourceActions {
         #[serde(rename = "type")]
@@ -1921,14 +1942,14 @@ pub mod input {
         id: String,
         actions: Vec<KeySourceAction>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum KeySourceAction {
         PauseAction(PauseAction),
         KeyDownAction(KeyDownAction),
         KeyUpAction(KeyUpAction),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PointerSourceActions {
         #[serde(rename = "type")]
@@ -1936,7 +1957,7 @@ pub mod input {
         id: String,
         actions: Vec<PointerSourceAction>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase")]
     pub enum PointerType {
@@ -1944,13 +1965,13 @@ pub mod input {
         Pen,
         Touch,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PointerParameters {
         #[serde(rename = "pointerType", skip_serializing_if = "Option::is_none")]
         pointer_type: Option<PointerType>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum PointerSourceAction {
         PauseAction(PauseAction),
@@ -1958,7 +1979,7 @@ pub mod input {
         PointerUpAction(PointerUpAction),
         PointerMoveAction(PointerMoveAction),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct WheelSourceActions {
         #[serde(rename = "type")]
@@ -1966,13 +1987,13 @@ pub mod input {
         id: String,
         actions: Vec<WheelSourceAction>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum WheelSourceAction {
         PauseAction(PauseAction),
         WheelScrollAction(WheelScrollAction),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PauseAction {
         #[serde(rename = "type")]
@@ -1980,28 +2001,28 @@ pub mod input {
         #[serde(skip_serializing_if = "Option::is_none")]
         duration: Option<JsUint>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct KeyDownAction {
         #[serde(rename = "type")]
         key_down_action_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct KeyUpAction {
         #[serde(rename = "type")]
         key_up_action_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PointerUpAction {
         #[serde(rename = "type")]
         pointer_up_action_type: String,
         button: JsUint,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PointerDownAction {
         #[serde(rename = "type")]
@@ -2010,7 +2031,7 @@ pub mod input {
         #[serde(flatten)]
         pointer_common_properties: PointerCommonProperties,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PointerMoveAction {
         #[serde(rename = "type")]
@@ -2024,7 +2045,7 @@ pub mod input {
         #[serde(flatten)]
         pointer_common_properties: PointerCommonProperties,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct WheelScrollAction {
         #[serde(rename = "type")]
@@ -2040,7 +2061,7 @@ pub mod input {
         #[serde(skip_serializing_if = "Option::is_none")]
         origin: Option<Origin>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct PointerCommonProperties {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -2058,7 +2079,7 @@ pub mod input {
         #[serde(rename = "azimuthAngle", skip_serializing_if = "Option::is_none")]
         azimuth_angle: Option<f64>,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum Origin {
         #[serde(rename = "viewport")]
@@ -2067,24 +2088,24 @@ pub mod input {
         Pointer,
         ElementOrigin(ElementOrigin),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ReleaseActions {
         method: String,
         params: ReleaseActionsParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ReleaseActionsParameters {
         context: browsing_context::BrowsingContext,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetFiles {
         method: String,
         params: SetFilesParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct SetFilesParameters {
         context: browsing_context::BrowsingContext,
@@ -2103,55 +2124,55 @@ pub enum WebExtensionCommand {
 
 pub mod web_extension {
     use super::*;
-    
+
     pub type Extension = String;
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Install {
         method: String,
         params: InstallParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct InstallParameters {
         #[serde(rename = "extensionData")]
         extension_data: ExtensionData,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub enum ExtensionData {
         ExtensionArchivePath(ExtensionArchivePath),
         ExtensionBase64Encoded(ExtensionBase64Encoded),
         ExtensionPath(ExtensionPath),
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ExtensionPath {
         #[serde(rename = "type")]
         extension_path_type: String,
         path: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ExtensionArchivePath {
         #[serde(rename = "type")]
         extension_archive_path_type: String,
         path: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct ExtensionBase64Encoded {
         #[serde(rename = "type")]
         extension_base64_encoded_type: String,
         value: String,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Uninstall {
         method: String,
         params: UninstallParameters,
     }
-    
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct UninstallParameters {
         extension: Extension,

@@ -9,15 +9,3 @@ pub fn get_tree_command(command_id: u32) -> Value {
         "params": {}
     })
 }
-
-/// Builds the `browsingContext.navigate` command
-pub fn navigate_command(command_id: u32, context_id: &str, url: &str) -> Value {
-    json!({
-        "id": command_id,
-        "method": "browsingContext.navigate",
-        "params": {
-            "context": context_id,
-            "url": url
-        }
-    })
-}

@@ -7,12 +7,12 @@ use tokio_tungstenite::{
 };
 
 #[derive(Debug)]
-pub struct OxibidiSession {
+pub struct WebDriverBiDiSession {
     pub websocket_url: String,
     pub websocket_stream: Option<WebSocketStream<MaybeTlsStream<TcpStream>>>,
 }
 
-impl OxibidiSession {
+impl WebDriverBiDiSession {
     /// Creates a new session and connects to the WebSocket URL
     pub async fn new(websocket_url: String) -> Result<Self, Box<dyn Error>> {
         let (stream, _) = connect_async(&websocket_url).await?;
