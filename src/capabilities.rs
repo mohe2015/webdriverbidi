@@ -89,4 +89,4 @@ impl CapabilitiesBuilder {
 
 // TODO: Add default capabilities if none are provided
 // TODO: Ensure the webSocketUrl capability is always present and set to true
-// TODO: Ensure user-provided capabilities match WebDriver specifications
+// TODO: Validate user-provided capabilities against WebDriver specifications
