@@ -1,21 +1,23 @@
 use tokio;
-use webdriverbidi::capabilities::{CapabilitiesBuilder, Capability};
-use webdriverbidi::commands_tmp::get_tree_command;
-use webdriverbidi::http_session::{close_session, start_session};
+use webdriverbidi::webdriver::capabilities::{Capabilities, CapabilityRequest};
+use webdriverbidi::webdriver::session::{close_session, start_session};
 use webdriverbidi::session::WebDriverBiDiSession;
 
 use webdriverbidi::commands::browsing_context::NavigateCommand;
 use webdriverbidi::models::remote::browsing_context::{
     Navigate, NavigateParameters, ReadinessState,
 };
+use webdriverbidi::commands::browsing_context::GetTreeCommand;
+use webdriverbidi::models::remote::browsing_context::{GetTree, GetTreeParameters};
+
 #[tokio::main]
 async fn main() {
     // Base URL of the WebDriver server (GeckoDriver, ChromeDriver or MSEdgeDriver)
     let base_url = "http://localhost:4444";
 
-    let capabilities = CapabilitiesBuilder::new()
-        .add_standard(Capability::WebSocketUrl(true))
-        .build();
+    let always_match = CapabilityRequest::new();
+    
+    let capabilities = Capabilities::new(always_match);
 
     // Step 1: Start a new session
     let session = start_session(base_url, capabilities)
@@ -30,9 +32,12 @@ async fn main() {
         .expect("Failed to connect to WebSocket");
 
     // Step 3: Send the `browsingContext.getTree` command
-    let get_tree = get_tree_command(1);
+    let get_tree_params = GetTreeParameters::new();
+    let get_tree_cmd = GetTreeCommand::new(1, GetTree::new(get_tree_params));
+    
+    // let get_tree = get_tree_command(1);
     bidi_session
-        .send_command(get_tree)
+        .send_command(get_tree_cmd)
         .await
         .expect("Failed to send command");
 
@@ -49,12 +54,9 @@ async fn main() {
             "https://www.rust-lang.org/".to_string(),
             Some(ReadinessState::Complete),
         );
-        let navigate = Navigate::new(navigate_params);
-        let navigate_command = NavigateCommand::new(2, navigate);
-        let navigate = serde_json::to_value(navigate_command).unwrap();
-        // let navigate = navigate_command(2, context_id, "https://www.rust-lang.org/", Some(ReadinessState::Complete));
+        let navigate_command = NavigateCommand::new(2, Navigate::new(navigate_params));
         bidi_session
-            .send_command(navigate)
+            .send_command(navigate_command)
             .await
             .expect("Failed to send command");
 

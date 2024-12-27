@@ -1,7 +1,6 @@
-use serde_json::json;
 use std::error::Error;
 
-use crate::capabilities::Capabilities;
+use crate::webdriver::capabilities::Capabilities;
 
 /// Represents the session response
 pub struct SessionResponse {
@@ -17,13 +16,7 @@ pub async fn start_session(
 ) -> Result<SessionResponse, Box<dyn std::error::Error>> {
     let url = format!("{}/session", base_url);
 
-    // Construct the HTTP payload
-    let payload = json!({
-        "capabilities": {
-            "alwaysMatch": capabilities.always_match,
-            "firstMatch": capabilities.first_match
-        }
-    });
+    let payload = capabilities.build();
 
     let client = reqwest::Client::new();
     let response = client
@@ -35,6 +28,8 @@ pub async fn start_session(
         .json::<serde_json::Value>()
         .await?;
 
+    println!("{:?}", response);
+    
     // Extract sessionId and WebSocket URL
     let session_id = response["value"]["sessionId"]
         .as_str()

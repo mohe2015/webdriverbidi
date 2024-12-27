@@ -560,15 +560,33 @@ pub mod browsing_context {
         method: String,
         params: GetTreeParameters,
     }
+    
+    impl GetTree {
+        pub fn new(params: GetTreeParameters) -> Self {
+            Self {
+                method: "browsingContext.getTree".to_string(),
+                params,
+            }
+        }
+    }
 
     #[derive(Debug, Serialize, Deserialize)]
     pub struct GetTreeParameters {
         #[serde(rename = "maxDepth", skip_serializing_if = "Option::is_none")]
-        max_depth: Option<JsUint>,
+        pub max_depth: Option<JsUint>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        root: Option<BrowsingContext>,
+        pub root: Option<BrowsingContext>,
     }
-
+    
+    impl GetTreeParameters {
+        pub fn new() -> Self {
+            Self {
+                max_depth: None,
+                root: None,
+            }
+        }
+    }
+    
     #[derive(Debug, Serialize, Deserialize)]
     pub struct HandleUserPrompt {
         method: String,

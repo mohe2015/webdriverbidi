@@ -1,4 +1,5 @@
 use futures::{SinkExt, StreamExt};
+use serde::Serialize;
 use serde_json::Value;
 use std::error::Error;
 use tokio::net::TcpStream;
@@ -24,9 +25,10 @@ impl WebDriverBiDiSession {
     }
 
     /// Sends a JSON command to the WebSocket
-    pub async fn send_command(&mut self, command: Value) -> Result<(), Box<dyn Error>> {
+    pub async fn send_command<T: Serialize>(&mut self, command: T) -> Result<(), Box<dyn Error>> {
         if let Some(ref mut stream) = self.websocket_stream {
-            let message = Message::Text(command.to_string().into());
+            let value = serde_json::to_value(command).unwrap();
+            let message = Message::Text(value.to_string().into());
             stream.send(message).await?;
             Ok(())
         } else {

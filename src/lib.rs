@@ -1,6 +1,7 @@
-pub mod capabilities;
-pub mod commands_tmp;
-pub mod http_session;
+pub mod webdriver {
+    pub mod capabilities;
+    pub mod session;
+}
 pub mod session;
 pub mod models {
     pub mod local;
@@ -11,5 +12,4 @@ pub mod commands {
 }
 
 // Re-export key functionality
-pub use capabilities::{Capabilities, CapabilitiesBuilder, Capability};
-pub use http_session::{start_session, SessionResponse};
+pub use webdriver::capabilities::{CapabilityRequest, Capabilities};
