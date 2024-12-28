@@ -1,6 +1,4 @@
-use futures::SinkExt;
-use futures::StreamExt;
-use futures::TryStreamExt;
+
 use serde_json::Value;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -14,7 +12,6 @@ use tokio_tungstenite::WebSocketStream;
 use futures::stream::Stream;
 use futures::task::{Context, Poll};
 use std::pin::Pin;
-use tokio::sync::MutexGuard;
 
 pub async fn handle_messages(
     websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,

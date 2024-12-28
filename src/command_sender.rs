@@ -4,7 +4,6 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::error::Error;
-use std::fmt::Debug;
 use std::sync::Arc;
 use tokio::net::TcpStream;
 use tokio::sync::{Mutex, oneshot};
