@@ -38,6 +38,20 @@ pub async fn start_session(
         .as_str()
         .ok_or("Missing webSocketUrl")?;
 
+    // Check if the browser window is open
+    let window_check_url = format!("{}/session/{}/window", base_url, session_id);
+    let window_response = client
+        .get(&window_check_url)
+        .send()
+        .await?
+        .error_for_status()?
+        .json::<serde_json::Value>()
+        .await?;
+
+    if window_response["value"].is_null() {
+        return Err("Browser window is not open".into());
+    }
+    
     Ok(SessionResponse {
         session_id: session_id.to_string(),
         capabilities: response["value"]["capabilities"].clone(),

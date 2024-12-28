@@ -35,8 +35,8 @@ pub type InfoList = Vec<Info>;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Info {
     children: Option<InfoList>,
-    #[serde(rename = "clientWindow")]
-    client_window: browser::ClientWindow,
+    #[serde(rename = "clientWindow", skip_serializing_if = "Option::is_none")]
+    client_window: Option<browser::ClientWindow>,
     context: BrowsingContext,
     #[serde(rename = "originalOpener")]
     original_opener: Option<BrowsingContext>,

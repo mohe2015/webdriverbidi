@@ -1,7 +1,6 @@
-use serde::{Deserialize, Serialize};
-
+use crate::commands::id;
 use crate::models::remote::browsing_context::{GetTree, Navigate};
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigateCommand {
@@ -12,8 +11,11 @@ pub struct NavigateCommand {
 
 impl NavigateCommand {
     /// Builds the `browsingContext.navigate` command
-    pub fn new(id: u64, navigate: Navigate) -> Self {
-        Self { id, navigate }
+    pub fn new(navigate: Navigate) -> Self {
+        Self {
+            id: id::get_next_id(),
+            navigate,
+        }
     }
 }
 
@@ -28,7 +30,10 @@ pub struct GetTreeCommand {
 
 impl GetTreeCommand {
     /// Builds the `browsingContext.getTree` command
-    pub fn new(id: u64, get_tree: GetTree) -> Self {
-        Self { id, get_tree }
+    pub fn new(get_tree: GetTree) -> Self {
+        Self {
+            id: id::get_next_id(),
+            get_tree,
+        }
     }
 }

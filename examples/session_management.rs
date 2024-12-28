@@ -9,6 +9,7 @@ use webdriverbidi::models::remote::browsing_context::{
 };
 use webdriverbidi::commands::browsing_context::GetTreeCommand;
 use webdriverbidi::models::remote::browsing_context::{GetTree, GetTreeParameters};
+use webdriverbidi::models::local::browsing_context::GetTreeResult;
 
 #[tokio::main]
 async fn main() {
@@ -32,40 +33,43 @@ async fn main() {
         .expect("Failed to connect to WebSocket");
 
     // Step 3: Send the `browsingContext.getTree` command
-    let get_tree_params = GetTreeParameters::new();
-    let get_tree_cmd = GetTreeCommand::new(1, GetTree::new(get_tree_params));
+    let get_tree_params = GetTreeParameters::new(None, None);
+    let get_tree_cmd = GetTreeCommand::new(GetTree::new(get_tree_params));
     
-    // let get_tree = get_tree_command(1);
-    bidi_session
-        .send_command(get_tree_cmd)
-        .await
-        .expect("Failed to send command");
-
-    let response = bidi_session
-        .receive_response()
-        .await
-        .expect("Failed to receive response");
-    println!("Received getTree response: {}", response);
-
-    // Step 4: Extract browsingContextId and navigate
-    if let Some(context_id) = response["result"]["contexts"][0]["context"].as_str() {
-        let navigate_params = NavigateParameters::new(
-            context_id.to_string(),
-            "https://www.rust-lang.org/".to_string(),
-            Some(ReadinessState::Complete),
-        );
-        let navigate_command = NavigateCommand::new(2, Navigate::new(navigate_params));
+    let recv : GetTreeResult =
         bidi_session
-            .send_command(navigate_command)
+            .send_command::<GetTreeCommand, GetTreeResult>(get_tree_cmd)
             .await
             .expect("Failed to send command");
 
-        let navigate_response = bidi_session
-            .receive_response()
-            .await
-            .expect("Failed to receive response");
-        println!("Received navigate response: {}", navigate_response);
-    }
+    // let resp = recv.await.expect("Failed to receive response");
+    
+    println!("Received getTree response: {:?}", recv);
+    // let response = bidi_session
+    //     .receive_response()
+    //     .await
+    //     .expect("Failed to receive response");
+    // println!("Received getTree response: {}", response);
+
+    // // Step 4: Extract browsingContextId and navigate
+    // if let Some(context_id) = response["result"]["contexts"][0]["context"].as_str() {
+    //     let navigate_params = NavigateParameters::new(
+    //         context_id.to_string(),
+    //         "https://www.rust-lang.org/".to_string(),
+    //         Some(ReadinessState::Complete),
+    //     );
+    //     let navigate_command = NavigateCommand::new(Navigate::new(navigate_params));
+    //     bidi_session
+    //         .send_command(navigate_command)
+    //         .await
+    //         .expect("Failed to send command");
+
+    //     let navigate_response = bidi_session
+    //         .receive_response()
+    //         .await
+    //         .expect("Failed to receive response");
+    //     println!("Received navigate response: {}", navigate_response);
+    // }
 
     tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 

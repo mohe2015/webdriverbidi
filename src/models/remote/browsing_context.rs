@@ -223,11 +223,8 @@ pub struct GetTreeParameters {
 }
 
 impl GetTreeParameters {
-    pub fn new() -> Self {
-        Self {
-            max_depth: None,
-            root: None,
-        }
+    pub fn new(max_depth: Option<JsUint>, root: Option<BrowsingContext>) -> Self {
+        Self { max_depth, root }
     }
 }
 

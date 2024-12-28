@@ -7,7 +7,8 @@ pub mod models {
     pub mod local;
     pub mod remote;
 }
-pub mod commands {
+pub mod commands { 
+    mod id;
     pub mod browsing_context;
 }
 
