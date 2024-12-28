@@ -6,11 +6,9 @@ The WebDriverBiDi library provides an interface for interacting with web browser
 
 ## Features
 
-- Create and manage WebDriver sessions
-- Connect to WebSocket URLs for bidirectional communication
-- Send JSON commands to the WebSocket
-- Handle incoming messages asynchronously
-- Perform browsing context operations like getting the tree and navigating
+- Create and manage WebDriver BiDi sessions
+- Send commands
+- Handle events asynchronously
 
 ## Getting Started
 
