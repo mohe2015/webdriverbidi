@@ -34,17 +34,17 @@ pub type InfoList = Vec<Info>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Info {
-    children: Option<InfoList>,
+    pub children: Option<InfoList>,
     #[serde(rename = "clientWindow", skip_serializing_if = "Option::is_none")]
-    client_window: Option<browser::ClientWindow>,
-    context: BrowsingContext,
+    pub client_window: Option<browser::ClientWindow>,
+    pub context: BrowsingContext,
     #[serde(rename = "originalOpener")]
-    original_opener: Option<BrowsingContext>,
-    url: String,
+    pub original_opener: Option<BrowsingContext>,
+    pub url: String,
     #[serde(rename = "userContext")]
-    user_context: browser::UserContext,
+    pub user_context: browser::UserContext,
     #[serde(skip_serializing_if = "Option::is_none")]
-    parent: Option<BrowsingContext>,
+    pub parent: Option<BrowsingContext>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -135,7 +135,7 @@ pub struct CreateResult {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetTreeResult {
-    contexts: InfoList,
+    pub contexts: InfoList,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

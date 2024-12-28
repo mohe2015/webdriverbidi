@@ -1,50 +1,50 @@
 use tokio;
 use webdriverbidi::webdriver::capabilities::{Capabilities, CapabilityRequest};
-use webdriverbidi::webdriver::session::{close_session, start_session};
 use webdriverbidi::session::WebDriverBiDiSession;
 
-use webdriverbidi::commands::browsing_context::NavigateCommand;
 use webdriverbidi::models::remote::browsing_context::{
-    Navigate, NavigateParameters, ReadinessState,
+    NavigateParameters, ReadinessState,
 };
-use webdriverbidi::commands::browsing_context::GetTreeCommand;
-use webdriverbidi::models::remote::browsing_context::{GetTree, GetTreeParameters};
-use webdriverbidi::models::local::browsing_context::GetTreeResult;
+use webdriverbidi::models::remote::browsing_context::GetTreeParameters;
 
 #[tokio::main]
 async fn main() {
-    // Base URL of the WebDriver server (GeckoDriver, ChromeDriver or MSEdgeDriver)
-    let base_url = "http://localhost:4444";
 
-    let always_match = CapabilityRequest::new();
-    
+    let always_match = CapabilityRequest::new();  
     let capabilities = Capabilities::new(always_match);
 
-    // Step 1: Start a new session
-    let session = start_session(base_url, capabilities)
-        .await
-        .expect("Failed to start WebDriver session");
-    println!("Session started with ID: {}", session.session_id);
-    println!("WebSocket URL: {}", session.websocket_url);
-
-    // Step 2: Connect to the WebSocket
-    let mut bidi_session = WebDriverBiDiSession::new(session.websocket_url.clone())
+    let mut bidi_session = WebDriverBiDiSession::new("localhost".to_string(), 4444, capabilities)
         .await
         .expect("Failed to connect to WebSocket");
 
-    // Step 3: Send the `browsingContext.getTree` command
     let get_tree_params = GetTreeParameters::new(None, None);
-    let get_tree_cmd = GetTreeCommand::new(GetTree::new(get_tree_params));
     
-    let recv : GetTreeResult =
+    let get_tree_rslt =
         bidi_session
-            .send_command::<GetTreeCommand, GetTreeResult>(get_tree_cmd)
+            .browsing_context_get_tree(get_tree_params)
             .await
             .expect("Failed to send command");
+  
+    // println!("Received getTree response 1: {:?}", get_tree_rslt);
 
-    // let resp = recv.await.expect("Failed to receive response");
+
+
     
-    println!("Received getTree response: {:?}", recv);
+    let context_id = get_tree_rslt.contexts[0].context.clone();
+    
+    let navigate_params = NavigateParameters::new(
+        context_id,
+        "https://www.rust-lang.org/".to_string(),
+        Some(ReadinessState::Complete),
+    );
+    
+    let navigate_rslt = bidi_session
+        .browsing_context_navigate(navigate_params)
+        .await
+        .expect("Failed to send command");
+    
+    println!("Received navigate response: {:?}", navigate_rslt);
+    
     // let response = bidi_session
     //     .receive_response()
     //     .await
@@ -74,8 +74,5 @@ async fn main() {
     tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 
     // Step 5: Close the session
-    close_session(base_url, &session.session_id)
-        .await
-        .expect("Failed to close WebDriver session");
-    println!("Session closed.");
+    bidi_session.close().await.expect("Failed to close session");
 }

@@ -1,6 +1,5 @@
-use std::error::Error;
-
 use crate::webdriver::capabilities::Capabilities;
+use std::error::Error;
 
 /// Represents the session response
 pub struct SessionResponse {
@@ -11,7 +10,7 @@ pub struct SessionResponse {
 
 /// Starts a WebDriver session
 pub async fn start_session(
-    base_url: &str,
+    base_url: &String,
     capabilities: Capabilities,
 ) -> Result<SessionResponse, Box<dyn std::error::Error>> {
     let url = format!("{}/session", base_url);
@@ -29,7 +28,7 @@ pub async fn start_session(
         .await?;
 
     println!("{:?}", response);
-    
+
     // Extract sessionId and WebSocket URL
     let session_id = response["value"]["sessionId"]
         .as_str()
@@ -51,7 +50,7 @@ pub async fn start_session(
     if window_response["value"].is_null() {
         return Err("Browser window is not open".into());
     }
-    
+
     Ok(SessionResponse {
         session_id: session_id.to_string(),
         capabilities: response["value"]["capabilities"].clone(),
