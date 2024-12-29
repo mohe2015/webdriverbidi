@@ -21,5 +21,5 @@ pub enum ResultData {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EmptyResult {
     #[serde(flatten)]
-    extensible: Extensible,
+    pub extensible: Extensible,
 }

@@ -11,9 +11,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Command {
-    id: u64,
-    command_data: CommandData,
-    extensible: Extensible,
+    pub id: u64,
+    pub command_data: CommandData,
+    pub extensible: Extensible,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

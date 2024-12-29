@@ -16,6 +16,6 @@ pub mod command_sender;
 pub mod error;
 
 // Re-export key functionality
-pub use webdriver::capabilities::{CapabilityRequest, Capabilities};
+// pub use webdriver::capabilities::{CapabilityRequest, Capabilities};
 pub use models::remote;
 pub use models::local;

@@ -17,9 +17,9 @@ pub enum NetworkCommand {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthCredentials {
     #[serde(rename = "type")]
-    auth_credentials_type: String,
-    username: String,
-    password: String,
+    pub auth_credentials_type: String,
+    pub username: String,
+    pub password: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -31,15 +31,15 @@ pub enum BytesValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StringValue {
     #[serde(rename = "type")]
-    string_value_type: String,
-    value: String,
+    pub string_value_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Base64Value {
     #[serde(rename = "type")]
-    base64_value_type: String,
-    value: String,
+    pub base64_value_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -52,31 +52,31 @@ pub enum SameSite {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Cookie {
-    name: String,
-    value: BytesValue,
-    domain: String,
-    path: String,
-    size: JsUint,
+    pub name: String,
+    pub value: BytesValue,
+    pub domain: String,
+    pub path: String,
+    pub size: JsUint,
     #[serde(rename = "httpOnly")]
-    http_only: bool,
-    secure: bool,
+    pub http_only: bool,
+    pub secure: bool,
     #[serde(rename = "sameSite")]
-    same_site: SameSite,
+    pub same_site: SameSite,
     #[serde(skip_serializing_if = "Option::is_none")]
-    expiry: Option<JsUint>,
-    extensible: Extensible,
+    pub expiry: Option<JsUint>,
+    pub extensible: Extensible,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieHeader {
-    name: String,
-    value: BytesValue,
+    pub name: String,
+    pub value: BytesValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Header {
-    name: String,
-    value: BytesValue,
+    pub name: String,
+    pub value: BytesValue,
 }
 
 pub type Intercept = String;
@@ -84,22 +84,22 @@ pub type Request = String;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookieHeader {
-    name: String,
-    value: BytesValue,
+    pub name: String,
+    pub value: BytesValue,
     #[serde(skip_serializing_if = "Option::is_none")]
-    domain: Option<String>,
+    pub domain: Option<String>,
     #[serde(rename = "httpOnly", skip_serializing_if = "Option::is_none")]
-    http_only: Option<bool>,
+    pub http_only: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    expiry: Option<String>,
+    pub expiry: Option<String>,
     #[serde(rename = "maxAge", skip_serializing_if = "Option::is_none")]
-    max_age: Option<JsInt>,
+    pub max_age: Option<JsInt>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    path: Option<String>,
+    pub path: Option<String>,
     #[serde(rename = "sameSite", skip_serializing_if = "Option::is_none")]
-    same_site: Option<SameSite>,
+    pub same_site: Option<SameSite>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    secure: Option<bool>,
+    pub secure: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -111,39 +111,39 @@ pub enum UrlPattern {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternPattern {
     #[serde(rename = "type")]
-    url_pattern_pattern_type: String,
+    pub url_pattern_pattern_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    protocol: Option<String>,
+    pub protocol: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    hostname: Option<String>,
+    pub hostname: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    port: Option<String>,
+    pub port: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pathname: Option<String>,
+    pub pathname: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    search: Option<String>,
+    pub search: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternString {
     #[serde(rename = "type")]
-    url_pattern_string_type: String,
-    pattern: String,
+    pub url_pattern_string_type: String,
+    pub pattern: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddIntercept {
-    method: String,
-    params: AddInterceptParameters,
+    pub method: String,
+    pub params: AddInterceptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddInterceptParameters {
-    phases: Vec<InterceptPhase>,
+    pub phases: Vec<InterceptPhase>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    contexts: Option<Vec<BrowsingContext>>,
+    pub contexts: Option<Vec<BrowsingContext>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    url_patterns: Option<Vec<UrlPattern>>,
+    pub url_patterns: Option<Vec<UrlPattern>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -158,57 +158,57 @@ pub enum InterceptPhase {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueRequest {
-    method: String,
-    params: ContinueRequestParameters,
+    pub method: String,
+    pub params: ContinueRequestParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueRequestParameters {
-    request: Request,
+    pub request: Request,
     #[serde(skip_serializing_if = "Option::is_none")]
-    body: Option<BytesValue>,
+    pub body: Option<BytesValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    cookies: Option<Vec<CookieHeader>>,
+    pub cookies: Option<Vec<CookieHeader>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    headers: Option<Vec<Header>>,
+    pub headers: Option<Vec<Header>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    method: Option<String>,
+    pub method: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    url: Option<String>,
+    pub url: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponse {
-    method: String,
-    params: ContinueResponseParameters,
+    pub method: String,
+    pub params: ContinueResponseParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponseParameters {
-    request: Request,
+    pub request: Request,
     #[serde(skip_serializing_if = "Option::is_none")]
-    cookies: Option<Vec<SetCookieHeader>>,
+    pub cookies: Option<Vec<SetCookieHeader>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    credentials: Option<AuthCredentials>,
+    pub credentials: Option<AuthCredentials>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    headers: Option<Vec<Header>>,
+    pub headers: Option<Vec<Header>>,
     #[serde(rename = "reasonPhrase", skip_serializing_if = "Option::is_none")]
-    reason_phrase: Option<String>,
+    pub reason_phrase: Option<String>,
     #[serde(rename = "statusCode", skip_serializing_if = "Option::is_none")]
-    status_code: Option<JsUint>,
+    pub status_code: Option<JsUint>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueWithAuth {
-    method: String,
-    params: ContinueWithAuthParameters,
+    pub method: String,
+    pub params: ContinueWithAuthParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueWithAuthParameters {
-    request: Request,
+    pub request: Request,
     #[serde(flatten, skip_serializing_if = "Option::is_none")]
-    auth_option: Option<ContinueWithAuthOption>,
+    pub auth_option: Option<ContinueWithAuthOption>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -219,13 +219,13 @@ pub enum ContinueWithAuthOption {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueWithAuthCredentials {
-    action: String,
-    credentials: AuthCredentials,
+    pub action: String,
+    pub credentials: AuthCredentials,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueWithAuthNoCredentials {
-    action: NoCredentialsAction,
+    pub action: NoCredentialsAction,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -237,58 +237,58 @@ pub enum NoCredentialsAction {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequest {
-    method: String,
-    params: FailRequestParameters,
+    pub method: String,
+    pub params: FailRequestParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequestParameters {
-    request: Request,
+    pub request: Request,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProvideResponse {
-    method: String,
-    params: ProvideResponseParameters,
+    pub method: String,
+    pub params: ProvideResponseParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProvideResponseParameters {
-    request: Request,
+    pub request: Request,
     #[serde(skip_serializing_if = "Option::is_none")]
-    body: Option<BytesValue>,
+    pub body: Option<BytesValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    cookies: Option<Vec<SetCookieHeader>>,
+    pub cookies: Option<Vec<SetCookieHeader>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    headers: Option<Vec<Header>>,
+    pub headers: Option<Vec<Header>>,
     #[serde(rename = "reasonPhrase", skip_serializing_if = "Option::is_none")]
-    reason_phrase: Option<String>,
+    pub reason_phrase: Option<String>,
     #[serde(rename = "statusCode", skip_serializing_if = "Option::is_none")]
-    status_code: Option<JsUint>,
+    pub status_code: Option<JsUint>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveIntercept {
-    method: String,
-    params: RemoveInterceptParameters,
+    pub method: String,
+    pub params: RemoveInterceptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveInterceptParameters {
-    intercept: Intercept,
+    pub intercept: Intercept,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCacheBehavior {
-    method: String,
-    params: SetCacheBehaviorParameters,
+    pub method: String,
+    pub params: SetCacheBehaviorParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCacheBehaviorParameters {
-    cache_behavior: CacheBehavior,
+    pub cache_behavior: CacheBehavior,
     #[serde(skip_serializing_if = "Option::is_none")]
-    contexts: Option<Vec<BrowsingContext>>,
+    pub contexts: Option<Vec<BrowsingContext>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

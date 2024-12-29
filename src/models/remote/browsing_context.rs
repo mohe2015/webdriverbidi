@@ -32,36 +32,36 @@ pub enum Locator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocator {
     #[serde(rename = "type")]
-    locator_type: String,
-    value: AccessibilityLocatorValue,
+    pub locator_type: String,
+    pub value: AccessibilityLocatorValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocatorValue {
     #[serde(skip_serializing_if = "Option::is_none")]
-    name: Option<String>,
+    pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    role: Option<String>,
+    pub role: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CssLocator {
     #[serde(rename = "type")]
-    locator_type: String,
-    value: String,
+    pub locator_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InnerTextLocator {
     #[serde(rename = "type")]
-    locator_type: String,
-    value: String,
+    pub locator_type: String,
+    pub value: String,
     #[serde(rename = "ignoreCase", skip_serializing_if = "Option::is_none")]
-    ignore_case: Option<bool>,
+    pub ignore_case: Option<bool>,
     #[serde(rename = "matchType", skip_serializing_if = "Option::is_none")]
-    match_type: Option<InnerTextLocatorMatchType>,
+    pub match_type: Option<InnerTextLocatorMatchType>,
     #[serde(rename = "maxDepth", skip_serializing_if = "Option::is_none")]
-    max_depth: Option<JsUint>,
+    pub max_depth: Option<JsUint>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -74,8 +74,8 @@ pub enum InnerTextLocatorMatchType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct XPathLocator {
     #[serde(rename = "type")]
-    locator_type: String,
-    value: String,
+    pub locator_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -97,30 +97,30 @@ pub enum UserPromptType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Activate {
-    method: String,
-    params: ActivateParameters,
+    pub method: String,
+    pub params: ActivateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ActivateParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshot {
-    method: String,
-    params: CaptureScreenshotParameters,
+    pub method: String,
+    pub params: CaptureScreenshotParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshotParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
     #[serde(skip_serializing_if = "Option::is_none")]
-    origin: Option<CaptureScreenshotParametersOrigin>,
+    pub origin: Option<CaptureScreenshotParametersOrigin>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    format: Option<ImageFormat>,
+    pub format: Option<ImageFormat>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    clip: Option<ClipRectangle>,
+    pub clip: Option<ClipRectangle>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -133,9 +133,9 @@ pub enum CaptureScreenshotParametersOrigin {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ImageFormat {
     #[serde(rename = "type")]
-    image_format_type: String,
+    pub image_format_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    quality: Option<f32>, // 0.0..1.0
+    pub quality: Option<f32>, // 0.0..1.0
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -147,37 +147,37 @@ pub enum ClipRectangle {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElementClipRectangle {
     #[serde(rename = "type")]
-    clip_rectangle_type: String,
-    element: SharedReference,
+    pub clip_rectangle_type: String,
+    pub element: SharedReference,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BoxClipRectangle {
     #[serde(rename = "type")]
-    clip_rectangle_type: String,
-    x: f32,
-    y: f32,
-    width: f32,
-    height: f32,
+    pub clip_rectangle_type: String,
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Close {
-    method: String,
-    params: CloseParameters,
+    pub method: String,
+    pub params: CloseParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CloseParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
     #[serde(rename = "promptUnload", skip_serializing_if = "Option::is_none")]
-    prompt_unload: Option<bool>,
+    pub prompt_unload: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Create {
-    method: String,
-    params: CreateParameters,
+    pub method: String,
+    pub params: CreateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -190,19 +190,19 @@ pub enum CreateType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateParameters {
     #[serde(rename = "type")]
-    create_type: CreateType,
+    pub create_type: CreateType,
     #[serde(rename = "referenceContext", skip_serializing_if = "Option::is_none")]
-    reference_context: Option<BrowsingContext>,
+    pub reference_context: Option<BrowsingContext>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    background: Option<bool>,
+    pub background: Option<bool>,
     #[serde(rename = "userContext", skip_serializing_if = "Option::is_none")]
-    user_context: Option<browser::UserContext>,
+    pub user_context: Option<browser::UserContext>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetTree {
-    method: String,
-    params: GetTreeParameters,
+    pub method: String,
+    pub params: GetTreeParameters,
 }
 
 impl GetTree {
@@ -230,38 +230,38 @@ impl GetTreeParameters {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPrompt {
-    method: String,
-    params: HandleUserPromptParameters,
+    pub method: String,
+    pub params: HandleUserPromptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPromptParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
     #[serde(skip_serializing_if = "Option::is_none")]
-    accept: Option<bool>,
+    pub accept: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    user_text: Option<String>,
+    pub user_text: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodes {
-    method: String,
-    params: LocateNodesParameters,
+    pub method: String,
+    pub params: LocateNodesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodesParameters {
-    context: BrowsingContext,
-    locator: Locator,
+    pub context: BrowsingContext,
+    pub locator: Locator,
     #[serde(rename = "maxNodeCount", skip_serializing_if = "Option::is_none")]
-    max_node_count: Option<JsUint>,
+    pub max_node_count: Option<JsUint>,
     #[serde(
         rename = "serializationOptions",
         skip_serializing_if = "Option::is_none"
     )]
-    serialization_options: Option<SerializationOptions>,
+    pub serialization_options: Option<SerializationOptions>,
     #[serde(rename = "startNodes", skip_serializing_if = "Option::is_none")]
-    start_nodes: Option<Vec<SharedReference>>,
+    pub start_nodes: Option<Vec<SharedReference>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -295,27 +295,27 @@ impl NavigateParameters {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Print {
-    method: String,
-    params: PrintParameters,
+    pub method: String,
+    pub params: PrintParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
     #[serde(skip_serializing_if = "Option::is_none")]
-    background: Option<bool>,
+    pub background: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    margin: Option<PrintMarginParameters>,
+    pub margin: Option<PrintMarginParameters>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    orientation: Option<PrintParametersOrientation>,
+    pub orientation: Option<PrintParametersOrientation>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    page: Option<PrintPageParameters>,
+    pub page: Option<PrintPageParameters>,
     #[serde(rename = "pageRanges", skip_serializing_if = "Option::is_none")]
-    page_ranges: Option<Vec<JsUintOrText>>,
+    pub page_ranges: Option<Vec<JsUintOrText>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    scale: Option<f32>, // 0.1..2.0
+    pub scale: Option<f32>, // 0.1..2.0
     #[serde(rename = "shrinkToFit", skip_serializing_if = "Option::is_none")]
-    shrink_to_fit: Option<bool>,
+    pub shrink_to_fit: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -334,67 +334,67 @@ pub enum JsUintOrText {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintMarginParameters {
     #[serde(skip_serializing_if = "Option::is_none")]
-    bottom: Option<f32>, // 0.0..
+    pub bottom: Option<f32>, // 0.0..
     #[serde(skip_serializing_if = "Option::is_none")]
-    left: Option<f32>, // 0.0..
+    pub left: Option<f32>, // 0.0..
     #[serde(skip_serializing_if = "Option::is_none")]
-    right: Option<f32>, // 0.0..
+    pub right: Option<f32>, // 0.0..
     #[serde(skip_serializing_if = "Option::is_none")]
-    top: Option<f32>, // 0.0..
+    pub top: Option<f32>, // 0.0..
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintPageParameters {
     #[serde(skip_serializing_if = "Option::is_none")]
-    height: Option<f32>, // 0.0352..
+    pub height: Option<f32>, // 0.0352..
     #[serde(skip_serializing_if = "Option::is_none")]
-    width: Option<f32>, // 0.0352..
+    pub width: Option<f32>, // 0.0352..
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Reload {
-    method: String,
-    params: ReloadParameters,
+    pub method: String,
+    pub params: ReloadParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReloadParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
     #[serde(rename = "ignoreCache", skip_serializing_if = "Option::is_none")]
-    ignore_cache: Option<bool>,
+    pub ignore_cache: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    wait: Option<ReadinessState>,
+    pub wait: Option<ReadinessState>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewport {
-    method: String,
-    params: SetViewportParameters,
+    pub method: String,
+    pub params: SetViewportParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewportParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
     #[serde(skip_serializing_if = "Option::is_none")]
-    viewport: Option<Viewport>,
+    pub viewport: Option<Viewport>,
     #[serde(rename = "devicePixelRatio", skip_serializing_if = "Option::is_none")]
-    device_pixel_ratio: Option<f32>, // 0.0..
+    pub device_pixel_ratio: Option<f32>, // 0.0..
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Viewport {
-    width: JsUint,
-    height: JsUint,
+    pub width: JsUint,
+    pub height: JsUint,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistory {
-    method: String,
-    params: TraverseHistoryParameters,
+    pub method: String,
+    pub params: TraverseHistoryParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistoryParameters {
-    context: BrowsingContext,
-    delta: JsInt,
+    pub context: BrowsingContext,
+    pub delta: JsInt,
 }

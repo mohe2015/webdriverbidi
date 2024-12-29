@@ -10,14 +10,14 @@ pub type Extension = String;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Install {
-    method: String,
-    params: InstallParameters,
+    pub method: String,
+    pub params: InstallParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InstallParameters {
     #[serde(rename = "extensionData")]
-    extension_data: ExtensionData,
+    pub extension_data: ExtensionData,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -30,31 +30,31 @@ pub enum ExtensionData {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionPath {
     #[serde(rename = "type")]
-    extension_path_type: String,
-    path: String,
+    pub extension_path_type: String,
+    pub path: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionArchivePath {
     #[serde(rename = "type")]
-    extension_archive_path_type: String,
-    path: String,
+    pub extension_archive_path_type: String,
+    pub path: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionBase64Encoded {
     #[serde(rename = "type")]
-    extension_base64_encoded_type: String,
-    value: String,
+    pub extension_base64_encoded_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Uninstall {
-    method: String,
-    params: UninstallParameters,
+    pub method: String,
+    pub params: UninstallParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UninstallParameters {
-    extension: Extension,
+    pub extension: Extension,
 }

@@ -11,14 +11,14 @@ pub type ClientWindow = String;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ClientWindowInfo {
-    active: bool,
+    pub active: bool,
     #[serde(rename = "clientWindow")]
-    client_window: ClientWindow,
-    height: JsUint,
-    state: ClientWindowInfoState,
-    width: JsUint,
-    x: JsInt,
-    y: JsInt,
+    pub client_window: ClientWindow,
+    pub height: JsUint,
+    pub state: ClientWindowInfoState,
+    pub width: JsUint,
+    pub x: JsInt,
+    pub y: JsInt,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -35,7 +35,7 @@ pub type UserContext = String;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserContextInfo {
     #[serde(rename = "userContext")]
-    user_context: UserContext,
+    pub user_context: UserContext,
 }
 
 pub type CreateUserContextResult = UserContextInfo;
@@ -43,11 +43,11 @@ pub type CreateUserContextResult = UserContextInfo;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetClientWindowsResult {
     #[serde(rename = "clientWindows")]
-    client_windows: Vec<ClientWindowInfo>,
+    pub client_windows: Vec<ClientWindowInfo>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetUserContextsResult {
     #[serde(rename = "userContexts")]
-    user_contexts: Vec<UserContextInfo>,
+    pub user_contexts: Vec<UserContextInfo>,
 }

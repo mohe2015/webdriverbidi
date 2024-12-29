@@ -9,5 +9,5 @@ pub type Extension = String;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InstallResult {
-    extension: Extension,
+    pub extension: Extension,
 }

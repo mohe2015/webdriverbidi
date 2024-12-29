@@ -13,14 +13,14 @@ pub enum BrowserCommand {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowInfo {
-    active: bool,
+    pub active: bool,
     #[serde(rename = "clientWindow")]
-    client_window: ClientWindow,
-    height: JsUint,
-    state: ClientWindowState,
-    width: JsUint,
-    x: JsInt,
-    y: JsInt,
+    pub client_window: ClientWindow,
+    pub height: JsUint,
+    pub state: ClientWindowState,
+    pub width: JsUint,
+    pub x: JsInt,
+    pub y: JsInt,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -38,57 +38,57 @@ pub type UserContext = String;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserContextInfo {
     #[serde(rename = "userContext")]
-    user_context: UserContext,
+    pub user_context: UserContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Close {
-    method: String,
-    params: EmptyParams,
+    pub method: String,
+    pub params: EmptyParams,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateUserContext {
-    method: String,
-    params: EmptyParams,
+    pub method: String,
+    pub params: EmptyParams,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetClientWindows {
-    method: String,
-    params: EmptyParams,
+    pub method: String,
+    pub params: EmptyParams,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetUserContexts {
-    method: String,
-    params: EmptyParams,
+    pub method: String,
+    pub params: EmptyParams,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveUserContext {
-    method: String,
-    params: RemoveUserContextParameters,
+    pub method: String,
+    pub params: RemoveUserContextParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveUserContextParameters {
     #[serde(rename = "userContext")]
-    user_context: UserContext,
+    pub user_context: UserContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetClientWindowState {
-    method: String,
-    params: SetClientWindowStateParameters,
+    pub method: String,
+    pub params: SetClientWindowStateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetClientWindowStateParameters {
     #[serde(rename = "clientWindow")]
-    client_window: ClientWindow,
+    pub client_window: ClientWindow,
     #[serde(rename = "clientWindowNamedState")]
-    client_window_named_state: ClientWindowNamedOrRectState,
+    pub client_window_named_state: ClientWindowNamedOrRectState,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -99,18 +99,18 @@ pub enum ClientWindowNamedOrRectState {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowNamedState {
-    state: ClientWindowState,
+    pub state: ClientWindowState,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowRectState {
-    state: String,
+    pub state: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    width: Option<JsUint>,
+    pub width: Option<JsUint>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    height: Option<JsUint>,
+    pub height: Option<JsUint>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    x: Option<JsInt>,
+    pub x: Option<JsInt>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    y: Option<JsInt>,
+    pub y: Option<JsInt>,
 }

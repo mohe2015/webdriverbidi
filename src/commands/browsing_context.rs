@@ -51,11 +51,11 @@ pub async fn navigate(
 ) -> Result<NavigateResult, CommandError> {
     let navigate_cmd = NavigateCommand::new(params);
 
-    let result = session
+    let rslt = session
         .send_command::<NavigateCommand, NavigateResult>(navigate_cmd)
         .await?;
 
-    Ok(result)
+    Ok(rslt)
 }
 
 // --------------------------------------------------

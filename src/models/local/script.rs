@@ -21,20 +21,20 @@ pub type Channel = String;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ChannelValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: ChannelProperties,
+    pub value_type: String,
+    pub value: ChannelProperties,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ChannelProperties {
-    channel: Channel,
+    pub channel: Channel,
     #[serde(
         rename = "serializationOptions",
         skip_serializing_if = "Option::is_none"
     )]
-    serialization_options: Option<SerializationOptions>,
+    pub serialization_options: Option<SerializationOptions>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    ownership: Option<ResultOwnership>,
+    pub ownership: Option<ResultOwnership>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -46,30 +46,30 @@ pub enum EvaluateResult {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EvaluateResultSuccess {
     #[serde(rename = "type")]
-    result_type: String,
-    result: RemoteValue,
-    realm: Realm,
+    pub result_type: String,
+    pub result: RemoteValue,
+    pub realm: Realm,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EvaluateResultException {
     #[serde(rename = "type")]
-    result_type: String,
+    pub result_type: String,
     #[serde(rename = "exceptionDetails")]
-    exception_details: ExceptionDetails,
-    realm: Realm,
+    pub exception_details: ExceptionDetails,
+    pub realm: Realm,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ExceptionDetails {
     #[serde(rename = "columnNumber")]
-    column_number: JsUint,
-    exception: RemoteValue,
+    pub column_number: JsUint,
+    pub exception: RemoteValue,
     #[serde(rename = "lineNumber")]
-    line_number: JsUint,
+    pub line_number: JsUint,
     #[serde(rename = "stackTrace")]
-    stack_trace: StackTrace,
-    text: String,
+    pub stack_trace: StackTrace,
+    pub text: String,
 }
 
 pub type Handle = String;
@@ -93,15 +93,15 @@ pub type ListLocalValue = Vec<LocalValue>;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ArrayLocalValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: ListLocalValue,
+    pub value_type: String,
+    pub value: ListLocalValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DateLocalValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: String,
+    pub value_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -117,36 +117,36 @@ pub enum LocalValueOrText {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MapLocalValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: MappingLocalValue,
+    pub value_type: String,
+    pub value: MappingLocalValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ObjectLocalValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: MappingLocalValue,
+    pub value_type: String,
+    pub value: MappingLocalValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RegExpValue {
-    pattern: String,
+    pub pattern: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    flags: Option<String>,
+    pub flags: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RegExpLocalValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: RegExpValue,
+    pub value_type: String,
+    pub value: RegExpValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SetLocalValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: ListLocalValue,
+    pub value_type: String,
+    pub value: ListLocalValue,
 }
 
 pub type PreloadScript = String;
@@ -165,20 +165,20 @@ pub enum PrimitiveProtocolValue {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UndefinedValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NullValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct StringValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: String,
+    pub value_type: String,
+    pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -194,8 +194,8 @@ pub enum SpecialNumber {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NumberValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: NumberOrSpecialNumber,
+    pub value_type: String,
+    pub value: NumberOrSpecialNumber,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -208,15 +208,15 @@ pub enum NumberOrSpecialNumber {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BooleanValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: bool,
+    pub value_type: String,
+    pub value: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BigIntValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: String,
+    pub value_type: String,
+    pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -233,76 +233,76 @@ pub enum RealmInfo {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BaseRealmInfo {
-    realm: Realm,
-    origin: String,
+    pub realm: Realm,
+    pub origin: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WindowRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
-    context: browsing_context::BrowsingContext,
+    pub realm_type: String,
+    pub context: browsing_context::BrowsingContext,
     #[serde(skip_serializing_if = "Option::is_none")]
-    sandbox: Option<String>,
+    pub sandbox: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DedicatedWorkerRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
-    owners: Vec<Realm>,
+    pub realm_type: String,
+    pub owners: Vec<Realm>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SharedWorkerRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
+    pub realm_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServiceWorkerRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
+    pub realm_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WorkerRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
+    pub realm_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PaintWorkletRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
+    pub realm_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AudioWorkletRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
+    pub realm_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WorkletRealmInfo {
     #[serde(flatten)]
-    base: BaseRealmInfo,
+    pub base: BaseRealmInfo,
     #[serde(rename = "type")]
-    realm_type: String,
+    pub realm_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -334,20 +334,20 @@ pub enum RemoteReference {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SharedReference {
     #[serde(rename = "sharedId")]
-    shared_id: SharedId,
+    pub shared_id: SharedId,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(flatten)]
-    extensible: Extensible,
+    pub extensible: Extensible,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RemoteObjectReference {
-    handle: Handle,
+    pub handle: Handle,
     #[serde(rename = "sharedId", skip_serializing_if = "Option::is_none")]
-    shared_id: Option<SharedId>,
+    pub shared_id: Option<SharedId>,
     #[serde(flatten)]
-    extensible: Extensible,
+    pub extensible: Extensible,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -389,236 +389,236 @@ pub enum RemoteValueOrText {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SymbolRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ArrayRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<ListRemoteValue>,
+    pub value: Option<ListRemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ObjectRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<MappingRemoteValue>,
+    pub value: Option<MappingRemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FunctionRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RegExpRemoteValue {
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(rename = "type")]
-    value_type: String,
-    value: RegExpValue,
+    pub value_type: String,
+    pub value: RegExpValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DateRemoteValue {
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(rename = "type")]
-    value_type: String,
-    value: String,
+    pub value_type: String,
+    pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MapRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<MappingRemoteValue>,
+    pub value: Option<MappingRemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SetRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<ListRemoteValue>,
+    pub value: Option<ListRemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WeakMapRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WeakSetRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GeneratorRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ErrorRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ProxyRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PromiseRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TypedArrayRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ArrayBufferRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NodeListRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<ListRemoteValue>,
+    pub value: Option<ListRemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct HTMLCollectionRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<ListRemoteValue>,
+    pub value: Option<ListRemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NodeRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
+    pub value_type: String,
     #[serde(rename = "sharedId", skip_serializing_if = "Option::is_none")]
-    shared_id: Option<SharedId>,
+    pub shared_id: Option<SharedId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<Box<NodeProperties>>,
+    pub value: Option<Box<NodeProperties>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NodeProperties {
     #[serde(rename = "nodeType")]
-    node_type: JsUint,
+    pub node_type: JsUint,
     #[serde(rename = "childNodeCount")]
-    child_node_count: JsUint,
+    pub child_node_count: JsUint,
     #[serde(skip_serializing_if = "Option::is_none")]
-    attributes: Option<HashMap<String, String>>,
+    pub attributes: Option<HashMap<String, String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    children: Option<Vec<NodeRemoteValue>>,
+    pub children: Option<Vec<NodeRemoteValue>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "localName")]
-    local_name: Option<String>,
+    pub local_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "mode")]
-    mode: Option<NodePropertiesMode>,
+    pub mode: Option<NodePropertiesMode>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "namespaceURI")]
-    namespace_uri: Option<String>,
+    pub namespace_uri: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "nodeValue")]
-    node_value: Option<String>,
+    pub node_value: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "shadowRoot")]
-    shadow_root: Option<NodeRemoteValue>,
+    pub shadow_root: Option<NodeRemoteValue>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -631,17 +631,17 @@ pub enum NodePropertiesMode {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WindowProxyRemoteValue {
     #[serde(rename = "type")]
-    value_type: String,
-    value: WindowProxyProperties,
+    pub value_type: String,
+    pub value: WindowProxyProperties,
     #[serde(skip_serializing_if = "Option::is_none")]
-    handle: Option<Handle>,
+    pub handle: Option<Handle>,
     #[serde(rename = "internalId", skip_serializing_if = "Option::is_none")]
-    internal_id: Option<InternalId>,
+    pub internal_id: Option<InternalId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WindowProxyProperties {
-    context: browsing_context::BrowsingContext,
+    pub context: browsing_context::BrowsingContext,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -654,11 +654,11 @@ pub enum ResultOwnership {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SerializationOptions {
     #[serde(rename = "maxDomDepth", skip_serializing_if = "Option::is_none")]
-    max_dom_depth: Option<JsUint>,
+    pub max_dom_depth: Option<JsUint>,
     #[serde(rename = "maxObjectDepth", skip_serializing_if = "Option::is_none")]
-    max_object_depth: Option<JsUint>,
+    pub max_object_depth: Option<JsUint>,
     #[serde(rename = "includeShadowTree", skip_serializing_if = "Option::is_none")]
-    include_shadow_tree: Option<IncludeShadowTree>,
+    pub include_shadow_tree: Option<IncludeShadowTree>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -674,63 +674,63 @@ pub type SharedId = String;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct StackFrame {
     #[serde(rename = "columnNumber")]
-    column_number: JsUint,
+    pub column_number: JsUint,
     #[serde(rename = "functionName")]
-    function_name: String,
+    pub function_name: String,
     #[serde(rename = "lineNumber")]
-    line_number: JsUint,
-    url: String,
+    pub line_number: JsUint,
+    pub url: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct StackTrace {
     #[serde(rename = "callFrames")]
-    call_frames: Vec<StackFrame>,
+    pub call_frames: Vec<StackFrame>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Source {
-    realm: Realm,
+    pub realm: Realm,
     #[serde(skip_serializing_if = "Option::is_none")]
-    context: Option<browsing_context::BrowsingContext>,
+    pub context: Option<browsing_context::BrowsingContext>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AddPreloadScriptResult {
-    script: PreloadScript,
+    pub script: PreloadScript,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetRealmsResult {
-    realms: Vec<RealmInfo>,
+    pub realms: Vec<RealmInfo>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Message {
-    method: String,
-    params: MessageParameters,
+    pub method: String,
+    pub params: MessageParameters,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MessageParameters {
-    channel: Channel,
-    data: RemoteValue,
-    source: Source,
+    pub channel: Channel,
+    pub data: RemoteValue,
+    pub source: Source,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RealmCreated {
-    method: String,
-    params: RealmInfo,
+    pub method: String,
+    pub params: RealmInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RealmDestroyed {
-    method: String,
-    params: RealmDestroyedParameters,
+    pub method: String,
+    pub params: RealmDestroyedParameters,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RealmDestroyedParameters {
-    realm: Realm,
+    pub realm: Realm,
 }

@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CommandResponse {
     #[serde(rename = "type")]
-    response_type: String,
-    id: JsUint,
-    result: ResultData,
+    pub response_type: String,
+    pub id: JsUint,
+    pub result: ResultData,
     #[serde(flatten)]
-    extensible: Extensible,
+    pub extensible: Extensible,
 }

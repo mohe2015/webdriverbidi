@@ -13,57 +13,57 @@ pub enum StorageCommand {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PartionKey {
     #[serde(rename = "userContext", skip_serializing_if = "Option::is_none")]
-    user_context: Option<String>,
+    pub user_context: Option<String>,
     #[serde(rename = "sourceOrigin", skip_serializing_if = "Option::is_none")]
-    source_origin: Option<String>,
-    extensible: Extensible,
+    pub source_origin: Option<String>,
+    pub extensible: Extensible,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookies {
-    method: String,
-    params: GetCookiesParameters,
+    pub method: String,
+    pub params: GetCookiesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieFilter {
     #[serde(skip_serializing_if = "Option::is_none")]
-    name: Option<String>,
+    pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<BytesValue>,
+    pub value: Option<BytesValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    domain: Option<String>,
+    pub domain: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    path: Option<String>,
+    pub path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    size: Option<JsUint>,
+    pub size: Option<JsUint>,
     #[serde(rename = "httpOnly", skip_serializing_if = "Option::is_none")]
-    http_only: Option<bool>,
+    pub http_only: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    secure: Option<bool>,
+    pub secure: Option<bool>,
     #[serde(rename = "sameSite", skip_serializing_if = "Option::is_none")]
-    same_site: Option<SameSite>,
+    pub same_site: Option<SameSite>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    expiry: Option<JsUint>,
-    extensible: Extensible,
+    pub expiry: Option<JsUint>,
+    pub extensible: Extensible,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrowsingContextPartitionDescriptor {
     #[serde(rename = "type")]
-    browsing_context_partition_descriptor_type: String,
-    context: browsing_context::BrowsingContext,
+    pub browsing_context_partition_descriptor_type: String,
+    pub context: browsing_context::BrowsingContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StorageKeyPartitionDescriptor {
     #[serde(rename = "type")]
-    storage_key_partition_descriptor_type: String,
+    pub storage_key_partition_descriptor_type: String,
     #[serde(rename = "userContext", skip_serializing_if = "Option::is_none")]
-    user_context: Option<String>,
+    pub user_context: Option<String>,
     #[serde(rename = "sourceOrigin", skip_serializing_if = "Option::is_none")]
-    source_origin: Option<String>,
-    extensible: Extensible,
+    pub source_origin: Option<String>,
+    pub extensible: Extensible,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -75,52 +75,52 @@ pub enum PartitionDescriptor {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookiesParameters {
     #[serde(skip_serializing_if = "Option::is_none")]
-    filter: Option<CookieFilter>,
+    pub filter: Option<CookieFilter>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    partition: Option<PartitionDescriptor>,
+    pub partition: Option<PartitionDescriptor>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookie {
-    method: String,
-    params: SetCookieParameters,
+    pub method: String,
+    pub params: SetCookieParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PartialCookie {
-    name: String,
-    value: BytesValue,
-    domain: String,
+    pub name: String,
+    pub value: BytesValue,
+    pub domain: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    path: Option<String>,
+    pub path: Option<String>,
     #[serde(rename = "httpOnly", skip_serializing_if = "Option::is_none")]
-    http_only: Option<bool>,
+    pub http_only: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    secure: Option<bool>,
+    pub secure: Option<bool>,
     #[serde(rename = "sameSite", skip_serializing_if = "Option::is_none")]
-    same_site: Option<SameSite>,
+    pub same_site: Option<SameSite>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    expiry: Option<JsUint>,
-    extensible: Extensible,
+    pub expiry: Option<JsUint>,
+    pub extensible: Extensible,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookieParameters {
-    cookie: PartialCookie,
+    pub cookie: PartialCookie,
     #[serde(skip_serializing_if = "Option::is_none")]
-    partition: Option<PartitionDescriptor>,
+    pub partition: Option<PartitionDescriptor>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeleteCookies {
-    method: String,
-    params: DeleteCookiesParameters,
+    pub method: String,
+    pub params: DeleteCookiesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeleteCookiesParameters {
     #[serde(skip_serializing_if = "Option::is_none")]
-    filter: Option<CookieFilter>,
+    pub filter: Option<CookieFilter>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    partition: Option<PartitionDescriptor>,
+    pub partition: Option<PartitionDescriptor>,
 }

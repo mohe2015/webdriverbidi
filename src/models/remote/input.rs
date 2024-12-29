@@ -13,20 +13,20 @@ pub enum InputCommand {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElementOrigin {
     #[serde(rename = "type")]
-    element_origin_type: String,
-    element: SharedReference,
+    pub element_origin_type: String,
+    pub element: SharedReference,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PerformActions {
-    method: String,
-    params: PerformActionsParameters,
+    pub method: String,
+    pub params: PerformActionsParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PerformActionsParameters {
-    context: BrowsingContext,
-    actions: Vec<SourceActions>,
+    pub context: BrowsingContext,
+    pub actions: Vec<SourceActions>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -40,9 +40,9 @@ pub enum SourceActions {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NoneSourceActions {
     #[serde(rename = "type")]
-    none_source_actions_type: String,
-    id: String,
-    actions: Vec<NoneSourceAction>,
+    pub none_source_actions_type: String,
+    pub id: String,
+    pub actions: Vec<NoneSourceAction>,
 }
 
 pub type NoneSourceAction = PauseAction;
@@ -50,9 +50,9 @@ pub type NoneSourceAction = PauseAction;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KeySourceActions {
     #[serde(rename = "type")]
-    key_source_actions_type: String,
-    id: String,
-    actions: Vec<KeySourceAction>,
+    pub key_source_actions_type: String,
+    pub id: String,
+    pub actions: Vec<KeySourceAction>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -65,9 +65,9 @@ pub enum KeySourceAction {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerSourceActions {
     #[serde(rename = "type")]
-    pointer_source_actions_type: String,
-    id: String,
-    actions: Vec<PointerSourceAction>,
+    pub pointer_source_actions_type: String,
+    pub id: String,
+    pub actions: Vec<PointerSourceAction>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -81,7 +81,7 @@ pub enum PointerType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerParameters {
     #[serde(rename = "pointerType", skip_serializing_if = "Option::is_none")]
-    pointer_type: Option<PointerType>,
+    pub pointer_type: Option<PointerType>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -95,9 +95,9 @@ pub enum PointerSourceAction {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WheelSourceActions {
     #[serde(rename = "type")]
-    wheel_source_actions_type: String,
-    id: String,
-    actions: Vec<WheelSourceAction>,
+    pub wheel_source_actions_type: String,
+    pub id: String,
+    pub actions: Vec<WheelSourceAction>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -109,87 +109,87 @@ pub enum WheelSourceAction {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PauseAction {
     #[serde(rename = "type")]
-    pause_action_type: String,
+    pub pause_action_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    duration: Option<JsUint>,
+    pub duration: Option<JsUint>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KeyDownAction {
     #[serde(rename = "type")]
-    key_down_action_type: String,
-    value: String,
+    pub key_down_action_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KeyUpAction {
     #[serde(rename = "type")]
-    key_up_action_type: String,
-    value: String,
+    pub key_up_action_type: String,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerUpAction {
     #[serde(rename = "type")]
-    pointer_up_action_type: String,
-    button: JsUint,
+    pub pointer_up_action_type: String,
+    pub button: JsUint,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerDownAction {
     #[serde(rename = "type")]
-    pointer_down_action_type: String,
-    button: JsUint,
+    pub pointer_down_action_type: String,
+    pub button: JsUint,
     #[serde(flatten)]
-    pointer_common_properties: PointerCommonProperties,
+    pub pointer_common_properties: PointerCommonProperties,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerMoveAction {
     #[serde(rename = "type")]
-    pointer_move_action_type: String,
-    x: JsInt,
-    y: JsInt,
+    pub pointer_move_action_type: String,
+    pub x: JsInt,
+    pub y: JsInt,
     #[serde(skip_serializing_if = "Option::is_none")]
-    duration: Option<JsUint>,
+    pub duration: Option<JsUint>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    origin: Option<Origin>,
+    pub origin: Option<Origin>,
     #[serde(flatten)]
-    pointer_common_properties: PointerCommonProperties,
+    pub pointer_common_properties: PointerCommonProperties,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WheelScrollAction {
     #[serde(rename = "type")]
-    wheel_scroll_action_type: String,
-    x: JsInt,
-    y: JsInt,
+    pub wheel_scroll_action_type: String,
+    pub x: JsInt,
+    pub y: JsInt,
     #[serde(rename = "deltaX")]
-    delta_x: JsInt,
+    pub delta_x: JsInt,
     #[serde(rename = "deltaY")]
-    delta_y: JsInt,
+    pub delta_y: JsInt,
     #[serde(skip_serializing_if = "Option::is_none")]
-    duration: Option<JsUint>,
+    pub duration: Option<JsUint>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    origin: Option<Origin>,
+    pub origin: Option<Origin>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerCommonProperties {
     #[serde(skip_serializing_if = "Option::is_none")]
-    width: Option<JsUint>,
+    pub width: Option<JsUint>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    height: Option<JsUint>,
+    pub height: Option<JsUint>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pressure: Option<f64>,
+    pub pressure: Option<f64>,
     #[serde(rename = "tangentialPressure", skip_serializing_if = "Option::is_none")]
-    tangential_pressure: Option<f64>,
+    pub tangential_pressure: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    twist: Option<JsUint>,
+    pub twist: Option<JsUint>,
     #[serde(rename = "altitudeAngle", skip_serializing_if = "Option::is_none")]
-    altitude_angle: Option<f64>,
+    pub altitude_angle: Option<f64>,
     #[serde(rename = "azimuthAngle", skip_serializing_if = "Option::is_none")]
-    azimuth_angle: Option<f64>,
+    pub azimuth_angle: Option<f64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -203,24 +203,24 @@ pub enum Origin {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReleaseActions {
-    method: String,
-    params: ReleaseActionsParameters,
+    pub method: String,
+    pub params: ReleaseActionsParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReleaseActionsParameters {
-    context: BrowsingContext,
+    pub context: BrowsingContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetFiles {
-    method: String,
-    params: SetFilesParameters,
+    pub method: String,
+    pub params: SetFilesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetFilesParameters {
-    context: BrowsingContext,
-    element: SharedReference,
-    files: Vec<String>,
+    pub context: BrowsingContext,
+    pub element: SharedReference,
+    pub files: Vec<String>,
 }

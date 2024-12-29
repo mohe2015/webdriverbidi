@@ -24,42 +24,42 @@ pub enum Entry {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BaseLogEntry {
-    level: Level,
-    source: script::Source,
-    text: Option<String>,
-    timestamp: JsUint,
+    pub level: Level,
+    pub source: script::Source,
+    pub text: Option<String>,
+    pub timestamp: JsUint,
     #[serde(rename = "stackTrace", skip_serializing_if = "Option::is_none")]
-    stack_trace: Option<script::StackTrace>,
+    pub stack_trace: Option<script::StackTrace>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GenericLogEntry {
     #[serde(flatten)]
-    base: BaseLogEntry,
+    pub base: BaseLogEntry,
     #[serde(rename = "type")]
-    log_type: String,
+    pub log_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConsoleLogEntry {
     #[serde(flatten)]
-    base: BaseLogEntry,
+    pub base: BaseLogEntry,
     #[serde(rename = "type")]
-    log_type: String,
-    method: String,
-    args: Vec<script::RemoteValue>,
+    pub log_type: String,
+    pub method: String,
+    pub args: Vec<script::RemoteValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct JavascriptLogEntry {
     #[serde(flatten)]
-    base: BaseLogEntry,
+    pub base: BaseLogEntry,
     #[serde(rename = "type")]
-    log_type: String,
+    pub log_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EntryAdded {
-    method: String,
-    params: Entry,
+    pub method: String,
+    pub params: Entry,
 }

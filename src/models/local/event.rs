@@ -8,10 +8,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Event {
     #[serde(rename = "type")]
-    event_type: String,
-    event_data: EventData,
+    pub event_type: String,
+    pub event_data: EventData,
     #[serde(flatten)]
-    extensible: Extensible,
+    pub extensible: Extensible,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

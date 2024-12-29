@@ -3,7 +3,7 @@ use webdriverbidi::remote::browsing_context::{
     GetTreeParameters, NavigateParameters, ReadinessState,
 };
 use webdriverbidi::session::WebDriverBiDiSession;
-use webdriverbidi::{Capabilities, CapabilityRequest};
+use webdriverbidi::webdriver::capabilities::{Capabilities, CapabilityRequest};
 
 #[tokio::main]
 async fn main() {
@@ -11,7 +11,7 @@ async fn main() {
     let always_match = CapabilityRequest::new();
     let capabilities = Capabilities::new(always_match);
 
-    // Step 2: Create a new WebDriver BiDi session and start it
+    // Step 2: Initialize a new WebDriver BiDi session and start it
     let mut bidi_session = WebDriverBiDiSession::new("localhost".to_string(), 4444, capabilities);
     let _ = bidi_session.start().await.expect("Failed to start session");
 

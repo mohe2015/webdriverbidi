@@ -4,11 +4,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ErrorResponse {
     #[serde(rename = "type")]
-    response_type: String,
-    id: Option<JsUint>,
-    error: ErrorCode,
-    message: String,
-    stacktrace: Option<String>,
+    pub response_type: String,
+    pub id: Option<JsUint>,
+    pub error: ErrorCode,
+    pub message: String,
+    pub stacktrace: Option<String>,
     #[serde(flatten)]
-    extensible: Extensible,
+    pub extensible: Extensible,
 }
