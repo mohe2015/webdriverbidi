@@ -1,16 +1,11 @@
-use thiserror::Error;
+use super::id;
+use crate::error::CommandError;
 use crate::models::local::browsing_context::{GetTreeResult, NavigateResult};
-use crate::models::remote::browsing_context::{GetTree, GetTreeParameters, Navigate, NavigateParameters};
+use crate::models::remote::browsing_context::{
+    GetTree, GetTreeParameters, Navigate, NavigateParameters,
+};
 use crate::session::WebDriverBiDiSession;
 use serde::{Deserialize, Serialize};
-
-use super::id;
-
-#[derive(Debug, Error)]
-pub enum BrowsingContextError {
-    #[error("Failed to send command: {0}")]
-    CommandError(String),
-}
 
 // --------------------------------------------------
 
@@ -49,17 +44,18 @@ impl NavigateCommand {
 ///
 /// # Returns
 ///
-/// A `Result` containing either a `NavigateResult` or a `WebDriverError`.
+/// A `Result` containing either a `NavigateResult` or a `CommandError`.
 pub async fn navigate(
     session: &mut WebDriverBiDiSession,
     params: NavigateParameters,
-) -> Result<NavigateResult, BrowsingContextError> {
+) -> Result<NavigateResult, CommandError> {
     let navigate_cmd = NavigateCommand::new(params);
 
-    session
+    let result = session
         .send_command::<NavigateCommand, NavigateResult>(navigate_cmd)
-        .await
-        .map_err(|e| BrowsingContextError::CommandError(e.to_string()))
+        .await?;
+
+    Ok(result)
 }
 
 // --------------------------------------------------
@@ -77,15 +73,15 @@ impl GetTreeCommand {
     ///
     /// # Arguments
     ///
-    /// * `get_tree_params` - Parameters for the getTree command.
+    /// * `params` - Parameters for the getTree command.
     ///
     /// # Returns
     ///
     /// A new instance of `GetTreeCommand`.
-    fn new(get_tree_params: GetTreeParameters) -> Self {
+    fn new(params: GetTreeParameters) -> Self {
         Self {
             id: id::get_next_id(),
-            get_tree: GetTree::new(get_tree_params),
+            get_tree: GetTree::new(params),
         }
     }
 }
@@ -95,19 +91,20 @@ impl GetTreeCommand {
 /// # Arguments
 ///
 /// * `session` - A mutable reference to the WebDriver BiDi session.
-/// * `get_tree_params` - Parameters for the getTree command.
+/// * `params` - Parameters for the getTree command.
 ///
 /// # Returns
 ///
-/// A `Result` containing either a `GetTreeResult` or a `WebDriverError`.
+/// A `Result` containing either a `GetTreeResult` or a `CommandError`.
 pub async fn get_tree(
     session: &mut WebDriverBiDiSession,
-    get_tree_params: GetTreeParameters,
-) -> Result<GetTreeResult, BrowsingContextError> {
-    let get_tree_cmd = GetTreeCommand::new(get_tree_params);
+    params: GetTreeParameters,
+) -> Result<GetTreeResult, CommandError> {
+    let get_tree_cmd = GetTreeCommand::new(params);
 
-    session
+    let rslt = session
         .send_command::<GetTreeCommand, GetTreeResult>(get_tree_cmd)
-        .await
-        .map_err(|e| BrowsingContextError::CommandError(e.to_string()))
+        .await?;
+
+    Ok(rslt)
 }

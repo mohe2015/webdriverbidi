@@ -13,7 +13,7 @@ use tokio::net::TcpStream;
 use tokio::sync::{oneshot, Mutex};
 use tokio::task;
 use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
-use crate::commands::browsing_context::BrowsingContextError;
+use crate::error::CommandError;
 
 #[derive(Debug)]
 pub struct WebDriverBiDiSession {
@@ -70,7 +70,7 @@ impl WebDriverBiDiSession {
     pub async fn send_command<T: Serialize, U: DeserializeOwned>(
         &mut self,
         command: T,
-    ) -> Result<U, Box<dyn Error>> {
+    ) -> Result<U, CommandError> {
         command_sender::send_command(
             self.websocket_stream.clone(),
             self.pending_commands.clone(),
@@ -94,14 +94,14 @@ impl WebDriverBiDiSession {
     pub async fn browsing_context_get_tree(
         &mut self,
         params: crate::models::remote::browsing_context::GetTreeParameters,
-    ) -> Result<GetTreeResult, BrowsingContextError> {
+    ) -> Result<GetTreeResult, CommandError> {
         crate::commands::browsing_context::get_tree(self, params).await
     }
 
     pub async fn browsing_context_navigate(
         &mut self,
         params: crate::models::remote::browsing_context::NavigateParameters,
-    ) -> Result<crate::models::local::browsing_context::NavigateResult, BrowsingContextError> {
+    ) -> Result<crate::models::local::browsing_context::NavigateResult, CommandError> {
         crate::commands::browsing_context::navigate(self, params).await
     }
 }
