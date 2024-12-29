@@ -11,7 +11,7 @@ pub struct SessionResponse {
 /// Starts a WebDriver session
 pub async fn start_session(
     base_url: &String,
-    capabilities: Capabilities,
+    capabilities: &Capabilities,
 ) -> Result<SessionResponse, Box<dyn std::error::Error>> {
     let url = format!("{}/session", base_url);
 

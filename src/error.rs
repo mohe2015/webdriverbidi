@@ -16,4 +16,7 @@ pub enum CommandError {
     
     #[error("Oneshot receiver error: {0}")]
     OneshotReceiverError(#[from] tokio::sync::oneshot::error::RecvError),
+    
+    #[error("Command error: {0}")]
+    Other(String),
 }

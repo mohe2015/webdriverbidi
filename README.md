@@ -28,6 +28,14 @@ webdriverbidi = "0.1.4"
 
 ### Usage
 
+Start a WebDriver BiDi compliant server
+
+```bash
+$ geckodriver --host=localhost --port=4444
+```
+
+Create a new Rust project and add the following code to `src/main.rs`:
+
 ```rust
 use tokio;
 use webdriverbidi::models::remote::browsing_context::{
