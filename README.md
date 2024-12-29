@@ -23,7 +23,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-webdriverbidi = "0.1.2"
+webdriverbidi = "0.1.4"
 ```
 
 ### Usage
