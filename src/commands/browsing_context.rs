@@ -5,15 +5,15 @@ use serde::{Deserialize, Serialize};
 
 use super::id;
 use crate::error::CommandError;
-use crate::models::local::browsing_context::{GetTreeResult, NavigateResult};
+use crate::models::local::browsing_context::{GetTreeResult, NavigateResult, TraverseHistoryResult};
 use crate::models::remote::browsing_context::{
-    GetTree, GetTreeParameters, Navigate, NavigateParameters,
+    GetTree, GetTreeParameters, Navigate, NavigateParameters, TraverseHistory, TraverseHistoryParameters
 };
 use crate::session::WebDriverBiDiSession;
 
 // --------------------------------------------------
 
-// Sends a command to the WebDriver BiDi session and processes the result.
+/// Sends a command to the WebDriver BiDi session and processes the result.
 ///
 /// # Arguments
 ///
@@ -140,6 +140,54 @@ pub async fn get_tree(
 ) -> Result<GetTreeResult, CommandError> {
     let get_tree_cmd = GetTreeCommand::new(params);
     send_command(session, get_tree_cmd).await
+}
+
+// --------------------------------------------------
+
+/// Represents the `browsingContext.traverseHistory` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct TraverseHistoryCommand {
+    id: u64,
+    #[serde(flatten)]
+    traverse_history: TraverseHistory,
+}
+
+impl TraverseHistoryCommand {
+    /// Constructs a new `TraverseHistoryCommand` with a unique ID and the provided parameters.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - Parameters for the traverseHistory command.
+    ///
+    /// # Returns
+    ///
+    /// A new instance of `TraverseHistoryCommand`.
+    fn new(params: TraverseHistoryParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating TraverseHistoryCommand with id: {}", id);
+        Self {
+            id,
+            traverse_history: TraverseHistory::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.traverseHistory` command to the WebDriver BiDi session.
+///
+/// # Arguments
+///
+/// * `session` - A mutable reference to the WebDriver BiDi session.
+/// * `params` - Parameters for the traverseHistory command.
+///
+/// # Returns
+///
+/// A `Result` containing either a `TraverseHistoryResult` or a `CommandError`.
+pub async fn traverse_history(
+    session: &mut WebDriverBiDiSession,
+    params: TraverseHistoryParameters,
+) -> Result<TraverseHistoryResult, CommandError> {
+    let traverse_history_cmd = TraverseHistoryCommand::new(params);
+    send_command(session, traverse_history_cmd).await
 }
 
 // --------------------------------------------------

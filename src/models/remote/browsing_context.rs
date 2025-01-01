@@ -393,8 +393,23 @@ pub struct TraverseHistory {
     pub params: TraverseHistoryParameters,
 }
 
+impl TraverseHistory {
+    pub fn new(params: TraverseHistoryParameters) -> Self {
+        Self {
+            method: "browsingContext.traverseHistory".into(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistoryParameters {
     pub context: BrowsingContext,
     pub delta: JsInt,
+}
+
+impl TraverseHistoryParameters {
+    pub fn new(context: String, delta: i64) -> Self {
+        Self { context, delta }
+    }
 }

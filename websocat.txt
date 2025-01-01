@@ -1,0 +1,5 @@
+// browsingContext.getTree
+echo '{"id": $ID, "method": "browsingContext.getTree", "params": {}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
+
+// browsingContext.traverseHistory (back example)
+echo '{"id": $ID, "method": "browsingContext.traverseHistory", "params": {"context": "$CONTEXT_ID", "delta": -1}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID

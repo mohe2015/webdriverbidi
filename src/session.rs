@@ -17,9 +17,11 @@ use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
 use crate::command_sender;
 use crate::commands;
 use crate::error::{CommandError, SessionError};
-use crate::local::browsing_context::{GetTreeResult, NavigateResult};
+use crate::local::browsing_context::{GetTreeResult, NavigateResult, TraverseHistoryResult};
 use crate::message_handler;
-use crate::remote::browsing_context::{GetTreeParameters, NavigateParameters};
+use crate::remote::browsing_context::{
+    GetTreeParameters, NavigateParameters, TraverseHistoryParameters,
+};
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
 
@@ -181,15 +183,15 @@ impl WebDriverBiDiSession {
     // --------------------------------------------------
 
     // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
-    
+
     // --------------------------------------------------
 
     // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
 
     // --------------------------------------------------
-    
+
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-getTree
-    
+
     /// Retrieves the browsing context tree.
     ///
     /// # Arguments
@@ -217,7 +219,7 @@ impl WebDriverBiDiSession {
     // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-navigate
-    
+
     /// Navigates to a URL in the browsing context.
     ///
     /// # Arguments
@@ -232,5 +234,32 @@ impl WebDriverBiDiSession {
         params: NavigateParameters,
     ) -> Result<NavigateResult, CommandError> {
         commands::browsing_context::navigate(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-traverseHistory
+
+    /// Navigates through the browsing history of a specified context.
+    ///
+    /// This method allows you to move forward or backward in the browsing history
+    /// of a given navigable context by a specified number of steps (delta).
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `TraverseHistoryParameters` instance, which
+    ///   includes the context identifier and the delta indicating the number of steps
+    ///   to move in the history. A positive delta moves forward, while a negative delta
+    ///   moves backward.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `TraverseHistoryResult` or a `CommandError` if the
+    /// operation fails.
+    pub async fn browsing_context_traverse_history(
+        &mut self,
+        params: TraverseHistoryParameters,
+    ) -> Result<TraverseHistoryResult, CommandError> {
+        commands::browsing_context::traverse_history(self, params).await
     }
 }
