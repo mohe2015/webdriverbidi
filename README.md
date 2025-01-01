@@ -81,6 +81,81 @@ async fn main() {
 }
 ```
 
+## Module Coverate
+
+### session
+#### Types
+#### Commands
+
+### browser
+#### Types
+#### Commands
+
+### browsingContext
+#### Types
+- [x] browsingContext.BrowsingContext
+- [x] browsingContext.Info
+- [x] browsingContext.Locator
+- [x] browsingContext.Navigation
+- [x] browsingContext.NavigationInfo
+- [x] browsingContext.ReadinessState
+- [x] browsingContext.UserPromptType
+
+#### Commands
+- [ ] browsingContext.activate
+- [ ] browsingContext.captureScreenshot
+- [ ] browsingContext.close
+- [ ] browsingContext.create
+- [x] browsingContext.getTree
+- [ ] browsingContext.handleUserPrompt
+- [ ] browsingContext.locateNodes
+- [x] browsingContext.navigate
+- [ ] browsingContext.print
+- [ ] browsingContext.reload
+- [ ] browsingContext.setViewport
+- [ ] browsingContext.traverseHistory
+
+#### Events
+- [ ] browsingContext.contextCreated
+- [ ] browsingContext.contextDestroyed
+- [ ] browsingContext.navigationStarted
+- [ ] browsingContext.fragmentNavigated
+- [ ] browsingContext.historyUpdated
+- [ ] browsingContext.domContentLoaded
+- [ ] browsingContext.load
+- [ ] browsingContext.downloadWillBegin
+- [ ] browsingContext.navigationAborted
+- [ ] browsingContext.navigationFailed
+- [ ] browsingContext.userPromptClosed
+- [ ] browsingContext.userPromptOpened
+
+### network
+#### Types
+#### Commands
+#### Events
+
+### script
+#### Types
+#### Commands
+#### Events
+
+### storage
+#### Types
+#### Commands
+
+
+### log
+#### Types
+#### Commands
+
+### input
+#### Types
+#### Commands
+
+### webExtension
+#### Types
+#### Commands
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.

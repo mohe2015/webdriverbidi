@@ -172,11 +172,29 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
+    // TODO https://w3c.github.io/webdriver-bidi/#command-browsingContext-activate
+
+    // --------------------------------------------------
+
+    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-captureScreenshot
+
+    // --------------------------------------------------
+
+    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
+    
+    // --------------------------------------------------
+
+    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
+
+    // --------------------------------------------------
+    
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-getTree
+    
     /// Retrieves the browsing context tree.
     ///
     /// # Arguments
     ///
-    /// * `params` - The parameters for the `GetTree` command.
+    /// * `params` - The parameters as a GetTreeParameters instance.
     ///
     /// # Returns
     ///
@@ -190,11 +208,21 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
+    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-handleUserPrompt
+
+    // --------------------------------------------------
+
+    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-navigate
+    
     /// Navigates to a URL in the browsing context.
     ///
     /// # Arguments
     ///
-    /// * `params` - The parameters for the `Navigate` command.
+    /// * `params` - The parameters as a NavigateParameters instance.
     ///
     /// # Returns
     ///
