@@ -1,8 +1,8 @@
-use crate::models::local::browsing_context::BrowsingContextEvent;
-use crate::models::local::log::LogEvent;
-use crate::models::local::network::NetworkEvent;
-use crate::models::local::script::ScriptEvent;
-use crate::models::local::Extensible;
+use crate::local::browsing_context::BrowsingContextEvent;
+use crate::local::log::LogEvent;
+use crate::local::network::NetworkEvent;
+use crate::local::script::ScriptEvent;
+use crate::local::Extensible;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

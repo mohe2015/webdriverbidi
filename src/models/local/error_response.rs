@@ -1,4 +1,4 @@
-use crate::models::local::{ErrorCode, Extensible, JsUint};
+use crate::local::{ErrorCode, Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

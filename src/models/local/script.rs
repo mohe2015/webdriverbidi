@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use crate::local::{browsing_context, Extensible, JsUint};
 use serde::{Deserialize, Serialize};
-use crate::models::local::{browsing_context, Extensible, JsUint};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ScriptResult {

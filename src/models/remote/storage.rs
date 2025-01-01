@@ -1,6 +1,6 @@
-use crate::models::remote::browsing_context;
-use crate::models::remote::network::{BytesValue, SameSite};
-use crate::models::remote::{Extensible, JsUint};
+use crate::remote::browsing_context;
+use crate::remote::network::{BytesValue, SameSite};
+use crate::remote::{Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

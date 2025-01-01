@@ -1,12 +1,12 @@
-use crate::models::remote::browser::BrowserCommand;
-use crate::models::remote::browsing_context::BrowsingContextCommand;
-use crate::models::remote::input::InputCommand;
-use crate::models::remote::network::NetworkCommand;
-use crate::models::remote::script::ScriptCommand;
-use crate::models::remote::session::SessionCommand;
-use crate::models::remote::storage::StorageCommand;
-use crate::models::remote::web_extension::WebExtensionCommand;
-use crate::models::remote::Extensible;
+use crate::remote::browser::BrowserCommand;
+use crate::remote::browsing_context::BrowsingContextCommand;
+use crate::remote::input::InputCommand;
+use crate::remote::network::NetworkCommand;
+use crate::remote::script::ScriptCommand;
+use crate::remote::session::SessionCommand;
+use crate::remote::storage::StorageCommand;
+use crate::remote::web_extension::WebExtensionCommand;
+use crate::remote::Extensible;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

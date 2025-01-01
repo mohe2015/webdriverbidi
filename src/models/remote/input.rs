@@ -1,6 +1,6 @@
-use crate::models::remote::browsing_context::BrowsingContext;
-use crate::models::remote::script::SharedReference;
-use crate::models::remote::{JsInt, JsUint};
+use crate::remote::browsing_context::BrowsingContext;
+use crate::remote::script::SharedReference;
+use crate::remote::{JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

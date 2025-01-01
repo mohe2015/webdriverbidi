@@ -7,15 +7,14 @@ pub mod models {
     pub mod local;
     pub mod remote;
 }
-pub mod commands { 
-    mod id;
+pub mod commands {
     pub mod browsing_context;
+    mod id;
 }
-pub mod message_handler;
 pub mod command_sender;
 pub mod error;
+pub mod message_handler;
 
 // Re-export key functionality
-// pub use webdriver::capabilities::{CapabilityRequest, Capabilities};
-pub use models::remote;
 pub use models::local;
+pub use models::remote;

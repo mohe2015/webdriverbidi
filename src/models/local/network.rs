@@ -1,4 +1,4 @@
-use crate::models::local::{browsing_context, script, Extensible, JsUint};
+use crate::local::{browsing_context, script, Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

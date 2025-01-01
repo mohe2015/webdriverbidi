@@ -1,4 +1,4 @@
-use crate::models::remote::{EmptyParams, JsInt, JsUint};
+use crate::remote::{EmptyParams, JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

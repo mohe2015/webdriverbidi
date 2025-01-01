@@ -1,24 +1,41 @@
-
-use serde_json::Value;
 use std::collections::HashMap;
+use std::pin::Pin;
 use std::sync::Arc;
-use tokio::net::TcpStream;
-use tokio::sync::oneshot;
-use tokio::sync::Mutex;
-use tokio_tungstenite::tungstenite::protocol::Message;
-use tokio_tungstenite::MaybeTlsStream;
-use tokio_tungstenite::WebSocketStream;
+
+// --------------------------------------------------
 
 use futures::stream::Stream;
 use futures::task::{Context, Poll};
-use std::pin::Pin;
+use log::{debug, error};
+use serde_json::Value;
+use tokio::net::TcpStream;
+use tokio::sync::{oneshot, Mutex};
+use tokio_tungstenite::tungstenite::protocol::Message;
+use tokio_tungstenite::{MaybeTlsStream, WebSocketStream};
 
+// --------------------------------------------------
+
+const ID_FIELD: &str = "id";
+
+// --------------------------------------------------
+
+/// Handles incoming WebSocket messages.
+///
+/// # Arguments
+///
+/// * `websocket_stream` - An `Arc` wrapped `Mutex` protecting a `WebSocketStream`
+/// that can be either a plain TCP stream or a TLS-encrypted stream. This stream
+/// is used to receive WebSocket messages.
+/// * `pending_commands` - An `Arc` wrapped `Mutex` protecting a `HashMap` where
+/// the keys are command IDs (u64) and the values are `oneshot::Sender<Value>`
+/// channels. These channels are used to send responses back to the pending commands.
 pub async fn handle_messages(
     websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,
     pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
 ) {
     loop {
         let message = {
+            debug!("Locking the WebSocket stream mutex");
             let mut websocket_stream = websocket_stream.lock().await;
 
             let waker = futures::task::noop_waker();
@@ -32,27 +49,29 @@ pub async fn handle_messages(
             }
         };
 
+        debug!("Received message: {:?}", message);
+
         match message {
-            Some(Ok(Message::Text(text))) => {
-                let json: Value = serde_json::from_str(&text).unwrap();
-                if let Some(id) = json.get("id").and_then(|id| id.as_u64()) {
-                    if let Some(sender) = pending_commands.lock().await.remove(&id) {
-                        let _ = sender.send(json);
+            Some(Ok(Message::Text(text))) => match serde_json::from_str::<Value>(&text) {
+                Ok(json) => {
+                    if let Some(id) = json.get(ID_FIELD).and_then(|id| id.as_u64()) {
+                        if let Some(sender) = pending_commands.lock().await.remove(&id) {
+                            debug!("Sending JSON to receiver: {:?}", json);
+                            let _ = sender.send(json);
+                        }
+                    } else {
+                        error!("Received message without an 'id' field: {}", text);
                     }
-                } else {
-                    eprintln!("Received message without an 'id' field: {}", text);
                 }
-            }
+                Err(e) => {
+                    error!("Failed to parse JSON: {:?}", e);
+                }
+            },
             Some(Ok(_)) => {}
             Some(Err(e)) => {
-                eprintln!("Error receiving message: {}", e);
-                // break;
+                error!("Error receiving message: {}", e);
             }
-            None => {
-                // No message available or stream has ended
-                // println!("No message available or stream has ended");
-                // break;
-            }
+            None => {}
         }
     }
 }

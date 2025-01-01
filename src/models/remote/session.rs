@@ -1,5 +1,5 @@
-use crate::models::remote::browsing_context::BrowsingContext;
-use crate::models::remote::{EmptyParams, Extensible};
+use crate::remote::browsing_context::BrowsingContext;
+use crate::remote::{EmptyParams, Extensible};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

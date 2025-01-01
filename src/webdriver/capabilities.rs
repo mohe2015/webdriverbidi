@@ -1,9 +1,17 @@
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
 use std::collections::HashMap;
 
+// --------------------------------------------------
+
+use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
+
+// --------------------------------------------------
+
+// Type alias for extensible capabilities, which are represented as a HashMap
+// with String keys and serde_json::Value values.
 pub type Extensible = HashMap<String, Value>;
 
+/// Standard WebDriver capabilities https://w3c.github.io/webdriver/#capabilities.
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CapabilityRequest {
@@ -29,18 +37,22 @@ pub struct CapabilityRequest {
     unhandled_prompt_behavior: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     user_agent: Option<String>,
-    // Ensure the webSocketUrl capability is always present and set to true
+    // Ensure the webSocketUrl capability is always present and set to true.
     #[serde(default = "default_web_socket_url")]
     web_socket_url: bool,
+    // Additional extensible capabilities.
     #[serde(flatten)]
     extension: Extensible,
 }
 
+// Default value for the webSocketUrl capability.
 fn default_web_socket_url() -> bool {
     true
 }
 
 impl CapabilityRequest {
+    /// Constructs a new CapabilityRequest instance with default values.
+    /// The webSocketUrl capability is set to true.
     pub fn new() -> Self {
         Self {
             browser_name: None,
@@ -60,6 +72,9 @@ impl CapabilityRequest {
     }
 }
 
+// --------------------------------------------------
+
+/// Capabilities struct to represent the standard capabilities JSON object.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Capabilities {
     #[serde(rename = "alwaysMatch", skip_serializing_if = "Option::is_none")]
@@ -69,6 +84,15 @@ pub struct Capabilities {
 }
 
 impl Capabilities {
+    /// Constructs a new Capabilities instance ensuring the webSocketUrl capability is set to true.
+    ///
+    /// # Arguments
+    ///
+    /// * `always_match` - A CapabilityRequest instance to be used as the alwaysMatch capability.
+    ///
+    /// # Returns
+    ///
+    /// A Capabilities instance with the alwaysMatch capability set.
     pub fn new(mut always_match: CapabilityRequest) -> Self {
         always_match.web_socket_url = true;
         Self {
@@ -76,7 +100,19 @@ impl Capabilities {
             first_match: None,
         }
     }
-    
+
+    // --------------------------------------------------
+
+    /// Adds a non standard alwaysMatch capability if the key is not `webSocketUrl`.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - A String representing the capability key.
+    /// * `value` - A serde_json::Value representing the capability value.
+    ///
+    /// # Returns
+    ///
+    /// A Capabilities instance with the alwaysMatch capability added.
     pub fn add_extension(&mut self, key: String, value: Value) {
         if key != "webSocketUrl" {
             if let Some(ref mut always_match) = self.always_match {
@@ -85,6 +121,17 @@ impl Capabilities {
         }
     }
 
+    // --------------------------------------------------
+
+    /// Adds a firstMatch capability to the Capabilities instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `first_match` - A HashMap<String, Value> representing the firstMatch capability.
+    ///
+    /// # Returns
+    ///
+    /// A Capabilities instance with the firstMatch capability added.
     pub fn add_first_match(&mut self, first_match: HashMap<String, Value>) {
         if let Some(ref mut first_match_vec) = self.first_match {
             first_match_vec.push(first_match);
@@ -92,7 +139,10 @@ impl Capabilities {
             self.first_match = Some(vec![first_match]);
         }
     }
-    
+
+    // --------------------------------------------------
+
+    /// Builds the Capabilities instance into a serde_json::Value ready for serialization.
     pub fn build(&self) -> Value {
         let json = json!({
             "capabilities": self
@@ -100,99 +150,3 @@ impl Capabilities {
         json
     }
 }
-
-
-
-
-
-
-
-
-// /// Enum for standard capabilities
-// /// https://w3c.github.io/webdriver/#dfn-table-of-standard-capabilities
-// #[derive(Debug, Serialize, Deserialize)]
-// #[serde(rename_all = "camelCase")]
-// pub enum Capability {
-//     BrowserName(String),
-//     BrowserVersion(String),
-//     PlatformName(String),
-//     AcceptInsecureCerts(bool),
-//     PageLoadStrategy(String),
-//     Proxy(Value),
-//     SetWindowRect(bool),
-//     Timeouts(Value),
-//     StrictFileInteractability(bool),
-//     UnhandledPromptBehavior(String),
-//     UserAgent(String),
-//     // Defined by WebDriver BiDi https://w3c.github.io/webdriver-bidi/#type-session-CapabilityRequest
-//     WebSocketUrl(bool),
-// }
-
-// /// Struct for session capabilities
-// #[derive(Debug, Serialize, Deserialize)]
-// pub struct Capabilities {
-//     pub always_match: HashMap<String, Value>,
-//     pub first_match: Vec<HashMap<String, Value>>,
-// }
-
-// /// Builder for constructing capabilities
-// #[derive(Debug, Default)]
-// pub struct CapabilitiesBuilder {
-//     always_match: HashMap<String, Value>,
-//     first_match: Vec<HashMap<String, Value>>,
-// }
-
-// impl CapabilitiesBuilder {
-//     /// Creates a new builder
-//     pub fn new() -> Self {
-//         Self::default()
-//     }
-
-//     /// Adds a standard capability
-//     pub fn add_standard(&mut self, capability: Capability) -> &mut Self {
-//         let (key, value) = match capability {
-//             Capability::BrowserName(name) => ("browserName", Value::String(name)),
-//             Capability::BrowserVersion(version) => ("browserVersion", Value::String(version)),
-//             Capability::PlatformName(platform) => ("platformName", Value::String(platform)),
-//             Capability::AcceptInsecureCerts(accept) => ("acceptInsecureCerts", Value::Bool(accept)),
-//             Capability::PageLoadStrategy(strategy) => ("pageLoadStrategy", Value::String(strategy)),
-//             Capability::Proxy(proxy) => ("proxy", proxy),
-//             Capability::SetWindowRect(set) => ("setWindowRect", Value::Bool(set)),
-//             Capability::Timeouts(timeouts) => ("timeouts", timeouts),
-//             Capability::StrictFileInteractability(strict) => {
-//                 ("strictFileInteractability", Value::Bool(strict))
-//             }
-//             Capability::UnhandledPromptBehavior(behavior) => {
-//                 ("unhandledPromptBehavior", Value::String(behavior))
-//             }
-//             Capability::UserAgent(user_agent) => ("userAgent", Value::String(user_agent)),
-//             Capability::WebSocketUrl(websocket_url) => ("webSocketUrl", Value::Bool(websocket_url)),
-//         };
-//         self.always_match.insert(key.to_string(), value);
-//         self
-//     }
-
-//     /// Adds a vendor-specific capability
-//     pub fn add_vendor(&mut self, key: &str, value: Value) -> &mut Self {
-//         self.always_match.insert(key.to_string(), value);
-//         self
-//     }
-
-//     /// Adds a firstMatch capability set
-//     pub fn add_first_match(&mut self, match_set: HashMap<String, Value>) -> &mut Self {
-//         self.first_match.push(match_set);
-//         self
-//     }
-
-//     /// Builds the `Capabilities` object
-//     pub fn build(&self) -> Capabilities {
-//         Capabilities {
-//             always_match: self.always_match.clone(),
-//             first_match: self.first_match.clone(),
-//         }
-//     }
-// }
-
-// // TODO: Add default capabilities if none are provided
-// // TODO: Ensure the webSocketUrl capability is always present and set to true
-// // TODO: Validate user-provided capabilities against WebDriver specifications

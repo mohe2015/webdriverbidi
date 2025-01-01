@@ -1,4 +1,4 @@
-use crate::models::local::{script, JsUint};
+use crate::local::{script, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

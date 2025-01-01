@@ -1,6 +1,6 @@
-use crate::models::remote::browser;
-use crate::models::remote::script::{SerializationOptions, SharedReference};
-use crate::models::remote::{JsInt, JsUint};
+use crate::remote::browser;
+use crate::remote::script::{SerializationOptions, SharedReference};
+use crate::remote::{JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 pub type BrowsingContext = String;

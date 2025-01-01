@@ -1,5 +1,5 @@
-use crate::models::remote::browsing_context::BrowsingContext;
-use crate::models::remote::{Extensible, JsUint};
+use crate::remote::browsing_context::BrowsingContext;
+use crate::remote::{Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

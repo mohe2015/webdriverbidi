@@ -1,4 +1,4 @@
-use crate::models::local::{JsInt, JsUint};
+use crate::local::{JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

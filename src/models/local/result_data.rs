@@ -1,10 +1,10 @@
-use crate::models::local::browsing_context::BrowsingContextResult;
-use crate::models::local::network::NetworkResult;
-use crate::models::local::script::ScriptResult;
-use crate::models::local::session::SessionResult;
-use crate::models::local::storage::StorageResult;
-use crate::models::local::web_extension::WebExtensionResult;
-use crate::models::local::Extensible;
+use crate::local::browsing_context::BrowsingContextResult;
+use crate::local::network::NetworkResult;
+use crate::local::script::ScriptResult;
+use crate::local::session::SessionResult;
+use crate::local::storage::StorageResult;
+use crate::local::web_extension::WebExtensionResult;
+use crate::local::Extensible;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

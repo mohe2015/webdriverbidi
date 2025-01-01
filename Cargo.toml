@@ -1,6 +1,6 @@
 [package]
 name = "webdriverbidi"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 authors = ["Taha Hachana <tahahachana@gmail.com>"]
 description = "WebDriver BiDi client implementation in Rust."
@@ -15,3 +15,8 @@ serde_json = "1.0.134"
 futures = "0.3.31"
 reqwest = { version = "0.12.9", features = ["json"] }
 thiserror = "2.0.9"
+log = "0.4.22"
+
+[dev-dependencies]
+simplelog = "0.12.2"
+time = "0.3.37"

@@ -1,22 +1,53 @@
 use thiserror::Error;
+use tokio::sync::oneshot;
+use tokio_tungstenite::tungstenite;
 
+/// Errors that can occur when sending a WebDriver command.
 #[derive(Error, Debug)]
 pub enum CommandError {
-    #[error("Serialization error: {0}")]
+    /// Error during JSON serialization/deserialization.
+    #[error("Serialization error: {0}.")]
     SerializationError(#[from] serde_json::Error),
 
-    #[error("Missing command ID field")]
+    /// Missing command ID field in the command.
+    #[error("Missing command ID field.")]
     MissingCommandId,
 
-    #[error("WebSocket send error: {0}")]
-    WebSocketSendError(#[from] tokio_tungstenite::tungstenite::Error),
+    /// Error when sending data over a WebSocket.
+    #[error("WebSocket send error: {0}.")]
+    WebSocketSendError(#[from] tungstenite::Error),
 
-    #[error("Missing result field")]
+    /// Missing result field in the response.
+    #[error("Missing result field.")]
     MissingResult,
-    
-    #[error("Oneshot receiver error: {0}")]
-    OneshotReceiverError(#[from] tokio::sync::oneshot::error::RecvError),
-    
-    #[error("Command error: {0}")]
+
+    /// Timeout when waiting for a receiver response
+    #[error("Timeout waiting for receiver response")]
+    TimeoutError,
+
+    /// Error when receiving a value from a one-shot channel.
+    #[error("Oneshot receiver error: {0}.")]
+    OneshotReceiverError(#[from] oneshot::error::RecvError),
+
+    /// Other command errors.
+    #[error("Command error: {0}.")]
+    Other(String),
+}
+
+// --------------------------------------------------
+
+/// Errors that can occur when starting a WebDriver session.
+#[derive(Error, Debug)]
+pub enum SessionError {
+    /// Error during an HTTP request.
+    #[error("HTTP request error: {0}.")]
+    HttpRequestError(#[from] reqwest::Error),
+
+    /// Error in the session response.
+    #[error("Session response error: {0}.")]
+    SessionResponseError(String),
+
+    /// Other command errors.
+    #[error("Session error: {0}.")]
     Other(String),
 }

@@ -1,4 +1,4 @@
-use crate::models::local::{network, Extensible};
+use crate::local::{network, Extensible};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
