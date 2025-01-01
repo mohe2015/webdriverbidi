@@ -1,8 +1,8 @@
-# WebDriverBiDi Library
+# webdriverbidi
 
 ## Overview
 
-The WebDriverBiDi library provides an interface for interacting with web browsers through the WebDriver BiDi (Bidirectional) protocol. This library allows you to create and manage WebDriver sessions, send commands, and handle responses asynchronously through WebSockets.
+The webdriverbidi library provides an interface for interacting with web browsers through the WebDriver BiDi (Bidirectional) protocol. This library allows you to create and manage WebDriver sessions, send commands, and handle responses asynchronously through WebSockets.
 
 ## Features
 
