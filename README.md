@@ -116,7 +116,7 @@ async fn main() {
 #### Commands
 - [x] browsingContext.activate
 - [x] browsingContext.captureScreenshot
-- [ ] browsingContext.close
+- [x] browsingContext.close
 - [ ] browsingContext.create
 - [x] browsingContext.getTree
 - [ ] browsingContext.handleUserPrompt

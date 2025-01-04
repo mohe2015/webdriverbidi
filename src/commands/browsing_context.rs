@@ -11,7 +11,7 @@ use crate::models::local::browsing_context::{
 use crate::models::local::result_data::EmptyResult;
 use crate::models::remote::browsing_context::{
     ActivateParameters, GetTree, GetTreeParameters, Navigate, NavigateParameters, TraverseHistory,
-    TraverseHistoryParameters, CaptureScreenshotParameters
+    TraverseHistoryParameters, CaptureScreenshotParameters, CloseParameters
 };
 use crate::session::WebDriverBiDiSession;
 
@@ -106,6 +106,45 @@ pub async fn capture_screenshot(
     let capture_screenshot_cmd = CaptureScreenshotCommand::new(params);
     send_command(session, capture_screenshot_cmd).await
 }
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
+
+/// Represents the `browsingContext.close` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct CloseCommand {
+    id: u64,
+    #[serde(flatten)]
+    close: CloseParameters,
+}
+
+impl CloseCommand {
+    /// Constructs a new `CloseCommand` with a unique ID and the provided parameters.
+    fn new(params: CloseParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating CloseCommand with id: {}", id);
+        Self {
+            id,
+            close: params,
+        }
+    }
+}
+
+/// Sends a `browsingContext.close` command to the WebDriver BiDi session.
+pub async fn close(
+    session: &mut WebDriverBiDiSession,
+    params: CloseParameters,
+) -> Result<EmptyResult, CommandError> {
+    let close_cmd = CloseCommand::new(params);
+    send_command(session, close_cmd).await
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
+
+
 
 // --------------------------------------------------
 

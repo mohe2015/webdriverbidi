@@ -24,7 +24,7 @@ use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
 use crate::remote::browsing_context::{
     ActivateParameters, CaptureScreenshotParameters, GetTreeParameters, NavigateParameters,
-    TraverseHistoryParameters,
+    TraverseHistoryParameters, CloseParameters,
 };
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
@@ -214,11 +214,27 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
+    
+    /// Closes the browsing context.
+    ///
+    /// # Arguments
+    /// 
+    /// * `params` - The parameters as a `CloseParameters` instance.
+    /// 
+    /// # Returns
+    /// 
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn browsing_context_close(
+        &mut self,
+        params: CloseParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::browsing_context::close(self, params).await
+    }
 
     // --------------------------------------------------
 
-    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
 
     // --------------------------------------------------
 
