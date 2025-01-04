@@ -269,7 +269,23 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-handleUserPrompt
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-handleUserPrompt
+
+    /// Allows closing an open prompt.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `HandleUserPromptParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn browsing_context_handle_user_prompt(
+        &mut self,
+        params: HandleUserPromptParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::browsing_context::handle_user_prompt(self, params).await
+    }
 
     // --------------------------------------------------
 

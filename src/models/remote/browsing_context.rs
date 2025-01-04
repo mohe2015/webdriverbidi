@@ -234,6 +234,15 @@ pub struct HandleUserPrompt {
     pub params: HandleUserPromptParameters,
 }
 
+impl HandleUserPrompt {
+    pub fn new(params: HandleUserPromptParameters) -> Self {
+        Self {
+            method: "browsingContext.handleUserPrompt".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPromptParameters {
     pub context: BrowsingContext,
@@ -241,6 +250,16 @@ pub struct HandleUserPromptParameters {
     pub accept: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub user_text: Option<String>,
+}
+
+impl HandleUserPromptParameters {
+    pub fn new(context: BrowsingContext, accept: Option<bool>, user_text: Option<String>) -> Self {
+        Self {
+            context,
+            accept,
+            user_text,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

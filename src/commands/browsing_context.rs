@@ -164,36 +164,7 @@ pub async fn create(
 
 // --------------------------------------------------
 
-/// Represents the `browsingContext.navigate` command.
-#[derive(Debug, Serialize, Deserialize)]
-struct NavigateCommand {
-    id: u64,
-    #[serde(flatten)]
-    navigate: Navigate,
-}
-
-impl NavigateCommand {
-    /// Constructs a new `NavigateCommand` with a unique ID and the provided parameters.
-    fn new(params: NavigateParameters) -> Self {
-        let id = id::get_next_id();
-        debug!("Creating NavigateCommand with id: {}", id);
-        Self {
-            id,
-            navigate: Navigate::new(params),
-        }
-    }
-}
-
-/// Sends a `browsingContext.navigate` command to the WebDriver BiDi session.
-pub async fn navigate(
-    session: &mut WebDriverBiDiSession,
-    params: NavigateParameters,
-) -> Result<NavigateResult, CommandError> {
-    let navigate_cmd = NavigateCommand::new(params);
-    send_command(session, navigate_cmd).await
-}
-
-// --------------------------------------------------
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-getTree
 
 /// Represents the `browsingContext.getTree` command.
 #[derive(Debug, Serialize, Deserialize)]
@@ -222,6 +193,70 @@ pub async fn get_tree(
 ) -> Result<GetTreeResult, CommandError> {
     let get_tree_cmd = GetTreeCommand::new(params);
     send_command(session, get_tree_cmd).await
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-handleUserPrompt
+
+/// Represents the `browsingContext.handleUserPrompt` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct HandleUserPromptCommand {
+    id: u64,
+    #[serde(flatten)]
+    handle_user_prompt: HandleUserPrompt,
+}
+
+impl HandleUserPromptCommand {
+    /// Constructs a new `HandleUserPromptCommand` with a unique ID and the provided parameters.
+    fn new(params: HandleUserPromptParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating HandleUserPromptCommand with id: {}", id);
+        Self {
+            id,
+            handle_user_prompt: HandleUserPrompt::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.handleUserPrompt` command to the WebDriver BiDi session.
+pub async fn handle_user_prompt(
+    session: &mut WebDriverBiDiSession,
+    params: HandleUserPromptParameters,
+) -> Result<EmptyResult, CommandError> {
+    let handle_user_prompt_cmd = HandleUserPromptCommand::new(params);
+    send_command(session, handle_user_prompt_cmd).await
+}
+
+// --------------------------------------------------
+
+/// Represents the `browsingContext.navigate` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct NavigateCommand {
+    id: u64,
+    #[serde(flatten)]
+    navigate: Navigate,
+}
+
+impl NavigateCommand {
+    /// Constructs a new `NavigateCommand` with a unique ID and the provided parameters.
+    fn new(params: NavigateParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating NavigateCommand with id: {}", id);
+        Self {
+            id,
+            navigate: Navigate::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.navigate` command to the WebDriver BiDi session.
+pub async fn navigate(
+    session: &mut WebDriverBiDiSession,
+    params: NavigateParameters,
+) -> Result<NavigateResult, CommandError> {
+    let navigate_cmd = NavigateCommand::new(params);
+    send_command(session, navigate_cmd).await
 }
 
 // --------------------------------------------------
