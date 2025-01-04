@@ -6,12 +6,12 @@ use serde::{Deserialize, Serialize};
 use super::id;
 use crate::error::CommandError;
 use crate::models::local::browsing_context::{
-    GetTreeResult, NavigateResult, TraverseHistoryResult,
+    GetTreeResult, NavigateResult, TraverseHistoryResult, CaptureScreenshotResult
 };
 use crate::models::local::result_data::EmptyResult;
 use crate::models::remote::browsing_context::{
     ActivateParameters, GetTree, GetTreeParameters, Navigate, NavigateParameters, TraverseHistory,
-    TraverseHistoryParameters,
+    TraverseHistoryParameters, CaptureScreenshotParameters
 };
 use crate::session::WebDriverBiDiSession;
 
@@ -72,6 +72,39 @@ pub async fn activate(
 ) -> Result<EmptyResult, CommandError> {
     let activate_cmd = ActivateCommand::new(params);
     send_command(session, activate_cmd).await
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-captureScreenshot
+
+/// Represents the `browsingContext.captureScreenshot` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct CaptureScreenshotCommand {
+    id: u64,
+    #[serde(flatten)]
+    capture_screenshot: CaptureScreenshotParameters,
+}
+
+impl CaptureScreenshotCommand {
+    /// Constructs a new `CaptureScreenshotCommand` with a unique ID and the provided parameters.
+    fn new(params: CaptureScreenshotParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating CaptureScreenshotCommand with id: {}", id);
+        Self {
+            id,
+            capture_screenshot: params,
+        }
+    }
+}
+
+/// Sends a `browsingContext.captureScreenshot` command to the WebDriver BiDi session.
+pub async fn capture_screenshot(
+    session: &mut WebDriverBiDiSession,
+    params: CaptureScreenshotParameters,
+) -> Result<CaptureScreenshotResult, CommandError> {
+    let capture_screenshot_cmd = CaptureScreenshotCommand::new(params);
+    send_command(session, capture_screenshot_cmd).await
 }
 
 // --------------------------------------------------

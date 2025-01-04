@@ -17,11 +17,14 @@ use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
 use crate::command_sender;
 use crate::commands;
 use crate::error::{CommandError, SessionError};
-use crate::local::browsing_context::{GetTreeResult, NavigateResult, TraverseHistoryResult};
+use crate::local::browsing_context::{
+    CaptureScreenshotResult, GetTreeResult, NavigateResult, TraverseHistoryResult,
+};
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
 use crate::remote::browsing_context::{
-    ActivateParameters, GetTreeParameters, NavigateParameters, TraverseHistoryParameters,
+    ActivateParameters, CaptureScreenshotParameters, GetTreeParameters, NavigateParameters,
+    TraverseHistoryParameters,
 };
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
@@ -191,7 +194,23 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-captureScreenshot
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-captureScreenshot
+
+    /// Captures an image of the given navigable, and returns it as a Base64-encoded string.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `CaptureScreenshotParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `CaptureScreenshotResult` or a `CommandError`.
+    pub async fn browsing_context_capture_screenshot(
+        &mut self,
+        params: CaptureScreenshotParameters,
+    ) -> Result<CaptureScreenshotResult, CommandError> {
+        commands::browsing_context::capture_screenshot(self, params).await
+    }
 
     // --------------------------------------------------
 
