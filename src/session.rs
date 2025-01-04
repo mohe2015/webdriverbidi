@@ -1,5 +1,7 @@
 use log::debug;
 use std::collections::HashMap;
+use std::future::Future;
+use std::pin::Pin;
 use std::sync::Arc;
 
 // --------------------------------------------------
@@ -28,11 +30,18 @@ use crate::webdriver::session;
 
 // --------------------------------------------------
 
+/// Type alias for the event handler functions.
+pub type EventHandler =
+    Box<dyn Fn(Value) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
+
+// --------------------------------------------------
+
 /// Represents a WebDriver BiDi session.
 ///
 /// This struct manages the lifecycle of a WebDriver session, including
 /// starting the session, establishing a WebSocket connection, sending
-/// commands, handling incoming messages and closing it.
+/// commands, handling incoming messages whether they are command responses
+/// or events and eventually closing the session.
 ///
 /// # Fields
 ///
@@ -44,7 +53,7 @@ use crate::webdriver::session;
 /// * `websocket_url` - The WebSocket URL for bidirectional communication.
 /// * `websocket_stream` - The WebSocket stream for communication protected by an `Arc` wrapped `Mutex`.
 /// * `pending_commands` - A map of pending commands awaiting responses protected by an `Arc` wrapped `Mutex`.
-#[derive(Debug)]
+/// * `event_handlers` - A map of events and their handlers protected by an `Arc` wrapped `Mutex`.
 pub struct WebDriverBiDiSession {
     pub host: String,
     pub port: u16,
@@ -54,6 +63,7 @@ pub struct WebDriverBiDiSession {
     pub websocket_url: String,
     pub websocket_stream: Option<Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>>,
     pub pending_commands: Option<Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>>,
+    event_handlers: Arc<Mutex<HashMap<String, EventHandler>>>,
 }
 
 // --------------------------------------------------
@@ -78,6 +88,7 @@ impl WebDriverBiDiSession {
             websocket_url: String::new(),
             websocket_stream: None,
             pending_commands: None,
+            event_handlers: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
@@ -102,13 +113,15 @@ impl WebDriverBiDiSession {
 
         let websocket_stream = Arc::new(Mutex::new(stream));
         let pending_commands = Arc::new(Mutex::new(HashMap::new()));
+        let event_handlers = self.event_handlers.clone();
 
         self.websocket_stream = Some(websocket_stream.clone());
         self.pending_commands = Some(pending_commands.clone());
+        // self.event_handlers = Some(event_handlers.clone());
 
         debug!("Starting the incoming messages manager loop");
         // Spawn a background task to manage incoming messages
-        self.spawn_message_handler_task(websocket_stream, pending_commands);
+        self.spawn_message_handler_task(websocket_stream, pending_commands, event_handlers);
 
         Ok(())
     }
@@ -162,11 +175,42 @@ impl WebDriverBiDiSession {
         &self,
         websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,
         pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
+        event_handlers: Arc<Mutex<HashMap<String, EventHandler>>>,
     ) {
         task::spawn(message_handler::handle_messages(
             websocket_stream,
             pending_commands,
+            event_handlers,
         ));
+    }
+
+    // --------------------------------------------------
+
+    /// Registers an event handler for a specific event type.
+    ///
+    /// # Arguments
+    ///
+    /// * `event_type` - The type of the event to handle.
+    /// * `handler` - The event handler function.
+    pub async fn register_event_handler<F, Fut>(&mut self, event_type: String, handler: F)
+    where
+        F: Fn(Value) -> Fut + Send + Sync + 'static,
+        Fut: Future<Output = ()> + Send + 'static,
+    {
+        let mut handlers = self.event_handlers.lock().await;
+        handlers.insert(event_type, Box::new(move |event| Box::pin(handler(event))));
+    }
+
+    // --------------------------------------------------
+
+    /// Unregisters an event handler for a specific event type.
+    ///
+    /// # Arguments
+    ///
+    /// * `event_type` - The type of the event to stop handling.
+    pub async fn unregister_event_handler(&mut self, event_type: &str) {
+        let mut handlers = self.event_handlers.lock().await;
+        handlers.remove(event_type);
     }
 }
 

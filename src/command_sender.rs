@@ -88,7 +88,7 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
         CommandError::MissingResult
     })?;
     let rslt = serde_json::from_value(rslt.to_owned()).map_err(|e| {
-        error!("Deserialization error: {:?}", e);
+        error!("Deserialization error: {:?} for JSON: {:?}", e, rslt);
         CommandError::SerdeError(e)
     })?;
     Ok(rslt)

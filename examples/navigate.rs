@@ -24,12 +24,12 @@ async fn main() {
     // Initialize a new WebDriver BiDi session and start it
     let host = String::from("localhost");
     let port = 4444;
-    let mut bidi_session = WebDriverBiDiSession::new(host, port, capabilities);
-    let _ = bidi_session.start().await.expect("Failed to start session");
+    let mut session = WebDriverBiDiSession::new(host, port, capabilities);
+    let _ = session.start().await.expect("Failed to start session");
 
     // Get the browsing context tree
     let get_tree_params = GetTreeParameters::new(None, None);
-    let get_tree_rslt = bidi_session
+    let get_tree_rslt = session
         .browsing_context_get_tree(get_tree_params)
         .await
         .expect("Failed to send command");
@@ -40,7 +40,7 @@ async fn main() {
         "https://www.rust-lang.org/".to_string(),
         Some(ReadinessState::Complete),
     );
-    let _ = bidi_session
+    let _ = session
         .browsing_context_navigate(navigate_params)
         .await
         .expect("Failed to send command");
@@ -48,5 +48,5 @@ async fn main() {
     sleep(2).await;
 
     // Close the session
-    bidi_session.close().await.expect("Failed to close session");
+    session.close().await.expect("Failed to close session");
 }

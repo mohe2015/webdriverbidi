@@ -15,7 +15,14 @@ use tokio_tungstenite::{MaybeTlsStream, WebSocketStream};
 
 // --------------------------------------------------
 
+use crate::session::EventHandler;
+
+// --------------------------------------------------
+
 const ID_FIELD: &str = "id";
+const TYPE_FIELD: &str = "type";
+const EVENT_TYPE_VALUE: &str = "event";
+const METHOD_FIELD: &str = "method";
 
 // --------------------------------------------------
 
@@ -23,6 +30,7 @@ const ID_FIELD: &str = "id";
 pub async fn handle_messages(
     websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,
     pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
+    event_handlers: Arc<Mutex<HashMap<String, EventHandler>>>,
 ) {
     loop {
         let message = {
@@ -45,13 +53,35 @@ pub async fn handle_messages(
         match message {
             Some(Ok(Message::Text(text))) => match serde_json::from_str::<Value>(&text) {
                 Ok(json) => {
+                    // Command response message
                     if let Some(id) = json.get(ID_FIELD).and_then(|id| id.as_u64()) {
+                        // This is a command response
                         if let Some(sender) = pending_commands.lock().await.remove(&id) {
                             // debug!("Sending JSON to receiver: {:?}", json);
                             let _ = sender.send(json);
                         }
+                    // Event message
+                    } else if json.get(TYPE_FIELD).and_then(|t| t.as_str())
+                        == Some(EVENT_TYPE_VALUE)
+                    {
+                        if let Some(method) = json
+                            .get(METHOD_FIELD)
+                            .and_then(|method| method.as_str().map(String::from))
+                        {
+                            let event_handlers = event_handlers.clone();
+                            let json_clone = json.clone();
+                            tokio::spawn(async move {
+                                let handlers = event_handlers.lock().await;
+                                if let Some(handler) = handlers.get(&method) {
+                                    handler(json_clone).await;
+                                }
+                            });
+                        }
                     } else {
-                        error!("Received message without an 'id' field: {}", text);
+                        error!(
+                            "Received message without an 'id' field or 'type' field: {}",
+                            text
+                        );
                     }
                 }
                 Err(e) => {
