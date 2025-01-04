@@ -109,10 +109,10 @@ async fn main() {
 
 #### Commands
 - [x] session.status
-- [ ] session.new
-- [ ] session.end
-- [ ] session.subscribe
-- [ ] session.unsubscribe
+- [x] session.new
+- [x] session.end
+- [x] session.subscribe
+- [x] session.unsubscribe
 
 ### browser
 #### Types

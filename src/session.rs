@@ -21,6 +21,7 @@ use crate::local::browsing_context::*;
 use crate::local::session::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
+use crate::remote::session::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
@@ -171,8 +172,8 @@ impl WebDriverBiDiSession {
 
 // --------------------------------------------------
 
-// Browsing context commands    
-impl WebDriverBiDiSession {    
+// Browsing context commands
+impl WebDriverBiDiSession {
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-activate
 
     /// Activates and focuses a browsing context.
@@ -426,7 +427,7 @@ impl WebDriverBiDiSession {
 // Session commands
 impl WebDriverBiDiSession {
     // https://w3c.github.io/webdriver-bidi/#command-session-status
-    
+
     /// Returns information about whether a remote end is in a state
     /// in which it can create new sessions, but may additionally include
     /// arbitrary meta information that is specific to the implementation.
@@ -434,11 +435,84 @@ impl WebDriverBiDiSession {
     /// # Returns
     ///
     /// A result containing the `SessionStatus` or a `CommandError`.
-    pub async fn session_status(&mut self, params: EmptyParams) -> Result<StatusResult, CommandError> {
+    pub async fn session_status(
+        &mut self,
+        params: EmptyParams,
+    ) -> Result<StatusResult, CommandError> {
         commands::session::status(self, params).await
     }
-    
+
     // --------------------------------------------------
 
-    
+    // https://w3c.github.io/webdriver-bidi/#command-session-new
+
+    /// Creates a new session.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `NewParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `NewResult` or a `CommandError`.
+    pub async fn session_new(&mut self, params: NewParameters) -> Result<NewResult, CommandError> {
+        commands::session::new_session(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-session-end
+
+    /// Ends the current session.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `EmptyParams` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn session_end(&mut self, params: EmptyParams) -> Result<EmptyResult, CommandError> {
+        commands::session::end(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-session-subscribe
+
+    /// Enables certain events either globally or for a set of navigables.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `SubscriptionRequest` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `SubscriptionRequestResult` or a `CommandError`.
+    pub async fn session_subscribe(
+        &mut self,
+        params: SubscriptionRequest,
+    ) -> Result<SubscriptionRequestResult, CommandError> {
+        commands::session::subscribe(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-session-unsubscribe
+
+    /// Disables certain events either globally or for a set of navigables.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `UnsubscribeRequest` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn session_unsubscribe(
+        &mut self,
+        params: UnsubscribeRequest,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::session::unsubscribe(self, params).await
+    }
 }

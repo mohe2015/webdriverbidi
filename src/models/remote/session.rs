@@ -173,9 +173,24 @@ pub struct New {
     pub params: NewParameters,
 }
 
+impl New {
+    pub fn new(params: NewParameters) -> Self {
+        Self {
+            method: "session.new".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewParameters {
     pub capabilities: CapabilitiesRequest,
+}
+
+impl NewParameters {
+    pub fn new(capabilities: CapabilitiesRequest) -> Self {
+        Self { capabilities }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -184,16 +199,43 @@ pub struct End {
     pub params: EmptyParams,
 }
 
+impl End {
+    pub fn new(params: EmptyParams) -> Self {
+        Self {
+            method: "session.end".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Subscribe {
     pub method: String,
     pub params: SubscriptionRequest,
 }
 
+impl Subscribe {
+    pub fn new(params: SubscriptionRequest) -> Self {
+        Self {
+            method: "session.subscribe".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Unsubscribe {
     pub method: String,
     pub params: UnsubscribeRequest,
+}
+
+impl Unsubscribe {
+    pub fn new(params: UnsubscribeRequest) -> Self {
+        Self {
+            method: "session.unsubscribe".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
