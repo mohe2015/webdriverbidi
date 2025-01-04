@@ -436,6 +436,15 @@ pub struct Reload {
     pub params: ReloadParameters,
 }
 
+impl Reload {
+    pub fn new(params: ReloadParameters) -> Self {
+        Self {
+            method: "browsingContext.reload".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReloadParameters {
     pub context: BrowsingContext,
@@ -445,10 +454,33 @@ pub struct ReloadParameters {
     pub wait: Option<ReadinessState>,
 }
 
+impl ReloadParameters {
+    pub fn new(
+        context: BrowsingContext,
+        ignore_cache: Option<bool>,
+        wait: Option<ReadinessState>,
+    ) -> Self {
+        Self {
+            context,
+            ignore_cache,
+            wait,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewport {
     pub method: String,
     pub params: SetViewportParameters,
+}
+
+impl SetViewport {
+    pub fn new(params: SetViewportParameters) -> Self {
+        Self {
+            method: "browsingContext.setViewport".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -458,6 +490,20 @@ pub struct SetViewportParameters {
     pub viewport: Option<Viewport>,
     #[serde(rename = "devicePixelRatio", skip_serializing_if = "Option::is_none")]
     pub device_pixel_ratio: Option<f32>, // 0.0..
+}
+
+impl SetViewportParameters {
+    pub fn new(
+        context: BrowsingContext,
+        viewport: Option<Viewport>,
+        device_pixel_ratio: Option<f32>,
+    ) -> Self {
+        Self {
+            context,
+            viewport,
+            device_pixel_ratio,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

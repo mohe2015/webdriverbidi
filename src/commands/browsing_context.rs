@@ -327,6 +327,72 @@ pub async fn print(
 
 // --------------------------------------------------
 
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-reload
+
+/// Represents the `browsingContext.reload` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct ReloadCommand {
+    id: u64,
+    #[serde(flatten)]
+    reload: Reload,
+}
+
+impl ReloadCommand {
+    /// Constructs a new `ReloadCommand` with a unique ID and the provided parameters.
+    fn new(params: ReloadParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating ReloadCommand with id: {}", id);
+        Self {
+            id,
+            reload: Reload::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.reload` command to the WebDriver BiDi session.
+pub async fn reload(
+    session: &mut WebDriverBiDiSession,
+    params: ReloadParameters,
+) -> Result<NavigateResult, CommandError> {
+    let reload_cmd = ReloadCommand::new(params);
+    send_command(session, reload_cmd).await
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-setViewport
+
+/// Represents the `browsingContext.setViewport` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct SetViewportCommand {
+    id: u64,
+    #[serde(flatten)]
+    set_viewport: SetViewport,
+}
+
+impl SetViewportCommand {
+    /// Constructs a new `SetViewportCommand` with a unique ID and the provided parameters.
+    fn new(params: SetViewportParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating SetViewportCommand with id: {}", id);
+        Self {
+            id,
+            set_viewport: SetViewport::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.setViewport` command to the WebDriver BiDi session.
+pub async fn set_viewport(
+    session: &mut WebDriverBiDiSession,
+    params: SetViewportParameters,
+) -> Result<EmptyResult, CommandError> {
+    let set_viewport_cmd = SetViewportCommand::new(params);
+    send_command(session, set_viewport_cmd).await
+}
+
+// --------------------------------------------------
+
 /// Represents the `browsingContext.traverseHistory` command.
 #[derive(Debug, Serialize, Deserialize)]
 struct TraverseHistoryCommand {

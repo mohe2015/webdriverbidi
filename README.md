@@ -123,8 +123,8 @@ async fn main() {
 - [x] browsingContext.locateNodes
 - [x] browsingContext.navigate
 - [x] browsingContext.print
-- [ ] browsingContext.reload
-- [ ] browsingContext.setViewport
+- [x] browsingContext.reload
+- [x] browsingContext.setViewport
 - [x] browsingContext.traverseHistory
 
 #### Events

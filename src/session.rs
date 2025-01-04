@@ -350,6 +350,47 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-reload
+
+    /// Reloads the current page in the browsing context.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `ReloadParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `NavigateResult` or a `CommandError`.
+    pub async fn browsing_context_reload(
+        &mut self,
+        params: ReloadParameters,
+    ) -> Result<NavigateResult, CommandError> {
+        commands::browsing_context::reload(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-setViewport
+
+    /// Modifies specific viewport characteristics (e.g. viewport width and viewport
+    /// height) on the given top-level traversable.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `SetViewportParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn browsing_context_set_viewport(
+        &mut self,
+        params: SetViewportParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::browsing_context::set_viewport(self, params).await
+    }
+
+    // --------------------------------------------------
+
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-traverseHistory
 
     /// Navigates through the browsing history of a specified context.
