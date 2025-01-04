@@ -268,6 +268,15 @@ pub struct LocateNodes {
     pub params: LocateNodesParameters,
 }
 
+impl LocateNodes {
+    pub fn new(params: LocateNodesParameters) -> Self {
+        Self {
+            method: "browsingContext.locateNodes".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodesParameters {
     pub context: BrowsingContext,
@@ -281,6 +290,24 @@ pub struct LocateNodesParameters {
     pub serialization_options: Option<SerializationOptions>,
     #[serde(rename = "startNodes", skip_serializing_if = "Option::is_none")]
     pub start_nodes: Option<Vec<SharedReference>>,
+}
+
+impl LocateNodesParameters {
+    pub fn new(
+        context: BrowsingContext,
+        locator: Locator,
+        max_node_count: Option<JsUint>,
+        serialization_options: Option<SerializationOptions>,
+        start_nodes: Option<Vec<SharedReference>>,
+    ) -> Self {
+        Self {
+            context,
+            locator,
+            max_node_count,
+            serialization_options,
+            start_nodes,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

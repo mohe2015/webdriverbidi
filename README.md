@@ -120,7 +120,7 @@ async fn main() {
 - [x] browsingContext.create
 - [x] browsingContext.getTree
 - [x] browsingContext.handleUserPrompt
-- [ ] browsingContext.locateNodes
+- [x] browsingContext.locateNodes
 - [x] browsingContext.navigate
 - [ ] browsingContext.print
 - [ ] browsingContext.reload

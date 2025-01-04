@@ -230,6 +230,39 @@ pub async fn handle_user_prompt(
 
 // --------------------------------------------------
 
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
+
+/// Represents the `browsingContext.locateNodes` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct LocateNodesCommand {
+    id: u64,
+    #[serde(flatten)]
+    locate_nodes: LocateNodes,
+}
+
+impl LocateNodesCommand {
+    /// Constructs a new `LocateNodesCommand` with a unique ID and the provided parameters.
+    fn new(params: LocateNodesParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating LocateNodesCommand with id: {}", id);
+        Self {
+            id,
+            locate_nodes: LocateNodes::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.locateNodes` command to the WebDriver BiDi session.
+pub async fn locate_nodes(
+    session: &mut WebDriverBiDiSession,
+    params: LocateNodesParameters,
+) -> Result<LocateNodesResult, CommandError> {
+    let locate_nodes_cmd = LocateNodesCommand::new(params);
+    send_command(session, locate_nodes_cmd).await
+}
+
+// --------------------------------------------------
+
 /// Represents the `browsingContext.navigate` command.
 #[derive(Debug, Serialize, Deserialize)]
 struct NavigateCommand {

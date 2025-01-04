@@ -289,7 +289,23 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    // TODO - https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
+
+    /// Returns a list of all nodes matching the specified locator.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `LocateNodesParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `LocateNodesResult` or a `CommandError`.
+    pub async fn browsing_context_locate_nodes(
+        &mut self,
+        params: LocateNodesParameters,
+    ) -> Result<LocateNodesResult, CommandError> {
+        commands::browsing_context::locate_nodes(self, params).await
+    }
 
     // --------------------------------------------------
 
