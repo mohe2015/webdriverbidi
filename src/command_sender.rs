@@ -22,10 +22,15 @@ use super::error::CommandError;
 
 const COMMAND_ID_KEY: &str = "id";
 const RESULT_KEY: &str = "result";
+// Wait 60 seconds max for a command response
 const RECEIVER_TIMEOUT: u64 = 60;
 
 // --------------------------------------------------
 
+/// Sends a command over a WebSocket connection and awaits a response.
+///
+/// This function serializes the given command, sends it over the provided WebSocket stream,
+/// and waits for a response. Timesout if no response is received within 60 seconds.
 pub async fn send_command<T: Serialize, U: DeserializeOwned>(
     websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,
     pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
@@ -33,7 +38,7 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
 ) -> Result<U, CommandError> {
     let value = serde_json::to_value(command).map_err(|e| {
         error!("Serialization error: {:?}", e);
-        CommandError::SerializationError(e)
+        CommandError::SerdeError(e)
     })?;
 
     let command_id = value
@@ -84,7 +89,7 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
     })?;
     let rslt = serde_json::from_value(rslt.to_owned()).map_err(|e| {
         error!("Deserialization error: {:?}", e);
-        CommandError::SerializationError(e)
+        CommandError::SerdeError(e)
     })?;
     Ok(rslt)
 }

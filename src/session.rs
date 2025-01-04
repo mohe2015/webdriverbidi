@@ -19,8 +19,9 @@ use crate::commands;
 use crate::error::{CommandError, SessionError};
 use crate::local::browsing_context::{GetTreeResult, NavigateResult, TraverseHistoryResult};
 use crate::message_handler;
+use crate::models::local::result_data::EmptyResult;
 use crate::remote::browsing_context::{
-    GetTreeParameters, NavigateParameters, TraverseHistoryParameters,
+    ActivateParameters, GetTreeParameters, NavigateParameters, TraverseHistoryParameters,
 };
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
@@ -58,7 +59,7 @@ pub struct WebDriverBiDiSession {
 // --------------------------------------------------
 
 impl WebDriverBiDiSession {
-    /// Creates a new session instance.
+    /// Creates a new session.
     ///
     /// # Arguments
     ///
@@ -82,9 +83,7 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    /// Starts the session by connecting to the WebSocket URL.
-    ///
-    /// This method initializes the session by starting it with the WebDriver server,
+    /// Initializes the session by starting it with the WebDriver server,
     /// establishing a WebSocket connection, and spawning a background task to handle
     /// incoming messages.
     ///
@@ -116,9 +115,7 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    /// Closes the session and WebSocket connection.
-    ///
-    /// This method sends a request to the WebDriver server to close the session.
+    /// Sends a request to the WebDriver server to close the session.
     pub async fn close(&mut self) -> Result<(), SessionError> {
         session::close_session(&self.base_url, &self.session_id).await?;
         Ok(())
@@ -126,15 +123,15 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    /// Sends a JSON command to the WebSocket.
+    /// Sends a WebDriver BiDi command.
     ///
     /// # Arguments
     ///
-    /// * `command` - The command to be sent, which must implement the `Serialize` trait.
+    /// * `command` - The command to send.
     ///
     /// # Returns
     ///
-    /// A result containing the response of type `U` which implements the `DeserializeOwned` trait,
+    /// A result containing the response of type `U` that implements the `DeserializeOwned` trait,
     /// or a `CommandError` if the command could not be sent.
     pub async fn send_command<T: Serialize, U: DeserializeOwned>(
         &mut self,
@@ -157,7 +154,7 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    /// Spawns a background task to log incoming messages.
+    /// Spawns a background task to manage incoming WebSocket messages.
     ///
     /// This method creates a new asynchronous task that continuously listens for
     /// incoming messages on the WebSocket connection and handles them appropriately.
@@ -174,7 +171,23 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    // TODO https://w3c.github.io/webdriver-bidi/#command-browsingContext-activate
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-activate
+
+    /// Activates and focuses a browsing context.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `ActivateParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn browsing_context_activate(
+        &mut self,
+        params: ActivateParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::browsing_context::activate(self, params).await
+    }
 
     // --------------------------------------------------
 

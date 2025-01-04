@@ -5,24 +5,19 @@ use serde::{Deserialize, Serialize};
 
 use super::id;
 use crate::error::CommandError;
-use crate::models::local::browsing_context::{GetTreeResult, NavigateResult, TraverseHistoryResult};
+use crate::models::local::browsing_context::{
+    GetTreeResult, NavigateResult, TraverseHistoryResult,
+};
+use crate::models::local::result_data::EmptyResult;
 use crate::models::remote::browsing_context::{
-    GetTree, GetTreeParameters, Navigate, NavigateParameters, TraverseHistory, TraverseHistoryParameters
+    ActivateParameters, GetTree, GetTreeParameters, Navigate, NavigateParameters, TraverseHistory,
+    TraverseHistoryParameters,
 };
 use crate::session::WebDriverBiDiSession;
 
 // --------------------------------------------------
 
 /// Sends a command to the WebDriver BiDi session and processes the result.
-///
-/// # Arguments
-///
-/// * `session` - A mutable reference to the WebDriver BiDi session.
-/// * `command` - The command to send.
-///
-/// # Returns
-///
-/// A `Result` containing either the command result or a `CommandError`.
 async fn send_command<C, R>(
     session: &mut WebDriverBiDiSession,
     command: C,
@@ -48,6 +43,39 @@ where
 
 // --------------------------------------------------
 
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-activate
+
+/// Represents the `browsingContext.activate` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct ActivateCommand {
+    id: u64,
+    #[serde(flatten)]
+    activate: ActivateParameters,
+}
+
+impl ActivateCommand {
+    /// Constructs a new `ActivateCommand` with a unique ID and the provided parameters.
+    fn new(params: ActivateParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating ActivateCommand with id: {}", id);
+        Self {
+            id,
+            activate: params,
+        }
+    }
+}
+
+/// Sends a `browsingContext.activate` command to the WebDriver BiDi session.
+pub async fn activate(
+    session: &mut WebDriverBiDiSession,
+    params: ActivateParameters,
+) -> Result<EmptyResult, CommandError> {
+    let activate_cmd = ActivateCommand::new(params);
+    send_command(session, activate_cmd).await
+}
+
+// --------------------------------------------------
+
 /// Represents the `browsingContext.navigate` command.
 #[derive(Debug, Serialize, Deserialize)]
 struct NavigateCommand {
@@ -58,14 +86,6 @@ struct NavigateCommand {
 
 impl NavigateCommand {
     /// Constructs a new `NavigateCommand` with a unique ID and the provided parameters.
-    ///
-    /// # Arguments
-    ///
-    /// * `params` - Parameters for the navigate command.
-    ///
-    /// # Returns
-    ///
-    /// A new instance of `NavigateCommand`.
     fn new(params: NavigateParameters) -> Self {
         let id = id::get_next_id();
         debug!("Creating NavigateCommand with id: {}", id);
@@ -77,15 +97,6 @@ impl NavigateCommand {
 }
 
 /// Sends a `browsingContext.navigate` command to the WebDriver BiDi session.
-///
-/// # Arguments
-///
-/// * `session` - A mutable reference to the WebDriver BiDi session.
-/// * `params` - Parameters for the navigate command.
-///
-/// # Returns
-///
-/// A `Result` containing either a `NavigateResult` or a `CommandError`.
 pub async fn navigate(
     session: &mut WebDriverBiDiSession,
     params: NavigateParameters,
@@ -106,14 +117,6 @@ struct GetTreeCommand {
 
 impl GetTreeCommand {
     /// Constructs a new `GetTreeCommand` with a unique ID and the provided parameters.
-    ///
-    /// # Arguments
-    ///
-    /// * `params` - Parameters for the getTree command.
-    ///
-    /// # Returns
-    ///
-    /// A new instance of `GetTreeCommand`.
     fn new(params: GetTreeParameters) -> Self {
         let id = id::get_next_id();
         debug!("Creating GetTreeCommand with id: {}", id);
@@ -125,15 +128,6 @@ impl GetTreeCommand {
 }
 
 /// Sends a `browsingContext.getTree` command to the WebDriver BiDi session.
-///
-/// # Arguments
-///
-/// * `session` - A mutable reference to the WebDriver BiDi session.
-/// * `params` - Parameters for the getTree command.
-///
-/// # Returns
-///
-/// A `Result` containing either a `GetTreeResult` or a `CommandError`.
 pub async fn get_tree(
     session: &mut WebDriverBiDiSession,
     params: GetTreeParameters,
@@ -154,14 +148,6 @@ struct TraverseHistoryCommand {
 
 impl TraverseHistoryCommand {
     /// Constructs a new `TraverseHistoryCommand` with a unique ID and the provided parameters.
-    ///
-    /// # Arguments
-    ///
-    /// * `params` - Parameters for the traverseHistory command.
-    ///
-    /// # Returns
-    ///
-    /// A new instance of `TraverseHistoryCommand`.
     fn new(params: TraverseHistoryParameters) -> Self {
         let id = id::get_next_id();
         debug!("Creating TraverseHistoryCommand with id: {}", id);
@@ -173,15 +159,6 @@ impl TraverseHistoryCommand {
 }
 
 /// Sends a `browsingContext.traverseHistory` command to the WebDriver BiDi session.
-///
-/// # Arguments
-///
-/// * `session` - A mutable reference to the WebDriver BiDi session.
-/// * `params` - Parameters for the traverseHistory command.
-///
-/// # Returns
-///
-/// A `Result` containing either a `TraverseHistoryResult` or a `CommandError`.
 pub async fn traverse_history(
     session: &mut WebDriverBiDiSession,
     params: TraverseHistoryParameters,

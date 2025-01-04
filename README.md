@@ -4,7 +4,7 @@
 
 The webdriverbidi library provides an interface for interacting with web browsers through the WebDriver BiDi (Bidirectional) protocol. This library allows you to create and manage WebDriver sessions, send commands, and handle responses asynchronously through WebSockets.
 
-## Features
+## Planned Features
 
 - Create and manage WebDriver BiDi sessions
 - Send commands
@@ -53,6 +53,8 @@ use webdriverbidi::webdriver::capabilities::{Capabilities, CapabilityRequest};
 async fn sleep(secs: u64) {
     time::sleep(time::Duration::from_secs(secs)).await
 }
+
+// --------------------------------------------------
 
 #[tokio::main]
 async fn main() {
@@ -112,7 +114,7 @@ async fn main() {
 - [x] browsingContext.UserPromptType
 
 #### Commands
-- [ ] browsingContext.activate
+- [x] browsingContext.activate
 - [ ] browsingContext.captureScreenshot
 - [ ] browsingContext.close
 - [ ] browsingContext.create

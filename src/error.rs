@@ -7,7 +7,7 @@ use tokio_tungstenite::tungstenite;
 pub enum CommandError {
     /// Error during JSON serialization/deserialization.
     #[error("Serialization error: {0}.")]
-    SerializationError(#[from] serde_json::Error),
+    SerdeError(#[from] serde_json::Error),
 
     /// Missing command ID field in the command.
     #[error("Missing command ID field.")]

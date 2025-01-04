@@ -16,33 +16,33 @@ pub type Extensible = HashMap<String, Value>;
 #[serde(rename_all = "camelCase")]
 pub struct CapabilityRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
-    browser_name: Option<String>,
+    pub browser_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    browser_version: Option<String>,
+    pub browser_version: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    platform_name: Option<String>,
+    pub platform_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    accept_insecure_certs: Option<bool>,
+    pub accept_insecure_certs: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    page_load_strategy: Option<String>,
+    pub page_load_strategy: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    proxy: Option<Value>,
+    pub proxy: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    set_window_rect: Option<bool>,
+    pub set_window_rect: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    timeouts: Option<Value>,
+    pub timeouts: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    strict_file_interactability: Option<bool>,
+    pub strict_file_interactability: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    unhandled_prompt_behavior: Option<String>,
+    pub unhandled_prompt_behavior: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    user_agent: Option<String>,
+    pub user_agent: Option<String>,
     // Ensure the webSocketUrl capability is always present and set to true.
     #[serde(default = "default_web_socket_url")]
-    web_socket_url: bool,
+    pub web_socket_url: bool,
     // Additional extensible capabilities.
     #[serde(flatten)]
-    extension: Extensible,
+    pub extension: Extensible,
 }
 
 // Default value for the webSocketUrl capability.
@@ -103,6 +103,25 @@ impl Capabilities {
 
     // --------------------------------------------------
 
+    /// Adds a firstMatch capability to the Capabilities instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `first_match` - A HashMap<String, Value> representing the firstMatch capability.
+    ///
+    /// # Returns
+    ///
+    /// A Capabilities instance with the firstMatch capability added.
+    pub fn add_first_match(&mut self, first_match: HashMap<String, Value>) {
+        if let Some(ref mut first_match_vec) = self.first_match {
+            first_match_vec.push(first_match);
+        } else {
+            self.first_match = Some(vec![first_match]);
+        }
+    }
+
+    // --------------------------------------------------
+
     /// Adds a non standard alwaysMatch capability if the key is not `webSocketUrl`.
     ///
     /// # Arguments
@@ -118,25 +137,6 @@ impl Capabilities {
             if let Some(ref mut always_match) = self.always_match {
                 always_match.extension.insert(key, value);
             }
-        }
-    }
-
-    // --------------------------------------------------
-
-    /// Adds a firstMatch capability to the Capabilities instance.
-    ///
-    /// # Arguments
-    ///
-    /// * `first_match` - A HashMap<String, Value> representing the firstMatch capability.
-    ///
-    /// # Returns
-    ///
-    /// A Capabilities instance with the firstMatch capability added.
-    pub fn add_first_match(&mut self, first_match: HashMap<String, Value>) {
-        if let Some(ref mut first_match_vec) = self.first_match {
-            first_match_vec.push(first_match);
-        } else {
-            self.first_match = Some(vec![first_match]);
         }
     }
 

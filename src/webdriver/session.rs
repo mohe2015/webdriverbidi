@@ -20,15 +20,6 @@ pub struct SessionResponse {
 // --------------------------------------------------
 
 /// Starts a WebDriver session through HTTP.
-///
-/// # Arguments
-///
-/// * `base_url` - The base URL of the WebDriver server.
-/// * `capabilities` - The features that the session is expected to support.
-///
-/// # Returns
-///
-/// A `Result` containing either a SessionResponse instance or a SessionError.
 pub async fn start_session(
     base_url: &str,
     capabilities: &Capabilities,
@@ -85,16 +76,7 @@ pub async fn start_session(
 
 // --------------------------------------------------
 
-/// Closes a WebDriver session.
-///
-/// # Arguments
-///
-/// * `base_url` - The base URL of the WebDriver server.
-/// * `session_id` - The ID of the WebDriver session to close.
-///
-/// # Returns
-///
-/// A `Result` containing either `()` or a SessionError.
+/// Closes a WebDriver session through HTTP.
 pub async fn close_session(base_url: &str, session_id: &str) -> Result<(), SessionError> {
     let url = format!("{}/session/{}", base_url, session_id);
     let client = create_http_client();
