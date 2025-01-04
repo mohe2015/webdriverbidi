@@ -17,15 +17,10 @@ use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
 use crate::command_sender;
 use crate::commands;
 use crate::error::{CommandError, SessionError};
-use crate::local::browsing_context::{
-    CaptureScreenshotResult, GetTreeResult, NavigateResult, TraverseHistoryResult,
-};
+use crate::local::browsing_context::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
-use crate::remote::browsing_context::{
-    ActivateParameters, CaptureScreenshotParameters, GetTreeParameters, NavigateParameters,
-    TraverseHistoryParameters, CloseParameters,
-};
+use crate::remote::browsing_context::*;
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
 
@@ -215,15 +210,15 @@ impl WebDriverBiDiSession {
     // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
-    
+
     /// Closes the browsing context.
     ///
     /// # Arguments
-    /// 
+    ///
     /// * `params` - The parameters as a `CloseParameters` instance.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// A result containing the `EmptyResult` or a `CommandError`.
     pub async fn browsing_context_close(
         &mut self,
@@ -235,6 +230,22 @@ impl WebDriverBiDiSession {
     // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
+
+    /// Creates a new browsing context.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `CreateParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `CreateResult` or a `CommandError`.
+    pub async fn browsing_context_create(
+        &mut self,
+        params: CreateParameters,
+    ) -> Result<CreateResult, CommandError> {
+        commands::browsing_context::create(self, params).await
+    }
 
     // --------------------------------------------------
 

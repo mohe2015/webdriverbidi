@@ -5,14 +5,9 @@ use serde::{Deserialize, Serialize};
 
 use super::id;
 use crate::error::CommandError;
-use crate::models::local::browsing_context::{
-    GetTreeResult, NavigateResult, TraverseHistoryResult, CaptureScreenshotResult
-};
+use crate::models::local::browsing_context::*;
 use crate::models::local::result_data::EmptyResult;
-use crate::models::remote::browsing_context::{
-    ActivateParameters, GetTree, GetTreeParameters, Navigate, NavigateParameters, TraverseHistory,
-    TraverseHistoryParameters, CaptureScreenshotParameters, CloseParameters
-};
+use crate::models::remote::browsing_context::*;
 use crate::session::WebDriverBiDiSession;
 
 // --------------------------------------------------
@@ -124,10 +119,7 @@ impl CloseCommand {
     fn new(params: CloseParameters) -> Self {
         let id = id::get_next_id();
         debug!("Creating CloseCommand with id: {}", id);
-        Self {
-            id,
-            close: params,
-        }
+        Self { id, close: params }
     }
 }
 
@@ -144,7 +136,31 @@ pub async fn close(
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
 
+/// Represents the `browsingContext.create` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct CreateCommand {
+    id: u64,
+    #[serde(flatten)]
+    create: CreateParameters,
+}
 
+impl CreateCommand {
+    /// Constructs a new `CreateCommand` with a unique ID and the provided parameters.
+    fn new(params: CreateParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating CreateCommand with id: {}", id);
+        Self { id, create: params }
+    }
+}
+
+/// Sends a `browsingContext.create` command to the WebDriver BiDi session.
+pub async fn create(
+    session: &mut WebDriverBiDiSession,
+    params: CreateParameters,
+) -> Result<CreateResult, CommandError> {
+    let create_cmd = CreateCommand::new(params);
+    send_command(session, create_cmd).await
+}
 
 // --------------------------------------------------
 
