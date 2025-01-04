@@ -1,40 +1,15 @@
-use log::{debug, error};
+use log::debug;
 use serde::{Deserialize, Serialize};
 
 // --------------------------------------------------
 
 use super::id;
+use super::utils;
 use crate::error::CommandError;
 use crate::models::local::browsing_context::*;
 use crate::models::local::result_data::EmptyResult;
 use crate::models::remote::browsing_context::*;
 use crate::session::WebDriverBiDiSession;
-
-// --------------------------------------------------
-
-/// Sends a command to the WebDriver BiDi session and processes the result.
-async fn send_command<C, R>(
-    session: &mut WebDriverBiDiSession,
-    command: C,
-) -> Result<R, CommandError>
-where
-    C: Serialize,
-    R: for<'de> Deserialize<'de>,
-{
-    let command_id = id::get_next_id();
-    debug!("Sending command with id: {}", command_id); // Log before sending command
-
-    match session.send_command::<C, R>(command).await {
-        Ok(rslt) => {
-            debug!("Command with id: {} succeeded", command_id); // Log success
-            Ok(rslt)
-        }
-        Err(e) => {
-            error!("Command with id: {} failed: {:?}", command_id, e); // Log error
-            Err(e)
-        }
-    }
-}
 
 // --------------------------------------------------
 
@@ -45,7 +20,7 @@ where
 struct ActivateCommand {
     id: u64,
     #[serde(flatten)]
-    activate: ActivateParameters,
+    activate: Activate,
 }
 
 impl ActivateCommand {
@@ -55,7 +30,7 @@ impl ActivateCommand {
         debug!("Creating ActivateCommand with id: {}", id);
         Self {
             id,
-            activate: params,
+            activate: Activate::new(params),
         }
     }
 }
@@ -66,7 +41,7 @@ pub async fn activate(
     params: ActivateParameters,
 ) -> Result<EmptyResult, CommandError> {
     let activate_cmd = ActivateCommand::new(params);
-    send_command(session, activate_cmd).await
+    utils::send_command(session, activate_cmd).await
 }
 
 // --------------------------------------------------
@@ -78,7 +53,7 @@ pub async fn activate(
 struct CaptureScreenshotCommand {
     id: u64,
     #[serde(flatten)]
-    capture_screenshot: CaptureScreenshotParameters,
+    capture_screenshot: CaptureScreenshot,
 }
 
 impl CaptureScreenshotCommand {
@@ -88,7 +63,7 @@ impl CaptureScreenshotCommand {
         debug!("Creating CaptureScreenshotCommand with id: {}", id);
         Self {
             id,
-            capture_screenshot: params,
+            capture_screenshot: CaptureScreenshot::new(params),
         }
     }
 }
@@ -99,7 +74,7 @@ pub async fn capture_screenshot(
     params: CaptureScreenshotParameters,
 ) -> Result<CaptureScreenshotResult, CommandError> {
     let capture_screenshot_cmd = CaptureScreenshotCommand::new(params);
-    send_command(session, capture_screenshot_cmd).await
+    utils::send_command(session, capture_screenshot_cmd).await
 }
 
 // --------------------------------------------------
@@ -111,7 +86,7 @@ pub async fn capture_screenshot(
 struct CloseCommand {
     id: u64,
     #[serde(flatten)]
-    close: CloseParameters,
+    close: Close,
 }
 
 impl CloseCommand {
@@ -119,7 +94,10 @@ impl CloseCommand {
     fn new(params: CloseParameters) -> Self {
         let id = id::get_next_id();
         debug!("Creating CloseCommand with id: {}", id);
-        Self { id, close: params }
+        Self {
+            id,
+            close: Close::new(params),
+        }
     }
 }
 
@@ -129,7 +107,7 @@ pub async fn close(
     params: CloseParameters,
 ) -> Result<EmptyResult, CommandError> {
     let close_cmd = CloseCommand::new(params);
-    send_command(session, close_cmd).await
+    utils::send_command(session, close_cmd).await
 }
 
 // --------------------------------------------------
@@ -141,7 +119,7 @@ pub async fn close(
 struct CreateCommand {
     id: u64,
     #[serde(flatten)]
-    create: CreateParameters,
+    create: Create,
 }
 
 impl CreateCommand {
@@ -149,7 +127,10 @@ impl CreateCommand {
     fn new(params: CreateParameters) -> Self {
         let id = id::get_next_id();
         debug!("Creating CreateCommand with id: {}", id);
-        Self { id, create: params }
+        Self {
+            id,
+            create: Create::new(params),
+        }
     }
 }
 
@@ -159,7 +140,7 @@ pub async fn create(
     params: CreateParameters,
 ) -> Result<CreateResult, CommandError> {
     let create_cmd = CreateCommand::new(params);
-    send_command(session, create_cmd).await
+    utils::send_command(session, create_cmd).await
 }
 
 // --------------------------------------------------
@@ -192,7 +173,7 @@ pub async fn get_tree(
     params: GetTreeParameters,
 ) -> Result<GetTreeResult, CommandError> {
     let get_tree_cmd = GetTreeCommand::new(params);
-    send_command(session, get_tree_cmd).await
+    utils::send_command(session, get_tree_cmd).await
 }
 
 // --------------------------------------------------
@@ -225,7 +206,7 @@ pub async fn handle_user_prompt(
     params: HandleUserPromptParameters,
 ) -> Result<EmptyResult, CommandError> {
     let handle_user_prompt_cmd = HandleUserPromptCommand::new(params);
-    send_command(session, handle_user_prompt_cmd).await
+    utils::send_command(session, handle_user_prompt_cmd).await
 }
 
 // --------------------------------------------------
@@ -258,7 +239,7 @@ pub async fn locate_nodes(
     params: LocateNodesParameters,
 ) -> Result<LocateNodesResult, CommandError> {
     let locate_nodes_cmd = LocateNodesCommand::new(params);
-    send_command(session, locate_nodes_cmd).await
+    utils::send_command(session, locate_nodes_cmd).await
 }
 
 // --------------------------------------------------
@@ -289,7 +270,7 @@ pub async fn navigate(
     params: NavigateParameters,
 ) -> Result<NavigateResult, CommandError> {
     let navigate_cmd = NavigateCommand::new(params);
-    send_command(session, navigate_cmd).await
+    utils::send_command(session, navigate_cmd).await
 }
 
 // --------------------------------------------------
@@ -322,7 +303,7 @@ pub async fn print(
     params: PrintParameters,
 ) -> Result<PrintResult, CommandError> {
     let print_cmd = PrintCommand::new(params);
-    send_command(session, print_cmd).await
+    utils::send_command(session, print_cmd).await
 }
 
 // --------------------------------------------------
@@ -355,7 +336,7 @@ pub async fn reload(
     params: ReloadParameters,
 ) -> Result<NavigateResult, CommandError> {
     let reload_cmd = ReloadCommand::new(params);
-    send_command(session, reload_cmd).await
+    utils::send_command(session, reload_cmd).await
 }
 
 // --------------------------------------------------
@@ -388,7 +369,7 @@ pub async fn set_viewport(
     params: SetViewportParameters,
 ) -> Result<EmptyResult, CommandError> {
     let set_viewport_cmd = SetViewportCommand::new(params);
-    send_command(session, set_viewport_cmd).await
+    utils::send_command(session, set_viewport_cmd).await
 }
 
 // --------------------------------------------------
@@ -419,7 +400,7 @@ pub async fn traverse_history(
     params: TraverseHistoryParameters,
 ) -> Result<TraverseHistoryResult, CommandError> {
     let traverse_history_cmd = TraverseHistoryCommand::new(params);
-    send_command(session, traverse_history_cmd).await
+    utils::send_command(session, traverse_history_cmd).await
 }
 
 // --------------------------------------------------

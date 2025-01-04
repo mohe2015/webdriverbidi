@@ -101,15 +101,39 @@ pub struct Activate {
     pub params: ActivateParameters,
 }
 
+impl Activate {
+    pub fn new(params: ActivateParameters) -> Self {
+        Self {
+            method: "browsingContext.activate".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ActivateParameters {
     pub context: BrowsingContext,
+}
+
+impl ActivateParameters {
+    pub fn new(context: BrowsingContext) -> Self {
+        Self { context }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshot {
     pub method: String,
     pub params: CaptureScreenshotParameters,
+}
+
+impl CaptureScreenshot {
+    pub fn new(params: CaptureScreenshotParameters) -> Self {
+        Self {
+            method: "browsingContext.captureScreenshot".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -121,6 +145,22 @@ pub struct CaptureScreenshotParameters {
     pub format: Option<ImageFormat>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub clip: Option<ClipRectangle>,
+}
+
+impl CaptureScreenshotParameters {
+    pub fn new(
+        context: BrowsingContext,
+        origin: Option<CaptureScreenshotParametersOrigin>,
+        format: Option<ImageFormat>,
+        clip: Option<ClipRectangle>,
+    ) -> Self {
+        Self {
+            context,
+            origin,
+            format,
+            clip,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -167,6 +207,15 @@ pub struct Close {
     pub params: CloseParameters,
 }
 
+impl Close {
+    pub fn new(params: CloseParameters) -> Self {
+        Self {
+            method: "browsingContext.close".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CloseParameters {
     pub context: BrowsingContext,
@@ -174,10 +223,28 @@ pub struct CloseParameters {
     pub prompt_unload: Option<bool>,
 }
 
+impl CloseParameters {
+    pub fn new(context: BrowsingContext, prompt_unload: Option<bool>) -> Self {
+        Self {
+            context,
+            prompt_unload,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Create {
     pub method: String,
     pub params: CreateParameters,
+}
+
+impl Create {
+    pub fn new(params: CreateParameters) -> Self {
+        Self {
+            method: "browsingContext.create".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -197,6 +264,22 @@ pub struct CreateParameters {
     pub background: Option<bool>,
     #[serde(rename = "userContext", skip_serializing_if = "Option::is_none")]
     pub user_context: Option<browser::UserContext>,
+}
+
+impl CreateParameters {
+    pub fn new(
+        create_type: CreateType,
+        reference_context: Option<BrowsingContext>,
+        background: Option<bool>,
+        user_context: Option<browser::UserContext>,
+    ) -> Self {
+        Self {
+            create_type,
+            reference_context,
+            background,
+            user_context,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

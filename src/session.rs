@@ -18,9 +18,10 @@ use crate::command_sender;
 use crate::commands;
 use crate::error::{CommandError, SessionError};
 use crate::local::browsing_context::*;
+use crate::local::session::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
-use crate::remote::browsing_context::*;
+use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
 
@@ -166,9 +167,12 @@ impl WebDriverBiDiSession {
             pending_commands,
         ));
     }
+}
 
-    // --------------------------------------------------
+// --------------------------------------------------
 
+// Browsing context commands    
+impl WebDriverBiDiSession {    
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-activate
 
     /// Activates and focuses a browsing context.
@@ -415,4 +419,26 @@ impl WebDriverBiDiSession {
     ) -> Result<TraverseHistoryResult, CommandError> {
         commands::browsing_context::traverse_history(self, params).await
     }
+}
+
+// --------------------------------------------------
+
+// Session commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-session-status
+    
+    /// Returns information about whether a remote end is in a state
+    /// in which it can create new sessions, but may additionally include
+    /// arbitrary meta information that is specific to the implementation.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `SessionStatus` or a `CommandError`.
+    pub async fn session_status(&mut self, params: EmptyParams) -> Result<StatusResult, CommandError> {
+        commands::session::status(self, params).await
+    }
+    
+    // --------------------------------------------------
+
+    
 }

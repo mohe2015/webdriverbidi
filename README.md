@@ -97,7 +97,22 @@ async fn main() {
 
 ### session
 #### Types
+- [x] session.CapabilitiesRequest
+- [x] session.CapabilityRequest
+- [x] session.ProxyConfiguration
+- [x] session.UserPromptHandler
+- [x] session.UserPromptHandlerType
+- [x] session.Subscription
+- [x] session.SubscriptionRequest
+- [x] session.UnsubscribeByIDRequest
+- [x] session.UnsubscribeByAttributesRequest
+
 #### Commands
+- [x] session.status
+- [ ] session.new
+- [ ] session.end
+- [ ] session.subscribe
+- [ ] session.unsubscribe
 
 ### browser
 #### Types

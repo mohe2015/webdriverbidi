@@ -158,6 +158,15 @@ pub struct Status {
     pub params: EmptyParams,
 }
 
+impl Status {
+    pub fn new(params: EmptyParams) -> Self {
+        Self {
+            method: "session.status".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct New {
     pub method: String,

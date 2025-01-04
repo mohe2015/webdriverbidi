@@ -10,6 +10,8 @@ pub mod models {
 mod commands {
     pub mod browsing_context;
     mod id;
+    pub mod session;
+    mod utils;
 }
 mod command_sender;
 mod error;
