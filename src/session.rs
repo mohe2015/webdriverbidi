@@ -329,6 +329,27 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
+    // https://w3c.github.io/webdriver-bidi/#command-browsingContext-print
+
+    /// Creates a paginated representation of a document, and returns it
+    /// as a PDF document represented as a Base64-encoded string.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `PrintParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `PrintResult` or a `CommandError`.
+    pub async fn browsing_context_print(
+        &mut self,
+        params: PrintParameters,
+    ) -> Result<PrintResult, CommandError> {
+        commands::browsing_context::print(self, params).await
+    }
+
+    // --------------------------------------------------
+
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-traverseHistory
 
     /// Navigates through the browsing history of a specified context.

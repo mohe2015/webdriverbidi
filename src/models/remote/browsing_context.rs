@@ -345,6 +345,15 @@ pub struct Print {
     pub params: PrintParameters,
 }
 
+impl Print {
+    pub fn new(params: PrintParameters) -> Self {
+        Self {
+            method: "browsingContext.print".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintParameters {
     pub context: BrowsingContext,
@@ -362,6 +371,30 @@ pub struct PrintParameters {
     pub scale: Option<f32>, // 0.1..2.0
     #[serde(rename = "shrinkToFit", skip_serializing_if = "Option::is_none")]
     pub shrink_to_fit: Option<bool>,
+}
+
+impl PrintParameters {
+    pub fn new(
+        context: BrowsingContext,
+        background: Option<bool>,
+        margin: Option<PrintMarginParameters>,
+        orientation: Option<PrintParametersOrientation>,
+        page: Option<PrintPageParameters>,
+        page_ranges: Option<Vec<JsUintOrText>>,
+        scale: Option<f32>,
+        shrink_to_fit: Option<bool>,
+    ) -> Self {
+        Self {
+            context,
+            background,
+            margin,
+            orientation,
+            page,
+            page_ranges,
+            scale,
+            shrink_to_fit,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

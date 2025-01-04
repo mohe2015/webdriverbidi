@@ -294,6 +294,39 @@ pub async fn navigate(
 
 // --------------------------------------------------
 
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-print
+
+/// Represents the `browsingContext.print` command.
+#[derive(Debug, Serialize, Deserialize)]
+struct PrintCommand {
+    id: u64,
+    #[serde(flatten)]
+    print: Print,
+}
+
+impl PrintCommand {
+    /// Constructs a new `PrintCommand` with a unique ID and the provided parameters.
+    fn new(params: PrintParameters) -> Self {
+        let id = id::get_next_id();
+        debug!("Creating PrintCommand with id: {}", id);
+        Self {
+            id,
+            print: Print::new(params),
+        }
+    }
+}
+
+/// Sends a `browsingContext.print` command to the WebDriver BiDi session.
+pub async fn print(
+    session: &mut WebDriverBiDiSession,
+    params: PrintParameters,
+) -> Result<PrintResult, CommandError> {
+    let print_cmd = PrintCommand::new(params);
+    send_command(session, print_cmd).await
+}
+
+// --------------------------------------------------
+
 /// Represents the `browsingContext.traverseHistory` command.
 #[derive(Debug, Serialize, Deserialize)]
 struct TraverseHistoryCommand {
