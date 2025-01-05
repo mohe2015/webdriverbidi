@@ -137,6 +137,15 @@ pub struct AddIntercept {
     pub params: AddInterceptParameters,
 }
 
+impl AddIntercept {
+    pub fn new(params: AddInterceptParameters) -> Self {
+        Self {
+            method: "network.addIntercept".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddInterceptParameters {
     pub phases: Vec<InterceptPhase>,
@@ -162,6 +171,15 @@ pub struct ContinueRequest {
     pub params: ContinueRequestParameters,
 }
 
+impl ContinueRequest {
+    pub fn new(params: ContinueRequestParameters) -> Self {
+        Self {
+            method: "network.continueRequest".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueRequestParameters {
     pub request: Request,
@@ -183,6 +201,15 @@ pub struct ContinueResponse {
     pub params: ContinueResponseParameters,
 }
 
+impl ContinueResponse {
+    pub fn new(params: ContinueResponseParameters) -> Self {
+        Self {
+            method: "network.continueResponse".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponseParameters {
     pub request: Request,
@@ -202,6 +229,15 @@ pub struct ContinueResponseParameters {
 pub struct ContinueWithAuth {
     pub method: String,
     pub params: ContinueWithAuthParameters,
+}
+
+impl ContinueWithAuth {
+    pub fn new(params: ContinueWithAuthParameters) -> Self {
+        Self {
+            method: "network.continueWithAuth".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -241,6 +277,15 @@ pub struct FailRequest {
     pub params: FailRequestParameters,
 }
 
+impl FailRequest {
+    pub fn new(params: FailRequestParameters) -> Self {
+        Self {
+            method: "network.failRequest".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequestParameters {
     pub request: Request,
@@ -250,6 +295,15 @@ pub struct FailRequestParameters {
 pub struct ProvideResponse {
     pub method: String,
     pub params: ProvideResponseParameters,
+}
+
+impl ProvideResponse {
+    pub fn new(params: ProvideResponseParameters) -> Self {
+        Self {
+            method: "network.provideResponse".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -273,6 +327,15 @@ pub struct RemoveIntercept {
     pub params: RemoveInterceptParameters,
 }
 
+impl RemoveIntercept {
+    pub fn new(params: RemoveInterceptParameters) -> Self {
+        Self {
+            method: "network.removeIntercept".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveInterceptParameters {
     pub intercept: Intercept,
@@ -282,6 +345,15 @@ pub struct RemoveInterceptParameters {
 pub struct SetCacheBehavior {
     pub method: String,
     pub params: SetCacheBehaviorParameters,
+}
+
+impl SetCacheBehavior {
+    pub fn new(params: SetCacheBehaviorParameters) -> Self {
+        Self {
+            method: "network.setCacheBehavior".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

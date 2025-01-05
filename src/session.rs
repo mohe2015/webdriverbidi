@@ -23,10 +23,12 @@ use crate::events::EventType;
 use crate::local::browser::ClientWindowInfo;
 use crate::local::browser::*;
 use crate::local::browsing_context::*;
+use crate::local::network::*;
 use crate::local::session::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
 use crate::remote::browser::*;
+use crate::remote::network::*;
 use crate::remote::session::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
@@ -680,5 +682,168 @@ impl WebDriverBiDiSession {
         params: SetClientWindowStateParameters,
     ) -> Result<ClientWindowInfo, CommandError> {
         commands::browser::set_client_window_state(self, params).await
+    }
+}
+
+// --------------------------------------------------
+
+// Network commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-network-addIntercept
+
+    /// Adds a network intercept.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `AddInterceptParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `AddInterceptResult` or a `CommandError`.
+    pub async fn network_add_intercept(
+        &mut self,
+        params: AddInterceptParameters,
+    ) -> Result<AddInterceptResult, CommandError> {
+        commands::network::add_intercept(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-continueRequest
+
+    /// Continues a request that’s blocked by a network intercept.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `ContinueRequestParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_continue_request(
+        &mut self,
+        params: ContinueRequestParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::continue_request(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-continueResponse
+
+    /// Continues a response that’s blocked by a network intercept.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `ContinueResponseParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_continue_response(
+        &mut self,
+        params: ContinueResponseParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::continue_response(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-continueWithAuth
+
+    /// Continues a request that’s blocked by a network intercept at the authRequired phase.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `ContinueWithAuthParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_continue_with_auth(
+        &mut self,
+        params: ContinueWithAuthParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::continue_with_auth(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-failRequest
+
+    /// Fails a fetch that’s blocked by a network intercept.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `FailRequestParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_fail_request(
+        &mut self,
+        params: FailRequestParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::fail_request(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-provideResponse
+
+    /// Continues a request that’s blocked by a network intercept, by providing a complete response.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `ProvideResponseParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_provide_response(
+        &mut self,
+        params: ProvideResponseParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::provide_response(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-removeIntercept
+
+    /// Removes a network intercept.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `RemoveInterceptParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_remove_intercept(
+        &mut self,
+        params: RemoveInterceptParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::remove_intercept(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-network-setCacheBehavior
+
+    /// Configures the network cache behavior for certain requests.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `SetCacheBehaviorParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn network_set_cache_behavior(
+        &mut self,
+        params: SetCacheBehaviorParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::network::set_cache_behavior(self, params).await
     }
 }

@@ -42,8 +42,8 @@ pub async fn close(
     session: &mut WebDriverBiDiSession,
     params: EmptyParams,
 ) -> Result<EmptyResult, CommandError> {
-    let status_cmd = CloseCommand::new(params);
-    utils::send_command(session, status_cmd).await
+    let cmd = CloseCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------

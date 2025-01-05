@@ -187,21 +187,21 @@ async fn main() {
 - [x] network.UrlPattern
 
 #### Commands
-- [ ] network.addIntercept
-- [ ] network.continueRequest
-- [ ] network.continueResponse
-- [ ] network.continueWithAuth
-- [ ] network.failRequest
-- [ ] network.provideResponse
-- [ ] network.removeIntercept
-- [ ] network.setCacheBehavior
+- [x] network.addIntercept
+- [x] network.continueRequest
+- [x] network.continueResponse
+- [x] network.continueWithAuth
+- [x] network.failRequest
+- [x] network.provideResponse
+- [x] network.removeIntercept
+- [x] network.setCacheBehavior
 
 #### Events
-- [ ] network.authRequired
-- [ ] network.beforeRequestSent
-- [ ] network.fetchError
-- [ ] network.responseCompleted
-- [ ] network.responseStarted
+- [x] network.authRequired
+- [x] network.beforeRequestSent
+- [x] network.fetchError
+- [x] network.responseCompleted
+- [x] network.responseStarted
 
 ### script
 #### Types

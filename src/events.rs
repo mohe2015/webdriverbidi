@@ -13,6 +13,11 @@ pub enum EventType {
     BrowsingContextNavigationFailed,
     BrowsingContextUserPromptClosed,
     BrowsingContextUserPromptOpened,
+    NetworkAuthRequired,
+    NetworkBeforeRequestSent,
+    NetworkFetchError,
+    NetworkResponseCompleted,
+    NetworkResponseStarted,
 }
 
 impl EventType {
@@ -39,6 +44,11 @@ impl EventType {
             "browsingContext.navigationFailed" => Some(EventType::BrowsingContextNavigationFailed),
             "browsingContext.userPromptClosed" => Some(EventType::BrowsingContextUserPromptClosed),
             "browsingContext.userPromptOpened" => Some(EventType::BrowsingContextUserPromptOpened),
+            "network.authRequired" => Some(EventType::NetworkAuthRequired),
+            "network.beforeRequestSent" => Some(EventType::NetworkBeforeRequestSent),
+            "network.fetchError" => Some(EventType::NetworkFetchError),
+            "network.responseCompleted" => Some(EventType::NetworkResponseCompleted),
+            "network.responseStarted" => Some(EventType::NetworkResponseStarted),
             _ => None,
         }
     }

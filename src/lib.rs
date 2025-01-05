@@ -13,6 +13,7 @@ mod commands {
     mod id;
     pub mod session;
     mod utils;
+    pub mod network;
 }
 mod command_sender;
 mod error;

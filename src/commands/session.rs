@@ -41,8 +41,8 @@ pub async fn status(
     session: &mut WebDriverBiDiSession,
     params: EmptyParams,
 ) -> Result<StatusResult, CommandError> {
-    let status_cmd = StatusCommand::new(params);
-    utils::send_command(session, status_cmd).await
+    let cmd = StatusCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -74,8 +74,8 @@ pub async fn new_session(
     session: &mut WebDriverBiDiSession,
     params: NewParameters,
 ) -> Result<NewResult, CommandError> {
-    let new_cmd = NewCommand::new(params);
-    utils::send_command(session, new_cmd).await
+    let cmd = NewCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -107,8 +107,8 @@ pub async fn end(
     session: &mut WebDriverBiDiSession,
     params: EmptyParams,
 ) -> Result<EmptyResult, CommandError> {
-    let end_cmd = EndCommand::new(params);
-    utils::send_command(session, end_cmd).await
+    let cmd = EndCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -140,8 +140,8 @@ pub async fn subscribe(
     session: &mut WebDriverBiDiSession,
     params: SubscriptionRequest,
 ) -> Result<SubscriptionRequestResult, CommandError> {
-    let subscribe_cmd = SubscribeCommand::new(params);
-    utils::send_command(session, subscribe_cmd).await
+    let cmd = SubscribeCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -173,6 +173,6 @@ pub async fn unsubscribe(
     session: &mut WebDriverBiDiSession,
     params: UnsubscribeRequest,
 ) -> Result<EmptyResult, CommandError> {
-    let unsubscribe_cmd = UnsubscribeCommand::new(params);
-    utils::send_command(session, unsubscribe_cmd).await
+    let cmd = UnsubscribeCommand::new(params);
+    utils::send_command(session, cmd).await
 }

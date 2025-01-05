@@ -40,8 +40,8 @@ pub async fn activate(
     session: &mut WebDriverBiDiSession,
     params: ActivateParameters,
 ) -> Result<EmptyResult, CommandError> {
-    let activate_cmd = ActivateCommand::new(params);
-    utils::send_command(session, activate_cmd).await
+    let cmd = ActivateCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -73,8 +73,8 @@ pub async fn capture_screenshot(
     session: &mut WebDriverBiDiSession,
     params: CaptureScreenshotParameters,
 ) -> Result<CaptureScreenshotResult, CommandError> {
-    let capture_screenshot_cmd = CaptureScreenshotCommand::new(params);
-    utils::send_command(session, capture_screenshot_cmd).await
+    let cmd = CaptureScreenshotCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -106,8 +106,8 @@ pub async fn close(
     session: &mut WebDriverBiDiSession,
     params: CloseParameters,
 ) -> Result<EmptyResult, CommandError> {
-    let close_cmd = CloseCommand::new(params);
-    utils::send_command(session, close_cmd).await
+    let cmd = CloseCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -139,8 +139,8 @@ pub async fn create(
     session: &mut WebDriverBiDiSession,
     params: CreateParameters,
 ) -> Result<CreateResult, CommandError> {
-    let create_cmd = CreateCommand::new(params);
-    utils::send_command(session, create_cmd).await
+    let cmd = CreateCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -172,8 +172,8 @@ pub async fn get_tree(
     session: &mut WebDriverBiDiSession,
     params: GetTreeParameters,
 ) -> Result<GetTreeResult, CommandError> {
-    let get_tree_cmd = GetTreeCommand::new(params);
-    utils::send_command(session, get_tree_cmd).await
+    let cmd = GetTreeCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -205,8 +205,8 @@ pub async fn handle_user_prompt(
     session: &mut WebDriverBiDiSession,
     params: HandleUserPromptParameters,
 ) -> Result<EmptyResult, CommandError> {
-    let handle_user_prompt_cmd = HandleUserPromptCommand::new(params);
-    utils::send_command(session, handle_user_prompt_cmd).await
+    let cmd = HandleUserPromptCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -238,8 +238,8 @@ pub async fn locate_nodes(
     session: &mut WebDriverBiDiSession,
     params: LocateNodesParameters,
 ) -> Result<LocateNodesResult, CommandError> {
-    let locate_nodes_cmd = LocateNodesCommand::new(params);
-    utils::send_command(session, locate_nodes_cmd).await
+    let cmd = LocateNodesCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -269,8 +269,8 @@ pub async fn navigate(
     session: &mut WebDriverBiDiSession,
     params: NavigateParameters,
 ) -> Result<NavigateResult, CommandError> {
-    let navigate_cmd = NavigateCommand::new(params);
-    utils::send_command(session, navigate_cmd).await
+    let cmd = NavigateCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -302,8 +302,8 @@ pub async fn print(
     session: &mut WebDriverBiDiSession,
     params: PrintParameters,
 ) -> Result<PrintResult, CommandError> {
-    let print_cmd = PrintCommand::new(params);
-    utils::send_command(session, print_cmd).await
+    let cmd = PrintCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -335,8 +335,8 @@ pub async fn reload(
     session: &mut WebDriverBiDiSession,
     params: ReloadParameters,
 ) -> Result<NavigateResult, CommandError> {
-    let reload_cmd = ReloadCommand::new(params);
-    utils::send_command(session, reload_cmd).await
+    let cmd = ReloadCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -368,8 +368,8 @@ pub async fn set_viewport(
     session: &mut WebDriverBiDiSession,
     params: SetViewportParameters,
 ) -> Result<EmptyResult, CommandError> {
-    let set_viewport_cmd = SetViewportCommand::new(params);
-    utils::send_command(session, set_viewport_cmd).await
+    let cmd = SetViewportCommand::new(params);
+    utils::send_command(session, cmd).await
 }
 
 // --------------------------------------------------
@@ -399,8 +399,6 @@ pub async fn traverse_history(
     session: &mut WebDriverBiDiSession,
     params: TraverseHistoryParameters,
 ) -> Result<TraverseHistoryResult, CommandError> {
-    let traverse_history_cmd = TraverseHistoryCommand::new(params);
-    utils::send_command(session, traverse_history_cmd).await
+    let cmd = TraverseHistoryCommand::new(params);
+    utils::send_command(session, cmd).await
 }
-
-// --------------------------------------------------
