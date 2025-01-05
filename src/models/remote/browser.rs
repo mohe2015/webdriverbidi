@@ -47,10 +47,28 @@ pub struct Close {
     pub params: EmptyParams,
 }
 
+impl Close {
+    pub fn new(params: EmptyParams) -> Self {
+        Self {
+            method: "browser.close".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateUserContext {
     pub method: String,
     pub params: EmptyParams,
+}
+
+impl CreateUserContext {
+    pub fn new(params: EmptyParams) -> Self {
+        Self {
+            method: "browser.createUserContext".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -59,16 +77,43 @@ pub struct GetClientWindows {
     pub params: EmptyParams,
 }
 
+impl GetClientWindows {
+    pub fn new(params: EmptyParams) -> Self {
+        Self {
+            method: "browser.getClientWindows".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetUserContexts {
     pub method: String,
     pub params: EmptyParams,
 }
 
+impl GetUserContexts {
+    pub fn new(params: EmptyParams) -> Self {
+        Self {
+            method: "browser.getUserContexts".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveUserContext {
     pub method: String,
     pub params: RemoveUserContextParameters,
+}
+
+impl RemoveUserContext {
+    pub fn new(params: RemoveUserContextParameters) -> Self {
+        Self {
+            method: "browser.removeUserContext".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -81,6 +126,15 @@ pub struct RemoveUserContextParameters {
 pub struct SetClientWindowState {
     pub method: String,
     pub params: SetClientWindowStateParameters,
+}
+
+impl SetClientWindowState {
+    pub fn new(params: SetClientWindowStateParameters) -> Self {
+        Self {
+            method: "browser.setClientWindowState".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

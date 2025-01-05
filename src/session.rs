@@ -19,15 +19,18 @@ use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
 use crate::command_sender;
 use crate::commands;
 use crate::error::{CommandError, SessionError};
+use crate::events::EventType;
+use crate::local::browser::ClientWindowInfo;
+use crate::local::browser::*;
 use crate::local::browsing_context::*;
 use crate::local::session::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
+use crate::remote::browser::*;
 use crate::remote::session::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
-use crate::events::EventType;
 
 // --------------------------------------------------
 
@@ -554,5 +557,128 @@ impl WebDriverBiDiSession {
         params: UnsubscribeRequest,
     ) -> Result<EmptyResult, CommandError> {
         commands::session::unsubscribe(self, params).await
+    }
+}
+
+// --------------------------------------------------
+
+// Browser commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-browser-close
+
+    /// Terminates all WebDriver sessions and cleans up automation state in the remote browser instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `EmptyParams` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn browser_close(
+        &mut self,
+        params: EmptyParams,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::browser::close(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browser-createUserContext
+
+    /// Creates a new user context.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `EmptyParams` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `CreateUserContextResult` or a `CommandError`.
+    pub async fn browser_create_user_context(
+        &mut self,
+        params: EmptyParams,
+    ) -> Result<CreateUserContextResult, CommandError> {
+        commands::browser::create_user_context(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browser-getClientWindows
+
+    /// Retrieves the list of client windows.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `EmptyParams` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `GetClientWindowsResult` or a `CommandError`.
+    pub async fn browser_get_client_windows(
+        &mut self,
+        params: EmptyParams,
+    ) -> Result<GetClientWindowsResult, CommandError> {
+        commands::browser::get_client_windows(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browser-getUserContexts
+
+    /// Retrieves the list of user contexts.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `EmptyParams` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `GetUserContextsResult` or a `CommandError`.
+    pub async fn browser_get_user_contexts(
+        &mut self,
+        params: EmptyParams,
+    ) -> Result<GetUserContextsResult, CommandError> {
+        commands::browser::get_user_contexts(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browser-removeUserContext
+
+    /// Closes a user context and all navigables in it.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `RemoveUserContextParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn browser_remove_user_context(
+        &mut self,
+        params: RemoveUserContextParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::browser::remove_user_context(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-browser-setClientWindowState
+
+    /// Sets the dimensions of a client window.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `SetClientWindowStateParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `ClientWindowInfo` or a `CommandError`.
+    pub async fn browser_set_client_window_state(
+        &mut self,
+        params: SetClientWindowStateParameters,
+    ) -> Result<ClientWindowInfo, CommandError> {
+        commands::browser::set_client_window_state(self, params).await
     }
 }

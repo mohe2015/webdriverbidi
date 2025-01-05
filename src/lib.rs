@@ -8,6 +8,7 @@ pub mod models {
     pub mod remote;
 }
 mod commands {
+    pub mod browser;
     pub mod browsing_context;
     mod id;
     pub mod session;

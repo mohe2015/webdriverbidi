@@ -23,7 +23,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-webdriverbidi = "0.1.8"
+webdriverbidi = "0.1.9"
 ```
 
 ### Usage
@@ -116,7 +116,18 @@ async fn main() {
 
 ### browser
 #### Types
+- [x] browser.ClientWindow
+- [x] browser.ClientWindowInfo
+- [x] browser.UserContext
+- [x] browser.UserContextInfo
+
 #### Commands
+- [x] browser.close
+- [x] browser.createUserContext
+- [x] browser.getClientWindows
+- [x] browser.getUserContexts
+- [x] browser.removeUserContext
+- [x] browser.setClientWindowState
 
 ### browsingContext
 #### Types
@@ -169,7 +180,6 @@ async fn main() {
 ### storage
 #### Types
 #### Commands
-
 
 ### log
 #### Types
