@@ -15,6 +15,7 @@ mod commands {
 }
 mod command_sender;
 mod error;
+pub mod events;
 mod message_handler;
 
 // Re-export key functionality

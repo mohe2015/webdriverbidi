@@ -16,6 +16,7 @@ use tokio_tungstenite::{MaybeTlsStream, WebSocketStream};
 // --------------------------------------------------
 
 use crate::session::EventHandler;
+use crate::events::EventType;
 
 // --------------------------------------------------
 
@@ -30,7 +31,7 @@ const METHOD_FIELD: &str = "method";
 pub async fn handle_messages(
     websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,
     pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
-    event_handlers: Arc<Mutex<HashMap<String, EventHandler>>>,
+    event_handlers: Arc<Mutex<HashMap<EventType, EventHandler>>>,
 ) {
     loop {
         let message = {
@@ -64,18 +65,20 @@ pub async fn handle_messages(
                     } else if json.get(TYPE_FIELD).and_then(|t| t.as_str())
                         == Some(EVENT_TYPE_VALUE)
                     {
-                        if let Some(method) = json
+                        if let Some(event_type_str) = json
                             .get(METHOD_FIELD)
-                            .and_then(|method| method.as_str().map(String::from))
+                            .and_then(|method| method.as_str())
                         {
-                            let event_handlers = event_handlers.clone();
-                            let json_clone = json.clone();
-                            tokio::spawn(async move {
-                                let handlers = event_handlers.lock().await;
-                                if let Some(handler) = handlers.get(&method) {
-                                    handler(json_clone).await;
-                                }
-                            });
+                            if let Some(event_type) = EventType::from_str(event_type_str) {
+                                let event_handlers = event_handlers.clone();
+                                let json_clone = json.clone();
+                                tokio::spawn(async move {
+                                    let handlers = event_handlers.lock().await;
+                                    if let Some(handler) = handlers.get(&event_type) {
+                                        handler(json_clone).await;
+                                    }
+                                });
+                            }
                         }
                     } else {
                         error!(

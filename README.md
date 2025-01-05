@@ -143,18 +143,18 @@ async fn main() {
 - [x] browsingContext.traverseHistory
 
 #### Events
-- [ ] browsingContext.contextCreated
-- [ ] browsingContext.contextDestroyed
-- [ ] browsingContext.navigationStarted
-- [ ] browsingContext.fragmentNavigated
-- [ ] browsingContext.historyUpdated
-- [ ] browsingContext.domContentLoaded
-- [ ] browsingContext.load
-- [ ] browsingContext.downloadWillBegin
-- [ ] browsingContext.navigationAborted
-- [ ] browsingContext.navigationFailed
-- [ ] browsingContext.userPromptClosed
-- [ ] browsingContext.userPromptOpened
+- [x] browsingContext.contextCreated
+- [x] browsingContext.contextDestroyed
+- [x] browsingContext.navigationStarted
+- [x] browsingContext.fragmentNavigated
+- [x] browsingContext.historyUpdated
+- [x] browsingContext.domContentLoaded
+- [x] browsingContext.load
+- [x] browsingContext.downloadWillBegin
+- [x] browsingContext.navigationAborted
+- [x] browsingContext.navigationFailed
+- [x] browsingContext.userPromptClosed
+- [x] browsingContext.userPromptOpened
 
 ### network
 #### Types

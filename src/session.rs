@@ -27,6 +27,7 @@ use crate::remote::session::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
+use crate::events::EventType;
 
 // --------------------------------------------------
 
@@ -62,8 +63,8 @@ pub struct WebDriverBiDiSession {
     pub capabilities: Capabilities,
     pub websocket_url: String,
     pub websocket_stream: Option<Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>>,
-    pub pending_commands: Option<Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>>,
-    event_handlers: Arc<Mutex<HashMap<String, EventHandler>>>,
+    pub pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
+    event_handlers: Arc<Mutex<HashMap<EventType, EventHandler>>>,
 }
 
 // --------------------------------------------------
@@ -87,16 +88,15 @@ impl WebDriverBiDiSession {
             capabilities,
             websocket_url: String::new(),
             websocket_stream: None,
-            pending_commands: None,
+            pending_commands: Arc::new(Mutex::new(HashMap::new())),
             event_handlers: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
     // --------------------------------------------------
 
-    /// Initializes the session by starting it with the WebDriver server,
-    /// establishing a WebSocket connection, and spawning a background task to handle
-    /// incoming messages.
+    /// Starts a WebDriver session, establishes a WebSocket connection and
+    /// spawns a background task to handle incoming messages.
     ///
     /// **A WebDriver BiDi server must be running before calling this method.**
     pub async fn start(&mut self) -> Result<(), SessionError> {
@@ -112,14 +112,12 @@ impl WebDriverBiDiSession {
             .map_err(|e| SessionError::Other(format!("Failed to connect to WebSocket: {}", e)))?;
 
         let websocket_stream = Arc::new(Mutex::new(stream));
-        let pending_commands = Arc::new(Mutex::new(HashMap::new()));
+        self.websocket_stream = Some(websocket_stream.clone());
+
+        let pending_commands = self.pending_commands.clone();
         let event_handlers = self.event_handlers.clone();
 
-        self.websocket_stream = Some(websocket_stream.clone());
-        self.pending_commands = Some(pending_commands.clone());
-        // self.event_handlers = Some(event_handlers.clone());
-
-        debug!("Starting the incoming messages manager loop");
+        debug!("Starting the incoming messages management loop");
         // Spawn a background task to manage incoming messages
         self.spawn_message_handler_task(websocket_stream, pending_commands, event_handlers);
 
@@ -128,7 +126,7 @@ impl WebDriverBiDiSession {
 
     // --------------------------------------------------
 
-    /// Sends a request to the WebDriver server to close the session.
+    /// Closes the WebDriver session.
     pub async fn close(&mut self) -> Result<(), SessionError> {
         session::close_session(&self.base_url, &self.session_id).await?;
         Ok(())
@@ -150,17 +148,15 @@ impl WebDriverBiDiSession {
         &mut self,
         command: T,
     ) -> Result<U, CommandError> {
-        if let (Some(websocket_stream), Some(pending_commands)) =
-            (&self.websocket_stream, &self.pending_commands)
-        {
+        if let Some(websocket_stream) = &self.websocket_stream {
             command_sender::send_command(
                 websocket_stream.clone(),
-                pending_commands.clone(),
+                self.pending_commands.clone(),
                 command,
             )
             .await
         } else {
-            let error_msg = format!("WebSocket stream or pending commands mutex not initialized. WebSocket stream: {}, pending commands: {}", self.websocket_stream.is_some(), self.pending_commands.is_some());
+            let error_msg = format!("WebSocket stream not initialized.");
             Err(CommandError::Other(error_msg.into()))
         }
     }
@@ -175,7 +171,7 @@ impl WebDriverBiDiSession {
         &self,
         websocket_stream: Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>,
         pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
-        event_handlers: Arc<Mutex<HashMap<String, EventHandler>>>,
+        event_handlers: Arc<Mutex<HashMap<EventType, EventHandler>>>,
     ) {
         task::spawn(message_handler::handle_messages(
             websocket_stream,
@@ -192,7 +188,7 @@ impl WebDriverBiDiSession {
     ///
     /// * `event_type` - The type of the event to handle.
     /// * `handler` - The event handler function.
-    pub async fn register_event_handler<F, Fut>(&mut self, event_type: String, handler: F)
+    pub async fn register_event_handler<F, Fut>(&mut self, event_type: EventType, handler: F)
     where
         F: Fn(Value) -> Fut + Send + Sync + 'static,
         Fut: Future<Output = ()> + Send + 'static,
@@ -208,9 +204,9 @@ impl WebDriverBiDiSession {
     /// # Arguments
     ///
     /// * `event_type` - The type of the event to stop handling.
-    pub async fn unregister_event_handler(&mut self, event_type: &str) {
+    pub async fn unregister_event_handler(&mut self, event_type: EventType) {
         let mut handlers = self.event_handlers.lock().await;
-        handlers.remove(event_type);
+        handlers.remove(&event_type);
     }
 }
 
