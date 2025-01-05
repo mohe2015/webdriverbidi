@@ -169,29 +169,109 @@ async fn main() {
 
 ### network
 #### Types
+- [x] network.AuthChallenge
+- [x] network.AuthCredentials
+- [x] network.BaseParameters
+- [x] network.BytesValue
+- [x] network.Cookie
+- [x] network.CookieHeader
+- [x] network.FetchTimingInfo
+- [x] network.Header
+- [x] network.Initiator
+- [x] network.Intercept
+- [x] network.Request
+- [x] network.RequestData
+- [x] network.ResponseContent
+- [x] network.ResponseData
+- [x] network.SetCookieHeader
+- [x] network.UrlPattern
+
 #### Commands
+- [ ] network.addIntercept
+- [ ] network.continueRequest
+- [ ] network.continueResponse
+- [ ] network.continueWithAuth
+- [ ] network.failRequest
+- [ ] network.provideResponse
+- [ ] network.removeIntercept
+- [ ] network.setCacheBehavior
+
 #### Events
+- [ ] network.authRequired
+- [ ] network.beforeRequestSent
+- [ ] network.fetchError
+- [ ] network.responseCompleted
+- [ ] network.responseStarted
 
 ### script
 #### Types
+- [x] script.Channel
+- [x] script.ChannelValue
+- [x] script.EvaluateResult
+- [x] script.ExceptionDetails
+- [x] script.Handle
+- [x] script.InternalId
+- [x] script.LocalValue
+- [x] script.PreloadScript
+- [x] script.Realm
+- [x] script.PrimitiveProtocolValue
+- [x] script.RealmInfo
+- [x] script.RealmType
+- [x] script.RemoteReference
+- [x] script.RemoteValue
+- [x] script.ResultOwnership
+- [x] script.SerializationOptions
+- [x] script.SharedId
+- [x] script.StackFrame
+- [x] script.StackTrace
+- [x] script.Source
+- [x] script.Target
+
 #### Commands
+- [ ] script.addPreloadScript
+- [ ] script.disown
+- [ ] script.callFunction
+- [ ] script.evaluate
+- [ ] script.getRealms
+- [ ] script.removePreloadScript
+
 #### Events
+- [ ] script.message
+- [ ] script.realmCreated
+- [ ] script.realmDestroyed
 
 ### storage
 #### Types
+- [x] storage.PartitionKey
+
 #### Commands
+- [ ] storage.getCookies
+- [ ] storage.setCookie
+- [ ] storage.deleteCookies
 
 ### log
 #### Types
-#### Commands
+- [x] log.LogEntry
+
+#### Events
+- [ ] log.entryAdded
 
 ### input
 #### Types
+- [x] input.ElementOrigin
+
 #### Commands
+- [ ] input.performActions
+- [ ] input.releaseActions
+- [ ] input.setFiles
 
 ### webExtension
 #### Types
+- [x] webExtension.Extension
+
 #### Commands
+- [ ] webExtension.install
+- [ ] webExtension.uninstall
 
 ## Contributing
 
