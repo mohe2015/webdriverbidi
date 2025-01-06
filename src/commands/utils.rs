@@ -30,3 +30,64 @@ where
         }
     }
 }
+
+// --------------------------------------------------
+
+/// Macro to define a WebDriver BiDi command.
+///
+/// This macro generates a struct representing the command, an implementation block
+/// to create a new instance of the command, and an asynchronous function to send
+/// the command to the WebDriver BiDi session.
+///
+/// # Parameters
+///
+/// - `$cmd_name`: The name of the command struct to be generated.
+/// - `$cmd_type`: The type of the command parameters.
+/// - `$params_type`: The type of the parameters passed to the command.
+/// - `$fn_name`: The name of the function to send the command.
+/// - `$result_type`: The type of the result returned by the command.
+///
+/// # Example
+///
+/// ```
+/// define_command!(
+///     CloseCommand, 
+///     EmptyParams, 
+///     EmptyParams, 
+///     close_command, 
+///     EmptyResult
+/// );
+/// ```
+///
+/// This will generate:
+/// - A struct `CloseCommand` with an `id` and `params` field.
+/// - An implementation block for `CloseCommand` with a `new` method.
+/// - An asynchronous function `close_command` to send the command.
+#[macro_export]
+macro_rules! define_command {
+    ($cmd_name:ident, $cmd_type:ty, $params_type:ty, $fn_name:ident, $result_type:ty) => {
+        #[derive(Debug, Serialize, Deserialize)]
+        struct $cmd_name {
+            id: u64,
+            #[serde(flatten)]
+            params: $cmd_type,
+        }
+
+        impl $cmd_name {
+            fn new(params: $params_type) -> Self {
+                let id = id::get_next_id();
+                // debug!("Creating {} with id: {}", $cmd_str, id);
+                let params = <$cmd_type>::new(params);
+                Self { id, params }
+            }
+        }
+
+        pub async fn $fn_name(
+            session: &mut WebDriverBiDiSession,
+            params: $params_type,
+        ) -> Result<$result_type, CommandError> {
+            let cmd = $cmd_name::new(params);
+            utils::send_command(session, cmd).await
+        }
+    };
+}

@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use super::id;
 use super::utils;
+use crate::define_command;
 use crate::error::CommandError;
 use crate::models::local::browsing_context::*;
 use crate::models::local::result_data::EmptyResult;
@@ -244,34 +245,14 @@ pub async fn locate_nodes(
 
 // --------------------------------------------------
 
-/// Represents the `browsingContext.navigate` command.
-#[derive(Debug, Serialize, Deserialize)]
-struct NavigateCommand {
-    id: u64,
-    #[serde(flatten)]
-    navigate: Navigate,
-}
-
-impl NavigateCommand {
-    /// Constructs a new `NavigateCommand` with a unique ID and the provided parameters.
-    fn new(params: NavigateParameters) -> Self {
-        let id = id::get_next_id();
-        debug!("Creating NavigateCommand with id: {}", id);
-        Self {
-            id,
-            navigate: Navigate::new(params),
-        }
-    }
-}
-
-/// Sends a `browsingContext.navigate` command to the WebDriver BiDi session.
-pub async fn navigate(
-    session: &mut WebDriverBiDiSession,
-    params: NavigateParameters,
-) -> Result<NavigateResult, CommandError> {
-    let cmd = NavigateCommand::new(params);
-    utils::send_command(session, cmd).await
-}
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-navigate
+define_command!(
+    NavigateCommand,
+    Navigate,
+    NavigateParameters,
+    navigate,
+    NavigateResult
+);
 
 // --------------------------------------------------
 

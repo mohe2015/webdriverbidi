@@ -12,7 +12,8 @@ mod commands {
     pub mod browsing_context;
     mod id;
     pub mod session;
-    mod utils;
+    #[macro_use]
+    pub mod utils;
     pub mod network;
 }
 mod command_sender;
