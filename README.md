@@ -245,33 +245,33 @@ async fn main() {
 - [x] storage.PartitionKey
 
 #### Commands
-- [ ] storage.getCookies
-- [ ] storage.setCookie
-- [ ] storage.deleteCookies
+- [x] storage.getCookies
+- [x] storage.setCookie
+- [x] storage.deleteCookies
 
 ### log
 #### Types
 - [x] log.LogEntry
 
 #### Events
-- [ ] log.entryAdded
+- [x] log.entryAdded
 
 ### input
 #### Types
 - [x] input.ElementOrigin
 
 #### Commands
-- [ ] input.performActions
-- [ ] input.releaseActions
-- [ ] input.setFiles
+- [x] input.performActions
+- [x] input.releaseActions
+- [x] input.setFiles
 
 ### webExtension
 #### Types
 - [x] webExtension.Extension
 
 #### Commands
-- [ ] webExtension.install
-- [ ] webExtension.uninstall
+- [x] webExtension.install
+- [x] webExtension.uninstall
 
 ## Contributing
 

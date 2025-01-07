@@ -21,6 +21,7 @@ pub enum EventType {
     ScriptMessage,
     ScriptRealmCreated,
     ScriptRealmDestroyed,
+    LogEntryAdded,
 }
 
 impl EventType {
@@ -55,6 +56,7 @@ impl EventType {
             "script.message" => Some(EventType::ScriptMessage),
             "script.realmCreated" => Some(EventType::ScriptRealmCreated),
             "script.realmDestroyed" => Some(EventType::ScriptRealmDestroyed),
+            "log.entryAdded" => Some(EventType::LogEntryAdded),
             _ => None,
         }
     }

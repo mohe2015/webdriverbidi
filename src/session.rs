@@ -22,17 +22,23 @@ use crate::error::{CommandError, SessionError};
 use crate::events::EventType;
 use crate::local::browser::ClientWindowInfo;
 use crate::local::browser::*;
+use crate::local::web_extension::*;
+use crate::remote::web_extension::*;
+
 use crate::local::browsing_context::*;
 use crate::local::network::*;
 use crate::local::script::EvaluateResult;
 use crate::local::script::*;
 use crate::local::session::*;
+use crate::local::storage::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
 use crate::remote::browser::*;
+use crate::remote::input::*;
 use crate::remote::network::*;
 use crate::remote::script::*;
 use crate::remote::session::*;
+use crate::remote::storage::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
 use crate::webdriver::session;
@@ -972,5 +978,175 @@ impl WebDriverBiDiSession {
         params: RemovePreloadScriptParameters,
     ) -> Result<EmptyResult, CommandError> {
         commands::script::remove_preload_script(self, params).await
+    }
+}
+
+// --------------------------------------------------
+
+// Storage commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-storage-getCookies
+
+    /// Retrieves zero or more cookies which match a set of provided parameters.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `GetCookiesParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `GetCookiesResult` or a `CommandError`.
+    pub async fn storage_get_cookies(
+        &mut self,
+        params: GetCookiesParameters,
+    ) -> Result<GetCookiesResult, CommandError> {
+        commands::storage::get_cookies(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-storage-setCookie
+
+    /// Creates a new cookie in a cookie store.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `SetCookieParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `SetCookieResult` or a `CommandError`.
+    pub async fn storage_set_cookie(
+        &mut self,
+        params: SetCookieParameters,
+    ) -> Result<SetCookieResult, CommandError> {
+        commands::storage::set_cookie(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-storage-deleteCookies
+
+    /// Removes zero or more cookies which match a set of provided parameters.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `DeleteCookiesParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `DeleteCookiesResult` or a `CommandError`.
+    pub async fn storage_delete_cookies(
+        &mut self,
+        params: DeleteCookiesParameters,
+    ) -> Result<DeleteCookiesResult, CommandError> {
+        commands::storage::delete_cookies(self, params).await
+    }
+}
+
+// --------------------------------------------------
+
+// Input commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-input-performActions
+
+    /// Performs a specified sequence of user input actions.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `PerformActionsParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn input_perform_actions(
+        &mut self,
+        params: PerformActionsParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::input::perform_actions(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-input-releaseActions
+
+    /// Resets the input state associated with the current session.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `ReleaseActionsParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn input_release_actions(
+        &mut self,
+        params: ReleaseActionsParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::input::release_actions(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-input-setFiles
+
+    /// Sets the files property of a given input element with type file
+    /// to a set of file paths.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `SetFilesParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn input_set_files(
+        &mut self,
+        params: SetFilesParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::input::set_files(self, params).await
+    }
+}
+
+// --------------------------------------------------
+
+// Web extension commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-webExtension-install
+
+    /// Installs a web extension.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `InstallParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `InstallResult` or a `CommandError`.
+    pub async fn web_extension_install(
+        &mut self,
+        params: InstallParameters,
+    ) -> Result<InstallResult, CommandError> {
+        commands::web_extension::install(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-webExtension-uninstall
+
+    /// Uninstalls a web extension.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `UninstallParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn web_extension_uninstall(
+        &mut self,
+        params: UninstallParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::web_extension::uninstall(self, params).await
     }
 }

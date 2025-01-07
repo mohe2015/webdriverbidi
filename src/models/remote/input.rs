@@ -23,6 +23,15 @@ pub struct PerformActions {
     pub params: PerformActionsParameters,
 }
 
+impl PerformActions {
+    pub fn new(params: PerformActionsParameters) -> Self {
+        Self {
+            method: "input.performActions".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PerformActionsParameters {
     pub context: BrowsingContext,
@@ -207,6 +216,15 @@ pub struct ReleaseActions {
     pub params: ReleaseActionsParameters,
 }
 
+impl ReleaseActions {
+    pub fn new(params: ReleaseActionsParameters) -> Self {
+        Self {
+            method: "input.releaseActions".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReleaseActionsParameters {
     pub context: BrowsingContext,
@@ -216,6 +234,15 @@ pub struct ReleaseActionsParameters {
 pub struct SetFiles {
     pub method: String,
     pub params: SetFilesParameters,
+}
+
+impl SetFiles {
+    pub fn new(params: SetFilesParameters) -> Self {
+        Self {
+            method: "input.setFiles".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

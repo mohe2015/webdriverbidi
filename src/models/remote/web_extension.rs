@@ -14,6 +14,15 @@ pub struct Install {
     pub params: InstallParameters,
 }
 
+impl Install {
+    pub fn new(params: InstallParameters) -> Self {
+        Self {
+            method: "webExtension.install".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InstallParameters {
     #[serde(rename = "extensionData")]
@@ -52,6 +61,15 @@ pub struct ExtensionBase64Encoded {
 pub struct Uninstall {
     pub method: String,
     pub params: UninstallParameters,
+}
+
+impl Uninstall {
+    pub fn new(params: UninstallParameters) -> Self {
+        Self {
+            method: "webExtension.uninstall".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

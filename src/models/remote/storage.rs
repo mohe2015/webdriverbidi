@@ -25,6 +25,15 @@ pub struct GetCookies {
     pub params: GetCookiesParameters,
 }
 
+impl GetCookies {
+    pub fn new(params: GetCookiesParameters) -> Self {
+        Self {
+            method: "storage.getCookies".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieFilter {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -86,6 +95,15 @@ pub struct SetCookie {
     pub params: SetCookieParameters,
 }
 
+impl SetCookie {
+    pub fn new(params: SetCookieParameters) -> Self {
+        Self {
+            method: "storage.setCookie".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PartialCookie {
     pub name: String,
@@ -115,6 +133,15 @@ pub struct SetCookieParameters {
 pub struct DeleteCookies {
     pub method: String,
     pub params: DeleteCookiesParameters,
+}
+
+impl DeleteCookies {
+    pub fn new(params: DeleteCookiesParameters) -> Self {
+        Self {
+            method: "storage.deleteCookies".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -16,6 +16,9 @@ mod commands {
     mod utils;
     pub mod network;
     pub mod script;
+    pub mod storage;
+    pub mod input;
+    pub mod web_extension;
 }
 mod command_sender;
 mod error;
