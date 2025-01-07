@@ -24,11 +24,14 @@ use crate::local::browser::ClientWindowInfo;
 use crate::local::browser::*;
 use crate::local::browsing_context::*;
 use crate::local::network::*;
+use crate::local::script::EvaluateResult;
+use crate::local::script::*;
 use crate::local::session::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
 use crate::remote::browser::*;
 use crate::remote::network::*;
+use crate::remote::script::*;
 use crate::remote::session::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::Capabilities;
@@ -501,7 +504,7 @@ impl WebDriverBiDiSession {
     ///
     /// A result containing the `NewResult` or a `CommandError`.
     pub async fn session_new(&mut self, params: NewParameters) -> Result<NewResult, CommandError> {
-        commands::session::new_session(self, params).await
+        commands::session::new(self, params).await
     }
 
     // --------------------------------------------------
@@ -845,5 +848,129 @@ impl WebDriverBiDiSession {
         params: SetCacheBehaviorParameters,
     ) -> Result<EmptyResult, CommandError> {
         commands::network::set_cache_behavior(self, params).await
+    }
+}
+
+// --------------------------------------------------
+
+// Script commands
+impl WebDriverBiDiSession {
+    // https://w3c.github.io/webdriver-bidi/#command-script-addPreloadScript
+
+    /// Adds a script to be preloaded into the browsing context.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `AddPreloadScriptParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `AddPreloadScriptResult` or a `CommandError`.
+    pub async fn script_add_preload_script(
+        &mut self,
+        params: AddPreloadScriptParameters,
+    ) -> Result<AddPreloadScriptResult, CommandError> {
+        commands::script::add_preload_script(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-script-disown
+
+    /// Disowns the given handles.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `DisownParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn script_disown(
+        &mut self,
+        params: DisownParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::script::disown(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-script-callFunction
+
+    /// Calls a provided function with given arguments in a given realm.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `CallFunctionParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EvaluateResult` or a `CommandError`.
+    pub async fn script_call_function(
+        &mut self,
+        params: CallFunctionParameters,
+    ) -> Result<EvaluateResult, CommandError> {
+        commands::script::call_function(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-script-evaluate
+
+    /// Evaluates the given script in the given realm.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as an `EvaluateParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EvaluateResult` or a `CommandError`.
+    pub async fn script_evaluate(
+        &mut self,
+        params: EvaluateParameters,
+    ) -> Result<EvaluateResult, CommandError> {
+        commands::script::evaluate(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-script-getRealms
+
+    /// Returns a list of all realms, optionally filtered to realms of a
+    /// specific type, or to the realm associated with a navigable's active document.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `GetRealmsParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `GetRealmsResult` or a `CommandError`.
+    pub async fn script_get_realms(
+        &mut self,
+        params: GetRealmsParameters,
+    ) -> Result<GetRealmsResult, CommandError> {
+        commands::script::get_realms(self, params).await
+    }
+
+    // --------------------------------------------------
+
+    // https://w3c.github.io/webdriver-bidi/#command-script-removePreloadScript
+
+    /// Removes a preload script.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The parameters as a `RemovePreloadScriptParameters` instance.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the `EmptyResult` or a `CommandError`.
+    pub async fn script_remove_preload_script(
+        &mut self,
+        params: RemovePreloadScriptParameters,
+    ) -> Result<EmptyResult, CommandError> {
+        commands::script::remove_preload_script(self, params).await
     }
 }

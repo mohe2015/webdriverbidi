@@ -228,17 +228,17 @@ async fn main() {
 - [x] script.Target
 
 #### Commands
-- [ ] script.addPreloadScript
-- [ ] script.disown
-- [ ] script.callFunction
-- [ ] script.evaluate
-- [ ] script.getRealms
-- [ ] script.removePreloadScript
+- [x] script.addPreloadScript
+- [x] script.disown
+- [x] script.callFunction
+- [x] script.evaluate
+- [x] script.getRealms
+- [x] script.removePreloadScript
 
 #### Events
-- [ ] script.message
-- [ ] script.realmCreated
-- [ ] script.realmDestroyed
+- [x] script.message
+- [x] script.realmCreated
+- [x] script.realmDestroyed
 
 ### storage
 #### Types

@@ -13,8 +13,9 @@ mod commands {
     mod id;
     pub mod session;
     #[macro_use]
-    pub mod utils;
+    mod utils;
     pub mod network;
+    pub mod script;
 }
 mod command_sender;
 mod error;

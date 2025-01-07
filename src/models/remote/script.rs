@@ -609,6 +609,15 @@ pub struct AddPreloadScript {
     pub params: AddPreloadScriptParameters,
 }
 
+impl AddPreloadScript {
+    pub fn new(params: AddPreloadScriptParameters) -> Self {
+        Self {
+            method: "script.addPreloadScript".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScriptParameters {
     #[serde(rename = "functionDeclaration")]
@@ -627,6 +636,15 @@ pub struct Disown {
     pub params: DisownParameters,
 }
 
+impl Disown {
+    pub fn new(params: DisownParameters) -> Self {
+        Self {
+            method: "script.disown".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DisownParameters {
     pub handles: Vec<Handle>,
@@ -637,6 +655,15 @@ pub struct DisownParameters {
 pub struct CallFunction {
     pub method: String,
     pub params: CallFunctionParameters,
+}
+
+impl CallFunction {
+    pub fn new(params: CallFunctionParameters) -> Self {
+        Self {
+            method: "script.callFunction".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -666,6 +693,15 @@ pub struct Evaluate {
     pub params: EvaluateParameters,
 }
 
+impl Evaluate {
+    pub fn new(params: EvaluateParameters) -> Self {
+        Self {
+            method: "script.evaluate".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateParameters {
     pub expression: String,
@@ -688,6 +724,15 @@ pub struct GetRealms {
     pub params: GetRealmsParameters,
 }
 
+impl GetRealms {
+    pub fn new(params: GetRealmsParameters) -> Self {
+        Self {
+            method: "script.getRealms".to_string(),
+            params,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetRealmsParameters {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -701,6 +746,15 @@ pub struct GetRealmsParameters {
 pub struct RemovePreloadScript {
     pub method: String,
     pub params: RemovePreloadScriptParameters,
+}
+
+impl RemovePreloadScript {
+    pub fn new(params: RemovePreloadScriptParameters) -> Self {
+        Self {
+            method: "script.removePreloadScript".to_string(),
+            params,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

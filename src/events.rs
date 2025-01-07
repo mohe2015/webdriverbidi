@@ -18,6 +18,9 @@ pub enum EventType {
     NetworkFetchError,
     NetworkResponseCompleted,
     NetworkResponseStarted,
+    ScriptMessage,
+    ScriptRealmCreated,
+    ScriptRealmDestroyed,
 }
 
 impl EventType {
@@ -49,6 +52,9 @@ impl EventType {
             "network.fetchError" => Some(EventType::NetworkFetchError),
             "network.responseCompleted" => Some(EventType::NetworkResponseCompleted),
             "network.responseStarted" => Some(EventType::NetworkResponseStarted),
+            "script.message" => Some(EventType::ScriptMessage),
+            "script.realmCreated" => Some(EventType::ScriptRealmCreated),
+            "script.realmDestroyed" => Some(EventType::ScriptRealmDestroyed),
             _ => None,
         }
     }
