@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 // --------------------------------------------------
 
 use crate::error::SessionError;
-use crate::webdriver::capabilities::Capabilities;
+use crate::webdriver::capabilities::CapabilitiesRequest;
 
 // --------------------------------------------------
 
@@ -13,7 +13,7 @@ use crate::webdriver::capabilities::Capabilities;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SessionResponse {
     pub session_id: String,
-    pub capabilities: Capabilities,
+    pub capabilities: CapabilitiesRequest,
     pub websocket_url: String,
 }
 
@@ -22,7 +22,7 @@ pub struct SessionResponse {
 /// Starts a WebDriver session through HTTP.
 pub async fn start_session(
     base_url: &str,
-    capabilities: &Capabilities,
+    capabilities: &CapabilitiesRequest,
 ) -> Result<SessionResponse, SessionError> {
     let url = format!("{}/session", base_url);
     let payload = capabilities.build();

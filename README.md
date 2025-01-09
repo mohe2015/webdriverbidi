@@ -4,7 +4,7 @@
 
 The webdriverbidi library provides an interface for interacting with web browsers through the WebDriver BiDi (Bidirectional) protocol. This library allows you to create and manage WebDriver sessions, send commands, and handle responses asynchronously through WebSockets.
 
-## Planned Features
+## Features
 
 - Create and manage WebDriver BiDi sessions
 - Send commands
@@ -23,7 +23,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-webdriverbidi = "0.1.10"
+webdriverbidi = "0.1.11"
 ```
 
 ### Usage

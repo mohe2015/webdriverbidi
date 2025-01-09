@@ -40,7 +40,7 @@ use crate::remote::script::*;
 use crate::remote::session::*;
 use crate::remote::storage::*;
 use crate::remote::{browsing_context::*, EmptyParams};
-use crate::webdriver::capabilities::Capabilities;
+use crate::webdriver::capabilities::CapabilitiesRequest;
 use crate::webdriver::session;
 
 // --------------------------------------------------
@@ -74,7 +74,7 @@ pub struct WebDriverBiDiSession {
     pub port: u16,
     pub base_url: String,
     pub session_id: String,
-    pub capabilities: Capabilities,
+    pub capabilities: CapabilitiesRequest,
     pub websocket_url: String,
     pub websocket_stream: Option<Arc<Mutex<WebSocketStream<MaybeTlsStream<TcpStream>>>>>,
     pub pending_commands: Arc<Mutex<HashMap<u64, oneshot::Sender<Value>>>>,
@@ -91,7 +91,7 @@ impl WebDriverBiDiSession {
     /// * `host` - The host address of the WebDriver server.
     /// * `port` - The port number of the WebDriver server.
     /// * `capabilities` - The desired capabilities for the session.
-    pub fn new(host: String, port: u16, capabilities: Capabilities) -> Self {
+    pub fn new(host: String, port: u16, capabilities: CapabilitiesRequest) -> Self {
         let base_url = format!("http://{}:{}", host, port);
         debug!("Constructed base URL: {}", base_url);
         Self {

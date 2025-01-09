@@ -76,14 +76,14 @@ impl CapabilityRequest {
 
 /// Capabilities struct to represent the standard capabilities JSON object.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Capabilities {
+pub struct CapabilitiesRequest {
     #[serde(rename = "alwaysMatch", skip_serializing_if = "Option::is_none")]
     always_match: Option<CapabilityRequest>,
     #[serde(rename = "firstMatch", skip_serializing_if = "Option::is_none")]
     first_match: Option<Vec<HashMap<String, Value>>>,
 }
 
-impl Capabilities {
+impl CapabilitiesRequest {
     /// Constructs a new Capabilities instance ensuring the webSocketUrl capability is set to true.
     ///
     /// # Arguments
@@ -148,5 +148,13 @@ impl Capabilities {
             "capabilities": self
         });
         json
+    }
+
+    // --------------------------------------------------
+
+    /// Constructs a new CapabilitiesRequest instance with default values.
+    pub fn default() -> Self {
+        let always_match = CapabilityRequest::new();
+        CapabilitiesRequest::new(always_match)
     }
 }

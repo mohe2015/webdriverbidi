@@ -46,23 +46,6 @@ where
 /// - `$params_type`: The type of the parameters passed to the command.
 /// - `$fn_name`: The name of the function to send the command.
 /// - `$result_type`: The type of the result returned by the command.
-///
-/// # Example
-///
-/// ```
-/// define_command!(
-///     CloseCommand, 
-///     EmptyParams, 
-///     EmptyParams, 
-///     close_command, 
-///     EmptyResult
-/// );
-/// ```
-///
-/// This will generate:
-/// - A struct `CloseCommand` with an `id` and `params` field.
-/// - An implementation block for `CloseCommand` with a `new` method.
-/// - An asynchronous function `close_command` to send the command.
 #[macro_export]
 macro_rules! define_command {
     ($cmd_name:ident, $cmd_type:ty, $params_type:ty, $fn_name:ident, $result_type:ty) => {

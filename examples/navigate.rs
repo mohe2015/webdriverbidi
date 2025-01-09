@@ -7,7 +7,7 @@ use webdriverbidi::remote::browsing_context::{
     GetTreeParameters, NavigateParameters, ReadinessState,
 };
 use webdriverbidi::session::WebDriverBiDiSession;
-use webdriverbidi::webdriver::capabilities::{Capabilities, CapabilityRequest};
+use webdriverbidi::webdriver::capabilities::{CapabilitiesRequest, CapabilityRequest};
 
 // --------------------------------------------------
 
@@ -19,13 +19,13 @@ async fn sleep(secs: u64) {
 async fn main() {
     // Define the capabilities for the WebDriver session
     let always_match = CapabilityRequest::new();
-    let capabilities = Capabilities::new(always_match);
+    let capabilities = CapabilitiesRequest::new(always_match);
 
     // Initialize a new WebDriver BiDi session and start it
     let host = String::from("localhost");
     let port = 4444;
     let mut session = WebDriverBiDiSession::new(host, port, capabilities);
-    let _ = session.start().await.expect("Failed to start session");
+    session.start().await.expect("Failed to start session");
 
     // Get the browsing context tree
     let get_tree_params = GetTreeParameters::new(None, None);
@@ -40,7 +40,7 @@ async fn main() {
         "https://www.rust-lang.org/".to_string(),
         Some(ReadinessState::Complete),
     );
-    let _ = session
+    session
         .browsing_context_navigate(navigate_params)
         .await
         .expect("Failed to send command");
