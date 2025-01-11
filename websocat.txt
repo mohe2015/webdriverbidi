@@ -1,6 +1,13 @@
 // browsingContext.activate
 echo '{"id": $ID, "method": "browsingContext.activate", "params": {"context": "$CONTEXT_ID"}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
+// browsingContext.captureScreenshot
+echo '{"id": $ID, "method": "browsingContext.captureScreenshot", "params": {"context": "$CONTEXT_ID", "origin": "document", "format": {"image_format_type": "png"}}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
+
+// browsingContext.close
+echo '{"id": $ID, "method": "browsingContext.close", "params": {"context": "$CONTEXT_ID"}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
+
+
 // browsingContext.getTree
 echo '{"id": $ID, "method": "browsingContext.getTree", "params": {}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 

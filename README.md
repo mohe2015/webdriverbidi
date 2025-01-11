@@ -19,11 +19,11 @@ The webdriverbidi library provides an interface for interacting with web browser
 
 ### Installation
 
-Add the following to your `Cargo.toml`:
+Add the following to your `Cargo.toml` (the example below will also require tokio with full features):
 
 ```toml
 [dependencies]
-webdriverbidi = "0.1.11"
+webdriverbidi = "0.1.12"
 ```
 
 ### Usage
@@ -46,7 +46,7 @@ use webdriverbidi::remote::browsing_context::{
     GetTreeParameters, NavigateParameters, ReadinessState,
 };
 use webdriverbidi::session::WebDriverBiDiSession;
-use webdriverbidi::webdriver::capabilities::{Capabilities, CapabilityRequest};
+use webdriverbidi::webdriver::capabilities::CapabilitiesRequest;
 
 // --------------------------------------------------
 
@@ -54,26 +54,21 @@ async fn sleep(secs: u64) {
     time::sleep(time::Duration::from_secs(secs)).await
 }
 
-// --------------------------------------------------
-
 #[tokio::main]
 async fn main() {
-    // Define the capabilities for the WebDriver session
-    let always_match = CapabilityRequest::new();
-    let capabilities = Capabilities::new(always_match);
-
     // Initialize a new WebDriver BiDi session and start it
     let host = String::from("localhost");
     let port = 4444;
-    let mut bidi_session = WebDriverBiDiSession::new(host, port, capabilities);
-    let _ = bidi_session.start().await.expect("Failed to start session");
+    let capabilities = CapabilitiesRequest::default();
+    let mut session = WebDriverBiDiSession::new(host, port, capabilities);
+    session.start().await.expect("Failed to start session");
 
     // Get the browsing context tree
     let get_tree_params = GetTreeParameters::new(None, None);
-    let get_tree_rslt = bidi_session
+    let get_tree_rslt = session
         .browsing_context_get_tree(get_tree_params)
         .await
-        .expect("Failed to send command");
+        .expect("Failed to get browsing context tree");
 
     // Navigate to rust-lang.org
     let navigate_params = NavigateParameters::new(
@@ -81,15 +76,15 @@ async fn main() {
         "https://www.rust-lang.org/".to_string(),
         Some(ReadinessState::Complete),
     );
-    let _ = bidi_session
+    session
         .browsing_context_navigate(navigate_params)
         .await
-        .expect("Failed to send command");
+        .expect("Failed to navigate");
 
     sleep(2).await;
 
     // Close the session
-    bidi_session.close().await.expect("Failed to close session");
+    session.close().await.expect("Failed to close session");
 }
 ```
 

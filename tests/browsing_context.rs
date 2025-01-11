@@ -101,3 +101,43 @@ async fn test_browsing_context_capture_screenshot() {
 
     close_session(&mut session).await;
 }
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
+
+#[tokio::test]
+async fn test_browsing_context_close() {
+    let mut session = init_session().await;
+
+    // Get the browsing context tree
+    let get_tree_params = GetTreeParameters::new(None, None);
+    let get_tree_rslt = session
+        .browsing_context_get_tree(get_tree_params)
+        .await
+        .expect("Failed to get tree");
+
+    let first_tab_context = get_tree_rslt.contexts[0].context.clone();
+
+    sleep(2).await;
+
+    // Add a new tab, some browsers might not close the browser itself when the last tab or window is closed
+    let create_params = CreateParameters::new(CreateType::Tab, None, None, None);
+    session
+        .browsing_context_create(create_params)
+        .await
+        .expect("Failed to add a new tab");
+
+    sleep(2).await;
+
+    // Close the first tab
+    let close_params = CloseParameters::new(first_tab_context, None);
+    session
+        .browsing_context_close(close_params)
+        .await
+        .expect("Failed to activate the first tab");
+
+    sleep(2).await;
+
+    close_session(&mut session).await;
+}
