@@ -7,7 +7,7 @@ use webdriverbidi::remote::browsing_context::{
     GetTreeParameters, NavigateParameters, ReadinessState,
 };
 use webdriverbidi::session::WebDriverBiDiSession;
-use webdriverbidi::webdriver::capabilities::{CapabilitiesRequest, CapabilityRequest};
+use webdriverbidi::webdriver::capabilities::CapabilitiesRequest;
 
 // --------------------------------------------------
 
@@ -17,13 +17,10 @@ async fn sleep(secs: u64) {
 
 #[tokio::main]
 async fn main() {
-    // Define the capabilities for the WebDriver session
-    let always_match = CapabilityRequest::new();
-    let capabilities = CapabilitiesRequest::new(always_match);
-
     // Initialize a new WebDriver BiDi session and start it
     let host = String::from("localhost");
     let port = 4444;
+    let capabilities = CapabilitiesRequest::default();
     let mut session = WebDriverBiDiSession::new(host, port, capabilities);
     session.start().await.expect("Failed to start session");
 
@@ -32,7 +29,7 @@ async fn main() {
     let get_tree_rslt = session
         .browsing_context_get_tree(get_tree_params)
         .await
-        .expect("Failed to send command");
+        .expect("Failed to get browsing context tree");
 
     // Navigate to rust-lang.org
     let navigate_params = NavigateParameters::new(
@@ -43,7 +40,7 @@ async fn main() {
     session
         .browsing_context_navigate(navigate_params)
         .await
-        .expect("Failed to send command");
+        .expect("Failed to navigate");
 
     sleep(2).await;
 

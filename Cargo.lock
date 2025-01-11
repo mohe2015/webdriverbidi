@@ -1785,6 +1785,7 @@ dependencies = [
 name = "webdriverbidi"
 version = "0.1.11"
 dependencies = [
+ "base64",
  "env_logger",
  "futures",
  "log",
