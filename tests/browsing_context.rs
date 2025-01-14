@@ -141,3 +141,23 @@ async fn test_browsing_context_close() {
 
     close_session(&mut session).await;
 }
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
+
+#[tokio::test]
+async fn test_browsing_context_create() {
+    let mut session = init_session().await;
+
+    // Add a new tab
+    let create_params = CreateParameters::new(CreateType::Tab, None, None, None);
+    session
+        .browsing_context_create(create_params)
+        .await
+        .expect("Failed to add a new tab");
+
+    sleep(2).await;
+
+    close_session(&mut session).await;
+}
