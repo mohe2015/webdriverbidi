@@ -29,6 +29,12 @@ pub struct InstallParameters {
     pub extension_data: ExtensionData,
 }
 
+impl InstallParameters {
+    pub fn new(extension_data: ExtensionData) -> Self {
+        Self { extension_data }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ExtensionData {
     ExtensionArchivePath(ExtensionArchivePath),
@@ -43,6 +49,15 @@ pub struct ExtensionPath {
     pub path: String,
 }
 
+impl ExtensionPath {
+    pub fn new(path: String) -> Self {
+        Self {
+            extension_path_type: "path".to_string(),
+            path,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionArchivePath {
     #[serde(rename = "type")]
@@ -50,11 +65,29 @@ pub struct ExtensionArchivePath {
     pub path: String,
 }
 
+impl ExtensionArchivePath {
+    pub fn new(path: String) -> Self {
+        Self {
+            extension_archive_path_type: "archivePath".to_string(),
+            path,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionBase64Encoded {
     #[serde(rename = "type")]
     pub extension_base64_encoded_type: String,
     pub value: String,
+}
+
+impl ExtensionBase64Encoded {
+    pub fn new(value: String) -> Self {
+        Self {
+            extension_base64_encoded_type: "base64".to_string(),
+            value,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -75,4 +108,10 @@ impl Uninstall {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UninstallParameters {
     pub extension: Extension,
+}
+
+impl UninstallParameters {
+    pub fn new(extension: Extension) -> Self {
+        Self { extension }
+    }
 }

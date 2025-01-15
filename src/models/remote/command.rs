@@ -16,6 +16,16 @@ pub struct Command {
     pub extensible: Extensible,
 }
 
+impl Command {
+    pub fn new(id: u64, command_data: CommandData) -> Self {
+        Self {
+            id,
+            command_data,
+            extensible: Extensible::new(),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum CommandData {
     BrowserCommand(BrowserCommand),

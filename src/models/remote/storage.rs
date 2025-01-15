@@ -19,6 +19,16 @@ pub struct PartionKey {
     pub extensible: Extensible,
 }
 
+impl PartionKey {
+    pub fn new(user_context: Option<String>, source_origin: Option<String>) -> Self {
+        Self {
+            user_context,
+            source_origin,
+            extensible: Extensible::new(),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookies {
     pub method: String,
@@ -57,11 +67,48 @@ pub struct CookieFilter {
     pub extensible: Extensible,
 }
 
+impl CookieFilter {
+    pub fn new(
+        name: Option<String>,
+        value: Option<BytesValue>,
+        domain: Option<String>,
+        path: Option<String>,
+        size: Option<JsUint>,
+        http_only: Option<bool>,
+        secure: Option<bool>,
+        same_site: Option<SameSite>,
+        expiry: Option<JsUint>,
+        extensible: Extensible,
+    ) -> Self {
+        Self {
+            name,
+            value,
+            domain,
+            path,
+            size,
+            http_only,
+            secure,
+            same_site,
+            expiry,
+            extensible,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrowsingContextPartitionDescriptor {
     #[serde(rename = "type")]
     pub browsing_context_partition_descriptor_type: String,
     pub context: browsing_context::BrowsingContext,
+}
+
+impl BrowsingContextPartitionDescriptor {
+    pub fn new(context: browsing_context::BrowsingContext) -> Self {
+        Self {
+            browsing_context_partition_descriptor_type: "context".to_string(),
+            context,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -73,6 +120,17 @@ pub struct StorageKeyPartitionDescriptor {
     #[serde(rename = "sourceOrigin", skip_serializing_if = "Option::is_none")]
     pub source_origin: Option<String>,
     pub extensible: Extensible,
+}
+
+impl StorageKeyPartitionDescriptor {
+    pub fn new(user_context: Option<String>, source_origin: Option<String>) -> Self {
+        Self {
+            storage_key_partition_descriptor_type: "storageKey".to_string(),
+            user_context,
+            source_origin,
+            extensible: Extensible::new(),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -87,6 +145,12 @@ pub struct GetCookiesParameters {
     pub filter: Option<CookieFilter>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partition: Option<PartitionDescriptor>,
+}
+
+impl GetCookiesParameters {
+    pub fn new(filter: Option<CookieFilter>, partition: Option<PartitionDescriptor>) -> Self {
+        Self { filter, partition }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -122,11 +186,43 @@ pub struct PartialCookie {
     pub extensible: Extensible,
 }
 
+impl PartialCookie {
+    pub fn new(
+        name: String,
+        value: BytesValue,
+        domain: String,
+        path: Option<String>,
+        http_only: Option<bool>,
+        secure: Option<bool>,
+        same_site: Option<SameSite>,
+        expiry: Option<JsUint>,
+        extensible: Extensible,
+    ) -> Self {
+        Self {
+            name,
+            value,
+            domain,
+            path,
+            http_only,
+            secure,
+            same_site,
+            expiry,
+            extensible,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookieParameters {
     pub cookie: PartialCookie,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partition: Option<PartitionDescriptor>,
+}
+
+impl SetCookieParameters {
+    pub fn new(cookie: PartialCookie, partition: Option<PartitionDescriptor>) -> Self {
+        Self { cookie, partition }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -150,4 +246,10 @@ pub struct DeleteCookiesParameters {
     pub filter: Option<CookieFilter>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partition: Option<PartitionDescriptor>,
+}
+
+impl DeleteCookiesParameters {
+    pub fn new(filter: Option<CookieFilter>, partition: Option<PartitionDescriptor>) -> Self {
+        Self { filter, partition }
+    }
 }

@@ -36,6 +36,15 @@ pub struct AccessibilityLocator {
     pub value: AccessibilityLocatorValue,
 }
 
+impl AccessibilityLocator {
+    pub fn new(value: AccessibilityLocatorValue) -> Self {
+        Self {
+            locator_type: "accessibility".to_string(),
+            value,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocatorValue {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -44,11 +53,26 @@ pub struct AccessibilityLocatorValue {
     pub role: Option<String>,
 }
 
+impl AccessibilityLocatorValue {
+    pub fn new(name: Option<String>, role: Option<String>) -> Self {
+        Self { name, role }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CssLocator {
     #[serde(rename = "type")]
     pub locator_type: String,
     pub value: String,
+}
+
+impl CssLocator {
+    pub fn new(value: String) -> Self {
+        Self {
+            locator_type: "css".to_string(),
+            value,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -64,6 +88,23 @@ pub struct InnerTextLocator {
     pub max_depth: Option<JsUint>,
 }
 
+impl InnerTextLocator {
+    pub fn new(
+        value: String,
+        ignore_case: Option<bool>,
+        match_type: Option<InnerTextLocatorMatchType>,
+        max_depth: Option<JsUint>,
+    ) -> Self {
+        Self {
+            locator_type: "innerText".to_string(),
+            value,
+            ignore_case,
+            match_type,
+            max_depth,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum InnerTextLocatorMatchType {
@@ -76,6 +117,15 @@ pub struct XPathLocator {
     #[serde(rename = "type")]
     pub locator_type: String,
     pub value: String,
+}
+
+impl XPathLocator {
+    pub fn new(value: String) -> Self {
+        Self {
+            locator_type: "xpath".to_string(),
+            value,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -178,6 +228,15 @@ pub struct ImageFormat {
     pub quality: Option<f32>, // 0.0..1.0
 }
 
+impl ImageFormat {
+    pub fn new(image_format_type: String, quality: Option<f32>) -> Self {
+        Self {
+            image_format_type,
+            quality,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ClipRectangle {
     BoxClipRectangle(BoxClipRectangle),
@@ -191,6 +250,15 @@ pub struct ElementClipRectangle {
     pub element: SharedReference,
 }
 
+impl ElementClipRectangle {
+    pub fn new(element: SharedReference) -> Self {
+        Self {
+            clip_rectangle_type: "element".to_string(),
+            element,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BoxClipRectangle {
     #[serde(rename = "type")]
@@ -199,6 +267,18 @@ pub struct BoxClipRectangle {
     pub y: f32,
     pub width: f32,
     pub height: f32,
+}
+
+impl BoxClipRectangle {
+    pub fn new(x: f32, y: f32, width: f32, height: f32) -> Self {
+        Self {
+            clip_rectangle_type: "box".to_string(),
+            x,
+            y,
+            width,
+            height,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -505,12 +585,34 @@ pub struct PrintMarginParameters {
     pub top: Option<f32>, // 0.0..
 }
 
+impl PrintMarginParameters {
+    pub fn new(
+        bottom: Option<f32>,
+        left: Option<f32>,
+        right: Option<f32>,
+        top: Option<f32>,
+    ) -> Self {
+        Self {
+            bottom,
+            left,
+            right,
+            top,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintPageParameters {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub height: Option<f32>, // 0.0352..
     #[serde(skip_serializing_if = "Option::is_none")]
     pub width: Option<f32>, // 0.0352..
+}
+
+impl PrintPageParameters {
+    pub fn new(height: Option<f32>, width: Option<f32>) -> Self {
+        Self { height, width }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -593,6 +695,12 @@ impl SetViewportParameters {
 pub struct Viewport {
     pub width: JsUint,
     pub height: JsUint,
+}
+
+impl Viewport {
+    pub fn new(width: JsUint, height: JsUint) -> Self {
+        Self { width, height }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

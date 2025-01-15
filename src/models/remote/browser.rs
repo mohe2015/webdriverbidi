@@ -23,6 +23,28 @@ pub struct ClientWindowInfo {
     pub y: JsInt,
 }
 
+impl ClientWindowInfo {
+    pub fn new(
+        active: bool,
+        client_window: ClientWindow,
+        height: JsUint,
+        state: ClientWindowState,
+        width: JsUint,
+        x: JsInt,
+        y: JsInt,
+    ) -> Self {
+        Self {
+            active,
+            client_window,
+            height,
+            state,
+            width,
+            x,
+            y,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ClientWindowState {
@@ -39,6 +61,12 @@ pub type UserContext = String;
 pub struct UserContextInfo {
     #[serde(rename = "userContext")]
     pub user_context: UserContext,
+}
+
+impl UserContextInfo {
+    pub fn new(user_context: UserContext) -> Self {
+        Self { user_context }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -122,6 +150,12 @@ pub struct RemoveUserContextParameters {
     pub user_context: UserContext,
 }
 
+impl RemoveUserContextParameters {
+    pub fn new(user_context: UserContext) -> Self {
+        Self { user_context }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetClientWindowState {
     pub method: String,
@@ -145,6 +179,18 @@ pub struct SetClientWindowStateParameters {
     pub client_window_named_state: ClientWindowNamedOrRectState,
 }
 
+impl SetClientWindowStateParameters {
+    pub fn new(
+        client_window: ClientWindow,
+        client_window_named_state: ClientWindowNamedOrRectState,
+    ) -> Self {
+        Self {
+            client_window,
+            client_window_named_state,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ClientWindowNamedOrRectState {
     ClientWindowNamedState(ClientWindowNamedState),
@@ -154,6 +200,12 @@ pub enum ClientWindowNamedOrRectState {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowNamedState {
     pub state: ClientWindowState,
+}
+
+impl ClientWindowNamedState {
+    pub fn new(state: ClientWindowState) -> Self {
+        Self { state }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -167,4 +219,22 @@ pub struct ClientWindowRectState {
     pub x: Option<JsInt>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub y: Option<JsInt>,
+}
+
+impl ClientWindowRectState {
+    pub fn new(
+        state: String,
+        width: Option<JsUint>,
+        height: Option<JsUint>,
+        x: Option<JsInt>,
+        y: Option<JsInt>,
+    ) -> Self {
+        Self {
+            state,
+            width,
+            height,
+            x,
+            y,
+        }
+    }
 }

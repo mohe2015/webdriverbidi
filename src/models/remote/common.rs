@@ -12,3 +12,11 @@ pub type JsUint = u64;
 pub struct EmptyParams {
     pub extensible: Extensible,
 }
+
+impl EmptyParams {
+    pub fn new() -> Self {
+        Self {
+            extensible: Extensible::new(),
+        }
+    }
+}

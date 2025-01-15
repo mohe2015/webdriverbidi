@@ -22,6 +22,16 @@ pub struct AuthCredentials {
     pub password: String,
 }
 
+impl AuthCredentials {
+    pub fn new(username: String, password: String) -> Self {
+        Self {
+            auth_credentials_type: "password".to_string(),
+            username,
+            password,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum BytesValue {
     StringValue(StringValue),
@@ -35,11 +45,29 @@ pub struct StringValue {
     pub value: String,
 }
 
+impl StringValue {
+    pub fn new(value: String) -> Self {
+        Self {
+            string_value_type: "string".to_string(),
+            value,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Base64Value {
     #[serde(rename = "type")]
     pub base64_value_type: String,
     pub value: String,
+}
+
+impl Base64Value {
+    pub fn new(value: String) -> Self {
+        Self {
+            base64_value_type: "base64".to_string(),
+            value,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -67,16 +95,56 @@ pub struct Cookie {
     pub extensible: Extensible,
 }
 
+impl Cookie {
+    pub fn new(
+        name: String,
+        value: BytesValue,
+        domain: String,
+        path: String,
+        size: JsUint,
+        http_only: bool,
+        secure: bool,
+        same_site: SameSite,
+        expiry: Option<JsUint>,
+        extensible: Extensible,
+    ) -> Self {
+        Self {
+            name,
+            value,
+            domain,
+            path,
+            size,
+            http_only,
+            secure,
+            same_site,
+            expiry,
+            extensible,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieHeader {
     pub name: String,
     pub value: BytesValue,
 }
 
+impl CookieHeader {
+    pub fn new(name: String, value: BytesValue) -> Self {
+        Self { name, value }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Header {
     pub name: String,
     pub value: BytesValue,
+}
+
+impl Header {
+    pub fn new(name: String, value: BytesValue) -> Self {
+        Self { name, value }
+    }
 }
 
 pub type Intercept = String;
@@ -102,6 +170,32 @@ pub struct SetCookieHeader {
     pub secure: Option<bool>,
 }
 
+impl SetCookieHeader {
+    pub fn new(
+        name: String,
+        value: BytesValue,
+        domain: Option<String>,
+        http_only: Option<bool>,
+        expiry: Option<String>,
+        max_age: Option<JsInt>,
+        path: Option<String>,
+        same_site: Option<SameSite>,
+        secure: Option<bool>,
+    ) -> Self {
+        Self {
+            name,
+            value,
+            domain,
+            http_only,
+            expiry,
+            max_age,
+            path,
+            same_site,
+            secure,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum UrlPattern {
     UrlPatternPattern(UrlPatternPattern),
@@ -124,11 +218,39 @@ pub struct UrlPatternPattern {
     pub search: Option<String>,
 }
 
+impl UrlPatternPattern {
+    pub fn new(
+        protocol: Option<String>,
+        hostname: Option<String>,
+        port: Option<String>,
+        pathname: Option<String>,
+        search: Option<String>,
+    ) -> Self {
+        Self {
+            url_pattern_pattern_type: "pattern".to_string(),
+            protocol,
+            hostname,
+            port,
+            pathname,
+            search,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternString {
     #[serde(rename = "type")]
     pub url_pattern_string_type: String,
     pub pattern: String,
+}
+
+impl UrlPatternString {
+    pub fn new(pattern: String) -> Self {
+        Self {
+            url_pattern_string_type: "string".to_string(),
+            pattern,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -153,6 +275,20 @@ pub struct AddInterceptParameters {
     pub contexts: Option<Vec<BrowsingContext>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub url_patterns: Option<Vec<UrlPattern>>,
+}
+
+impl AddInterceptParameters {
+    pub fn new(
+        phases: Vec<InterceptPhase>,
+        contexts: Option<Vec<BrowsingContext>>,
+        url_patterns: Option<Vec<UrlPattern>>,
+    ) -> Self {
+        Self {
+            phases,
+            contexts,
+            url_patterns,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -195,6 +331,26 @@ pub struct ContinueRequestParameters {
     pub url: Option<String>,
 }
 
+impl ContinueRequestParameters {
+    pub fn new(
+        request: Request,
+        body: Option<BytesValue>,
+        cookies: Option<Vec<CookieHeader>>,
+        headers: Option<Vec<Header>>,
+        method: Option<String>,
+        url: Option<String>,
+    ) -> Self {
+        Self {
+            request,
+            body,
+            cookies,
+            headers,
+            method,
+            url,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponse {
     pub method: String,
@@ -225,6 +381,26 @@ pub struct ContinueResponseParameters {
     pub status_code: Option<JsUint>,
 }
 
+impl ContinueResponseParameters {
+    pub fn new(
+        request: Request,
+        cookies: Option<Vec<SetCookieHeader>>,
+        credentials: Option<AuthCredentials>,
+        headers: Option<Vec<Header>>,
+        reason_phrase: Option<String>,
+        status_code: Option<JsUint>,
+    ) -> Self {
+        Self {
+            request,
+            cookies,
+            credentials,
+            headers,
+            reason_phrase,
+            status_code,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueWithAuth {
     pub method: String,
@@ -247,6 +423,15 @@ pub struct ContinueWithAuthParameters {
     pub auth_option: Option<ContinueWithAuthOption>,
 }
 
+impl ContinueWithAuthParameters {
+    pub fn new(request: Request, auth_option: Option<ContinueWithAuthOption>) -> Self {
+        Self {
+            request,
+            auth_option,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ContinueWithAuthOption {
     Credentials(ContinueWithAuthCredentials),
@@ -259,9 +444,24 @@ pub struct ContinueWithAuthCredentials {
     pub credentials: AuthCredentials,
 }
 
+impl ContinueWithAuthCredentials {
+    pub fn new(action: String, credentials: AuthCredentials) -> Self {
+        Self {
+            action,
+            credentials,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueWithAuthNoCredentials {
     pub action: NoCredentialsAction,
+}
+
+impl ContinueWithAuthNoCredentials {
+    pub fn new(action: NoCredentialsAction) -> Self {
+        Self { action }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -289,6 +489,12 @@ impl FailRequest {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequestParameters {
     pub request: Request,
+}
+
+impl FailRequestParameters {
+    pub fn new(request: Request) -> Self {
+        Self { request }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -321,6 +527,26 @@ pub struct ProvideResponseParameters {
     pub status_code: Option<JsUint>,
 }
 
+impl ProvideResponseParameters {
+    pub fn new(
+        request: Request,
+        body: Option<BytesValue>,
+        cookies: Option<Vec<SetCookieHeader>>,
+        headers: Option<Vec<Header>>,
+        reason_phrase: Option<String>,
+        status_code: Option<JsUint>,
+    ) -> Self {
+        Self {
+            request,
+            body,
+            cookies,
+            headers,
+            reason_phrase,
+            status_code,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveIntercept {
     pub method: String,
@@ -339,6 +565,12 @@ impl RemoveIntercept {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveInterceptParameters {
     pub intercept: Intercept,
+}
+
+impl RemoveInterceptParameters {
+    pub fn new(intercept: Intercept) -> Self {
+        Self { intercept }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -361,6 +593,15 @@ pub struct SetCacheBehaviorParameters {
     pub cache_behavior: CacheBehavior,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<Vec<BrowsingContext>>,
+}
+
+impl SetCacheBehaviorParameters {
+    pub fn new(cache_behavior: CacheBehavior, contexts: Option<Vec<BrowsingContext>>) -> Self {
+        Self {
+            cache_behavior,
+            contexts,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
