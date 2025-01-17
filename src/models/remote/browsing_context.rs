@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub type BrowsingContext = String;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum BrowsingContextCommand {
     Activate(Activate),
     CaptureScreenshot(CaptureScreenshot),
@@ -22,6 +23,7 @@ pub enum BrowsingContextCommand {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum Locator {
     AccessibilityLocator(AccessibilityLocator),
     CssLocator(CssLocator),
@@ -238,6 +240,7 @@ impl ImageFormat {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ClipRectangle {
     BoxClipRectangle(BoxClipRectangle),
     ElementClipRectangle(ElementClipRectangle),
@@ -568,6 +571,7 @@ pub enum PrintParametersOrientation {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum JsUintOrText {
     JsUint(JsUint),
     Text(String),

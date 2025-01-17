@@ -4,6 +4,7 @@ use crate::local::event::Event;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum Message {
     CommandResponse(CommandResponse),
     ErrorResponse(ErrorResponse),

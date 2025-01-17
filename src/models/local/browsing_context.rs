@@ -2,6 +2,7 @@ use crate::local::{browser, script, session, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum BrowsingContextResult {
     CaptureScreenshotResult(CaptureScreenshotResult),
     CreateResult(CreateResult),
@@ -13,6 +14,7 @@ pub enum BrowsingContextResult {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum BrowsingContextEvent {
     ContextCreated(ContextCreated),
     ContextDestroyed(ContextDestroyed),
@@ -48,6 +50,7 @@ pub struct Info {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum Locator {
     AccessibilityLocator(AccessibilityLocator),
     CssLocator(CssLocator),

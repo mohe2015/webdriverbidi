@@ -7,6 +7,8 @@ echo '{"id": $ID, "method": "browsingContext.captureScreenshot", "params": {"con
 // browsingContext.close
 echo '{"id": $ID, "method": "browsingContext.close", "params": {"context": "$CONTEXT_ID"}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
+// browsingContext.create
+echo '{"id": $ID, "method": "browsingContext.create", "params": {"type": "tab"}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
 // browsingContext.getTree
 echo '{"id": $ID, "method": "browsingContext.getTree", "params": {}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
@@ -14,7 +16,9 @@ echo '{"id": $ID, "method": "browsingContext.getTree", "params": {}}' | websocat
 // browsingContext.traverseHistory (back example)
 echo '{"id": $ID, "method": "browsingContext.traverseHistory", "params": {"context": "$CONTEXT_ID", "delta": -1}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
-// browsingContext.create
-echo '{"id": $ID, "method": "browsingContext.create", "params": {"type": "tab"}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
+// --------------------------------------------------
+
+// browsingContext.getTree
+echo '{"id": $ID, "method": "script.evaluate", "params": {}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 

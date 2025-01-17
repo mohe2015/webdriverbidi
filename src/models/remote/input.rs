@@ -4,6 +4,7 @@ use crate::remote::{JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum InputCommand {
     PerformActions(PerformActions),
     ReleaseActions(ReleaseActions),
@@ -54,6 +55,7 @@ impl PerformActionsParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum SourceActions {
     NoneSourceActions(NoneSourceActions),
     KeySourceActions(KeySourceActions),
@@ -100,6 +102,7 @@ impl KeySourceActions {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum KeySourceAction {
     PauseAction(PauseAction),
     KeyDownAction(KeyDownAction),
@@ -151,6 +154,7 @@ impl PointerParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum PointerSourceAction {
     PauseAction(PauseAction),
     PointerDownAction(PointerDownAction),
@@ -177,6 +181,7 @@ impl WheelSourceActions {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum WheelSourceAction {
     PauseAction(PauseAction),
     WheelScrollAction(WheelScrollAction),

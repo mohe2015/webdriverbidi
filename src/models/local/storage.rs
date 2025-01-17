@@ -2,6 +2,7 @@ use crate::local::{network, Extensible};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum StorageResult {
     DeleteCookiesResult(DeleteCookiesResult),
     GetCookiesResult(GetCookiesResult),

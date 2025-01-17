@@ -8,6 +8,7 @@ use crate::local::Extensible;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum ResultData {
     BrowsingContextResult(BrowsingContextResult),
     EmptyResult(EmptyResult),

@@ -15,6 +15,7 @@ pub struct Event {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum EventData {
     BrowsingContextEvent(BrowsingContextEvent),
     LogEvent(LogEvent),

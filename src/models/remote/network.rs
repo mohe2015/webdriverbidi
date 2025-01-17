@@ -3,6 +3,7 @@ use crate::remote::{Extensible, JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum NetworkCommand {
     AddIntercept(AddIntercept),
     ContinueRequest(ContinueRequest),
@@ -33,6 +34,7 @@ impl AuthCredentials {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum BytesValue {
     StringValue(StringValue),
     Base64Value(Base64Value),
@@ -197,6 +199,7 @@ impl SetCookieHeader {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum UrlPattern {
     UrlPatternPattern(UrlPatternPattern),
     UrlPatternString(UrlPatternString),
@@ -433,6 +436,7 @@ impl ContinueWithAuthParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ContinueWithAuthOption {
     Credentials(ContinueWithAuthCredentials),
     NoCredentials(ContinueWithAuthNoCredentials),

@@ -3,6 +3,7 @@ use crate::remote::{EmptyParams, Extensible};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum SessionCommand {
     End(End),
     New(New),
@@ -77,6 +78,7 @@ impl CapabilityRequest {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ProxyConfiguration {
     AutodetectProxyConfiguration(AutodetectProxyConfiguration),
     DirectProxyConfiguration(DirectProxyConfiguration),
@@ -371,6 +373,7 @@ impl Unsubscribe {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum UnsubscribeRequest {
     UnsubscribeByAttributesRequest(UnsubscribeByAttributesRequest),
     UnsubscribeByIDRequest(UnsubscribeByIDRequest),

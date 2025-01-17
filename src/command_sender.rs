@@ -40,6 +40,7 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
         error!("Serialization error: {:?}", e);
         CommandError::SerdeError(e)
     })?;
+    debug!("Serialized command: {:?}", value);
 
     let command_id = value
         .get(COMMAND_ID_KEY)
@@ -83,6 +84,9 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
             CommandError::OneshotReceiverError(e)
         })?;
 
+    
+    debug!("Received response: {:?}", response);
+    
     let rslt = response.get(RESULT_KEY).ok_or_else(|| {
         error!("Missing result in the response: {:?}", response);
         CommandError::MissingResult

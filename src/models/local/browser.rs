@@ -2,6 +2,7 @@ use crate::local::{JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum BrowserResult {
     CreateUserContextResult(CreateUserContextResult),
     GetUserContextsResult(GetUserContextsResult),

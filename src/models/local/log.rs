@@ -2,6 +2,7 @@ use crate::local::{script, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum LogEvent {
     EntryAdded(EntryAdded),
 }
@@ -16,6 +17,7 @@ pub enum Level {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum Entry {
     GenericLogEntry(GenericLogEntry),
     ConsoleLogEntry(ConsoleLogEntry),

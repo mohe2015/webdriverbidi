@@ -1,9 +1,7 @@
-use log::{debug, error};
 use serde::{Deserialize, Serialize};
 
 // --------------------------------------------------
 
-use super::id;
 use crate::error::CommandError;
 use crate::session::WebDriverBiDiSession;
 
@@ -16,16 +14,14 @@ where
     C: Serialize,
     R: for<'de> Deserialize<'de>,
 {
-    let command_id = id::get_next_id();
-    debug!("Sending command with id: {}", command_id); // Log before sending command
-
+    
     match session.send_command::<C, R>(command).await {
         Ok(rslt) => {
-            debug!("Command with id: {} succeeded", command_id); // Log success
+            // debug!("Command with id: {} succeeded", command_id); // Log success
             Ok(rslt)
         }
         Err(e) => {
-            error!("Command with id: {} failed: {:?}", command_id, e); // Log error
+            // error!("Command with id: {} failed: {:?}", command_id, e); // Log error
             Err(e)
         }
     }

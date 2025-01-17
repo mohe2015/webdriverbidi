@@ -2,7 +2,10 @@ use crate::local::{browsing_context, Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+use super::result_data::EmptyResult;
+
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum ScriptResult {
     AddPreloadScriptResult(AddPreloadScriptResult),
     EvaluateResult(EvaluateResult),
@@ -10,6 +13,7 @@ pub enum ScriptResult {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum ScriptEvent {
     Message(Message),
     RealmCreated(RealmCreated),
@@ -38,9 +42,11 @@ pub struct ChannelProperties {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum EvaluateResult {
     EvaluateResultSuccess(EvaluateResultSuccess),
     EvaluateResultException(EvaluateResultException),
+    EmptyResult(EmptyResult),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -76,6 +82,7 @@ pub type Handle = String;
 pub type InternalId = String;
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum LocalValue {
     RemoteReference(RemoteReference),
     PrimitiveProtocolValue(PrimitiveProtocolValue),
@@ -153,6 +160,7 @@ pub type PreloadScript = String;
 pub type Realm = String;
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum PrimitiveProtocolValue {
     UndefinedValue(UndefinedValue),
     NullValue(NullValue),
@@ -220,6 +228,7 @@ pub struct BigIntValue {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum RealmInfo {
     WindowRealmInfo(WindowRealmInfo),
     DedicatedWorkerRealmInfo(DedicatedWorkerRealmInfo),
@@ -326,6 +335,7 @@ pub enum RealmType {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum RemoteReference {
     SharedReference(SharedReference),
     RemoteObjectReference(RemoteObjectReference),
@@ -351,6 +361,7 @@ pub struct RemoteObjectReference {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum RemoteValue {
     PrimitiveProtocolValue(PrimitiveProtocolValue),
     SymbolRemoteValue(SymbolRemoteValue),

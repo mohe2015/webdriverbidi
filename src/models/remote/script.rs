@@ -3,6 +3,7 @@ use crate::remote::{Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ScriptCommand {
     AddPreloadScript(AddPreloadScript),
     CallFunction(CallFunction),
@@ -57,6 +58,7 @@ impl ChannelProperties {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum EvaluateResult {
     EvaluateResultSuccess(EvaluateResultSuccess),
     EvaluateResultException(EvaluateResultException),
@@ -133,6 +135,7 @@ pub type Handle = String;
 pub type InternalId = String;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum LocalValue {
     RemoteReference(RemoteReference),
     PrimitiveProtocolValue(PrimitiveProtocolValue),
@@ -182,6 +185,7 @@ impl DateLocalValue {
 pub type MappingLocalValue = Vec<(LocalValueOrText, LocalValue)>;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum LocalValueOrText {
     LocalValue(LocalValue),
     Text(String),
@@ -268,6 +272,7 @@ pub type PreloadScript = String;
 pub type Realm = String;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum PrimitiveProtocolValue {
     UndefinedValue(UndefinedValue),
     NullValue(NullValue),
@@ -348,6 +353,7 @@ impl NumberValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum NumberOrSpecialNumber {
     Number(f64),
     SpecialNumber(SpecialNumber),
@@ -406,6 +412,7 @@ pub enum RealmType {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum RemoteReference {
     SharedReference(SharedReference),
     RemoteObjectReference(RemoteObjectReference),
@@ -449,6 +456,7 @@ impl RemoteObjectReference {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum RemoteValue {
     PrimitiveProtocolValue(PrimitiveProtocolValue),
     SymbolRemoteValue(SymbolRemoteValue),
@@ -477,6 +485,7 @@ pub type ListRemoteValue = Vec<RemoteValue>;
 pub type MappingRemoteValue = Vec<(RemoteValueOrText, RemoteValue)>;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum RemoteValueOrText {
     RemoteValue(RemoteValue),
     Text(String),
@@ -1167,6 +1176,7 @@ impl ContextTarget {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum Target {
     ContextTarget(ContextTarget),
     RealmTarget(RealmTarget),

@@ -4,6 +4,7 @@ use crate::remote::{Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum StorageCommand {
     DeleteCookies(DeleteCookies),
     GetCookies(GetCookies),
@@ -134,6 +135,7 @@ impl StorageKeyPartitionDescriptor {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum PartitionDescriptor {
     BrowsingContextPartitionDescriptor(BrowsingContextPartitionDescriptor),
     StorageKeyPartitionDescriptor(StorageKeyPartitionDescriptor),

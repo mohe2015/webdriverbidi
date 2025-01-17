@@ -27,6 +27,7 @@ impl Command {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum CommandData {
     BrowserCommand(BrowserCommand),
     BrowsingContextCommand(BrowsingContextCommand),

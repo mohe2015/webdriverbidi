@@ -2,6 +2,7 @@ use crate::local::Extensible;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum SessionResult {
     NewResult(NewResult),
     StatusResult(StatusResult),
@@ -40,6 +41,7 @@ pub struct CapabilityRequest {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum ProxyConfiguration {
     AutodetectProxyConfiguration(AutodetectProxyConfiguration),
     DirectProxyConfiguration(DirectProxyConfiguration),

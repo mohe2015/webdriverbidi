@@ -7,6 +7,7 @@ pub enum NetworkResult {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum NetworkEvent {
     AuthRequired(AuthRequired),
     BeforeRequestSent(BeforeRequestSent),

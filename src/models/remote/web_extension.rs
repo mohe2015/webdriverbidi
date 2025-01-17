@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum WebExtensionCommand {
     Install(Install),
     Uninstall(Uninstall),
@@ -36,6 +37,7 @@ impl InstallParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ExtensionData {
     ExtensionArchivePath(ExtensionArchivePath),
     ExtensionBase64Encoded(ExtensionBase64Encoded),

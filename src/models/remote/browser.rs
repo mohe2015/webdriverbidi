@@ -2,6 +2,7 @@ use crate::remote::{EmptyParams, JsInt, JsUint};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum BrowserCommand {
     Close(Close),
     CreateUserContext(CreateUserContext),
@@ -192,6 +193,7 @@ impl SetClientWindowStateParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ClientWindowNamedOrRectState {
     ClientWindowNamedState(ClientWindowNamedState),
     ClientWindowRectState(ClientWindowRectState),
