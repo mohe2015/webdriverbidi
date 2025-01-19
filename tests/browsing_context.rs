@@ -1,5 +1,4 @@
 use base64::prelude::*;
-use tokio;
 
 // --------------------------------------------------
 
@@ -265,5 +264,41 @@ async fn test_browsing_context_handle_user_prompt() {
         .expect("Failed to handle user prompt");
 
     sleep(1).await;
+    close_session(&mut session).await;
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
+// Not yet implemented in Chrome, Firefox, or Edge
+// Last checked: 2025-01-18
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-navigate
+
+#[tokio::test]
+async fn test_browsing_context_navigate() {
+    let mut session = init_session().await;
+
+    // Get the first browsing context
+    let context = get_first_context(&mut session)
+        .await
+        .expect("Failed to get first browsing context");
+
+    // Navigate to rust-lang.org
+    let navigate_params = NavigateParameters::new(
+        context.clone(),
+        "https://www.rust-lang.org/".to_string(),
+        Some(ReadinessState::Complete),
+    );
+
+    // Verify the navigation result URL
+    let nav_rslt = session
+        .browsing_context_navigate(navigate_params)
+        .await
+        .expect("Failed to navigate");
+    assert_eq!(nav_rslt.url, "https://www.rust-lang.org/");
+
     close_session(&mut session).await;
 }
