@@ -23,10 +23,10 @@ async fn test_browsing_context_activate() {
     sleep(1).await;
 
     // Activate the first tab
-    let first_tab_context = get_first_context(&mut session)
+    let first_tab_ctx = get_first_context(&mut session)
         .await
         .expect("Failed to get first browsing context");
-    let activate_params = ActivateParameters::new(first_tab_context);
+    let activate_params = ActivateParameters::new(first_tab_ctx);
     session
         .browsing_context_activate(activate_params)
         .await
@@ -337,13 +337,36 @@ async fn test_browsing_context_reload() {
     close_session(&mut session).await;
 }
 
-
-
 // --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-setViewport
 
 #[tokio::test]
 async fn test_browsing_context_set_viewport() {
-    todo!()
+    let mut session = init_session().await;
+
+    // Get the first browsing context
+    let context = get_first_context(&mut session)
+        .await
+        .expect("Failed to get first browsing context");
+
+    // Navigate to rust-lang.org
+    navigate(
+        context.clone(),
+        "https://www.rust-lang.org/".to_string(),
+        &mut session,
+    )
+    .await;
+
+    // Set the viewport size to 300x300
+    let params = SetViewportParameters::new(context, Some(Viewport::new(300, 300)), None);
+    session
+        .browsing_context_set_viewport(params)
+        .await
+        .expect("Failed to set viewport");
+
+    sleep(2).await;
+    close_session(&mut session).await;
 }
+
+// --------------------------------------------------
