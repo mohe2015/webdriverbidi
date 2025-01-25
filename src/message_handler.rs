@@ -70,12 +70,12 @@ pub async fn handle_messages(
                             .and_then(|method| method.as_str())
                         {
                             if let Some(event_type) = EventType::from_str(event_type_str) {
-                                let event_handlers = event_handlers.clone();
-                                let json_clone = json.clone();
+                                let event_handlers = Arc::clone(&event_handlers); // event_handlers.clone();
+                                let json = json.clone();
                                 tokio::spawn(async move {
                                     let handlers = event_handlers.lock().await;
                                     if let Some(handler) = handlers.get(&event_type) {
-                                        handler(json_clone).await;
+                                        handler(json).await;
                                     }
                                 });
                             }

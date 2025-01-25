@@ -1,13 +1,15 @@
 use base64::prelude::*;
+use ctor::ctor;
+use simplelog::*;
 use std::fs::File;
 use std::io::Write;
 use tokio::time;
-use ctor::ctor;
-use simplelog::*;
 
 // --------------------------------------------------
 
-use webdriverbidi::remote::browsing_context::{CreateParameters, CreateType, GetTreeParameters};
+use webdriverbidi::remote::browsing_context::{
+    CreateParameters, CreateType, GetTreeParameters, NavigateParameters, ReadinessState,
+};
 use webdriverbidi::session::WebDriverBiDiSession;
 use webdriverbidi::webdriver::capabilities::CapabilitiesRequest;
 
@@ -81,14 +83,26 @@ pub async fn new_tab(session: &mut WebDriverBiDiSession) {
 
 // --------------------------------------------------
 
-/// Initialize a simplelog TermLogger.
-#[ctor]
-fn init() {
-    TermLogger::init(
-        LevelFilter::Debug,
-        Config::default(),
-        TerminalMode::Mixed,
-        ColorChoice::Auto,
-    )
-    .unwrap();
+// /// Initialize a simplelog TermLogger.
+// #[ctor]
+// fn init() {
+//     TermLogger::init(
+//         LevelFilter::Debug,
+//         Config::default(),
+//         TerminalMode::Mixed,
+//         ColorChoice::Auto,
+//     )
+//     .unwrap();
+// }
+
+// --------------------------------------------------
+
+/// Navigates to the specified URL waiting for the document to completely load.
+pub async fn navigate(context: String, url: String, session: &mut WebDriverBiDiSession) {
+    let navigate_params =
+        NavigateParameters::new(context.clone(), url, Some(ReadinessState::Complete));
+    session
+        .browsing_context_navigate(navigate_params)
+        .await
+        .expect("Failed to navigate");
 }

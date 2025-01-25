@@ -20,7 +20,14 @@ echo '{"id": $ID, "method": "browsingContext.handleUserPrompt", "params": {"cont
 // Not yet implemented
 
 // browsingContext.navigate
+echo '{"id": $ID, "method": "browsingContext.navigate", "params": {"context": "$CONTEXT_ID", "url": "", "wait": "" }}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
+// browsingContext.print
+// Not yet implemented
+
+// browsingContext.reload
+
+echo '{"id": $ID, "method": "browsingContext.reload", "params": {"context": "$CONTEXT_ID", "wait": "complete" }}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
 
 // browsingContext.traverseHistory (back example)

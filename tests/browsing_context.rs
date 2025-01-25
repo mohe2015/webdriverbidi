@@ -51,15 +51,12 @@ async fn test_browsing_context_capture_screenshot() {
         .expect("Failed to get first browsing context");
 
     // Navigate to rust-lang.org
-    let navigate_params = NavigateParameters::new(
+    navigate(
         context.clone(),
         "https://www.rust-lang.org/".to_string(),
-        Some(ReadinessState::Complete),
-    );
-    session
-        .browsing_context_navigate(navigate_params)
-        .await
-        .expect("Failed to navigate");
+        &mut session,
+    )
+    .await;
 
     // Capture a screenshot
     let params = CaptureScreenshotParameters {
@@ -227,12 +224,7 @@ async fn test_browsing_context_handle_user_prompt() {
     let context = get_first_context(&mut session)
         .await
         .expect("Failed to get first browsing context");
-    let navigate_params =
-        NavigateParameters::new(context.clone(), data_url, Some(ReadinessState::Complete));
-    session
-        .browsing_context_navigate(navigate_params)
-        .await
-        .expect("Failed to load the data URL");
+    navigate(context.clone(), data_url, &mut session).await;
 
     // Trigger the alert dialog asynchronously
     // triggerAlert(); alone prevents receiving the command's response
@@ -301,4 +293,57 @@ async fn test_browsing_context_navigate() {
     assert_eq!(nav_rslt.url, "https://www.rust-lang.org/");
 
     close_session(&mut session).await;
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-print
+// Not yet implemented in Chrome, Firefox, or Edge
+// Last checked: 2025-01-18
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-reload
+
+#[tokio::test]
+async fn test_browsing_context_reload() {
+    let mut session = init_session().await;
+
+    // Get the first browsing context
+    let context = get_first_context(&mut session)
+        .await
+        .expect("Failed to get first browsing context");
+
+    // Navigate to rust-lang.org
+    navigate(
+        context.clone(),
+        "https://www.rust-lang.org/".to_string(),
+        &mut session,
+    )
+    .await;
+
+    sleep(1).await;
+
+    // Reload the page
+    let reload_params = ReloadParameters::new(context, None, Some(ReadinessState::Complete));
+    let nav_rslt = session
+        .browsing_context_reload(reload_params)
+        .await
+        .expect("Failed to reload the page");
+
+    assert_eq!(nav_rslt.url, "https://www.rust-lang.org/");
+
+    sleep(1).await;
+    close_session(&mut session).await;
+}
+
+
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-setViewport
+
+#[tokio::test]
+async fn test_browsing_context_set_viewport() {
+    todo!()
 }
