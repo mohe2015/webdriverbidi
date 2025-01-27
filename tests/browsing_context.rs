@@ -20,7 +20,7 @@ async fn test_browsing_context_activate() {
 
     // Open a new tab
     new_tab(&mut session).await;
-    sleep(1).await;
+    sleep_for_secs(1).await;
 
     // Activate the first tab
     let first_tab_ctx = get_first_context(&mut session)
@@ -33,7 +33,7 @@ async fn test_browsing_context_activate() {
         .expect("Failed to activate the first tab");
 
     // TODO - Is there a way to programmatically verify that the first tab was activated?
-    sleep(1).await;
+    sleep_for_secs(1).await;
     close_session(&mut session).await;
 }
 
@@ -92,7 +92,7 @@ async fn test_browsing_context_close() {
 
     // Open a new tab, some browsers might not close the browser itself when the last tab or window is closed
     new_tab(&mut session).await;
-    sleep(1).await;
+    sleep_for_secs(1).await;
 
     // Close the first tab
     let first_tab_context = get_first_context(&mut session)
@@ -104,7 +104,7 @@ async fn test_browsing_context_close() {
         .await
         .expect("Failed to activate the first tab");
 
-    sleep(1).await;
+    sleep_for_secs(1).await;
     close_session(&mut session).await;
 }
 
@@ -246,7 +246,7 @@ async fn test_browsing_context_handle_user_prompt() {
         .await
         .expect("Failed to evaluate script");
 
-    sleep(1).await;
+    sleep_for_secs(1).await;
 
     // Close the alert dialog
     let handle_prompt_params = HandleUserPromptParameters::new(context, Some(true), None);
@@ -255,7 +255,7 @@ async fn test_browsing_context_handle_user_prompt() {
         .await
         .expect("Failed to handle user prompt");
 
-    sleep(1).await;
+    sleep_for_secs(1).await;
     close_session(&mut session).await;
 }
 
@@ -322,7 +322,7 @@ async fn test_browsing_context_reload() {
     )
     .await;
 
-    sleep(1).await;
+    sleep_for_secs(1).await;
 
     // Reload the page
     let reload_params = ReloadParameters::new(context, None, Some(ReadinessState::Complete));
@@ -333,7 +333,7 @@ async fn test_browsing_context_reload() {
 
     assert_eq!(nav_rslt.url, "https://www.rust-lang.org/");
 
-    sleep(1).await;
+    sleep_for_secs(1).await;
     close_session(&mut session).await;
 }
 
@@ -365,8 +365,46 @@ async fn test_browsing_context_set_viewport() {
         .await
         .expect("Failed to set viewport");
 
-    sleep(2).await;
+    sleep_for_secs(2).await;
     close_session(&mut session).await;
 }
 
 // --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browsingContext-traverseHistory
+
+#[tokio::test]
+async fn test_browsing_context_traverse_history() {
+    let mut session = init_session().await;
+
+    // Get the first browsing context
+    let context = get_first_context(&mut session)
+        .await
+        .expect("Failed to get first browsing context");
+
+    // Navigate to rust-lang.org
+    navigate(
+        context.clone(),
+        "https://www.rust-lang.org/".to_string(),
+        &mut session,
+    )
+    .await;
+
+    sleep_for_secs(2).await;
+
+    // Navigate to crates.io
+    navigate(
+        context.clone(),
+        "https://www.crates.io/".to_string(),
+        &mut session,
+    )
+    .await;
+
+    sleep_for_secs(2).await;
+
+    // Go back to rust-lang.org
+    traverse_history(&mut session, context, -1).await;
+
+    sleep_for_secs(2).await;
+    close_session(&mut session).await;
+}

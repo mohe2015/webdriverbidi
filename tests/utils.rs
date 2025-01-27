@@ -1,6 +1,6 @@
 use base64::prelude::*;
-// use ctor::ctor;
-// use simplelog::*;
+use ctor::ctor;
+use simplelog::*;
 use std::fs::File;
 use std::io::Write;
 use tokio::time;
@@ -8,7 +8,7 @@ use tokio::time;
 // --------------------------------------------------
 
 use webdriverbidi::remote::browsing_context::{
-    CreateParameters, CreateType, GetTreeParameters, NavigateParameters, ReadinessState,
+    CreateParameters, CreateType, GetTreeParameters, NavigateParameters, ReadinessState, TraverseHistoryParameters,
 };
 use webdriverbidi::session::WebDriverBiDiSession;
 use webdriverbidi::webdriver::capabilities::CapabilitiesRequest;
@@ -21,7 +21,7 @@ const PORT: u16 = 4444;
 // --------------------------------------------------
 
 /// Sleep for a given number of seconds.
-pub async fn sleep(secs: u64) {
+pub async fn sleep_for_secs(secs: u64) {
     time::sleep(time::Duration::from_secs(secs)).await
 }
 
@@ -83,17 +83,17 @@ pub async fn new_tab(session: &mut WebDriverBiDiSession) {
 
 // --------------------------------------------------
 
-// /// Initialize a simplelog TermLogger.
-// #[ctor]
-// fn init() {
-//     TermLogger::init(
-//         LevelFilter::Debug,
-//         Config::default(),
-//         TerminalMode::Mixed,
-//         ColorChoice::Auto,
-//     )
-//     .unwrap();
-// }
+/// Initialize a simplelog TermLogger.
+#[ctor]
+fn init() {
+    TermLogger::init(
+        LevelFilter::Debug,
+        Config::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )
+    .unwrap();
+}
 
 // --------------------------------------------------
 
@@ -105,4 +105,15 @@ pub async fn navigate(context: String, url: String, session: &mut WebDriverBiDiS
         .browsing_context_navigate(navigate_params)
         .await
         .expect("Failed to navigate");
+}
+
+
+// --------------------------------------------------
+
+pub async fn traverse_history(session: &mut WebDriverBiDiSession, context: String, delta: i64) {
+    let traverse_history_params = TraverseHistoryParameters::new(context.clone(), delta);
+    session
+        .browsing_context_traverse_history(traverse_history_params)
+        .await
+        .expect("Failed to send command");
 }

@@ -26,9 +26,10 @@ echo '{"id": $ID, "method": "browsingContext.navigate", "params": {"context": "$
 // Not yet implemented
 
 // browsingContext.reload
-
 echo '{"id": $ID, "method": "browsingContext.reload", "params": {"context": "$CONTEXT_ID", "wait": "complete" }}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
+// browsingContext.setViewport
+echo '{"id": $ID, "method": "browsingContext.setViewport", "params": {"context": "$CONTEXT_ID", "viewport": {"width": 300, "height": 300} }}' | websocat ws://localhost:9222/session/$SESSION_ID
 
 // browsingContext.traverseHistory (back example)
 echo '{"id": $ID, "method": "browsingContext.traverseHistory", "params": {"context": "$CONTEXT_ID", "delta": -1}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
@@ -36,6 +37,5 @@ echo '{"id": $ID, "method": "browsingContext.traverseHistory", "params": {"conte
 
 // --------------------------------------------------
 
-// browsingContext.getTree
-echo '{"id": $ID, "method": "script.evaluate", "params": {}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
+
 

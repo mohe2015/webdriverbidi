@@ -170,7 +170,7 @@ impl WebDriverBiDiSession {
             )
             .await
         } else {
-            let error_msg = format!("WebSocket stream not initialized.");
+            let error_msg = "WebSocket stream not initialized.";
             Err(CommandError::Other(error_msg.into()))
         }
     }
