@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use crate::remote::browsing_context;
 use crate::remote::network::{BytesValue, SameSite};
 use crate::remote::{Extensible, JsUint};

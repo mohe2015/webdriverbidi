@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use crate::local::browsing_context::BrowsingContextEvent;
 use crate::local::log::LogEvent;
 use crate::local::network::NetworkEvent;

@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use crate::local::browsing_context::BrowsingContextResult;
 use crate::local::network::NetworkResult;
 use crate::local::script::ScriptResult;

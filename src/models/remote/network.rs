@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use crate::remote::browsing_context::BrowsingContext;
 use crate::remote::{Extensible, JsInt, JsUint};
 use serde::{Deserialize, Serialize};

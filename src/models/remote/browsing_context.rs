@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use crate::remote::browser;
 use crate::remote::script::{SerializationOptions, SharedReference};
 use crate::remote::{JsInt, JsUint};

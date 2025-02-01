@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use crate::remote::browser::UserContext;
 use crate::remote::browsing_context::BrowsingContext;
 use crate::remote::{EmptyParams, Extensible};
