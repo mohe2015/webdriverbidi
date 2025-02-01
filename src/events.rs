@@ -1,3 +1,9 @@
+use std::error::Error;
+use std::fmt;
+use std::str::FromStr;
+
+// --------------------------------------------------
+
 /// Represents the standard WebDriver BiDi events.
 #[derive(Hash, Eq, PartialEq, Debug)]
 pub enum EventType {
@@ -25,43 +31,48 @@ pub enum EventType {
     LogEntryAdded,
 }
 
-impl EventType {
-    /// Parses an event type string into an EventType instance.
-    pub fn from_str(event_type: &str) -> Option<Self> {
-        match event_type {
-            "browsingContext.ContextCreated" => Some(EventType::BrowsingContextContextCreated),
-            "browsingContext.contextDestroyed" => Some(EventType::BrowsingContextContextDestroyed),
-            "browsingContext.navigationStarted" => {
-                Some(EventType::BrowsingContextNavigationStarted)
-            }
-            "browsingContext.fragmentNavigated" => {
-                Some(EventType::BrowsingContextFragmentNavigated)
-            }
-            "browsingContext.historyUpdated" => Some(EventType::BrowsingContextHistoryUpdated),
-            "browsingContext.domContentLoaded" => Some(EventType::BrowsingContextDomContentLoaded),
-            "browsingContext.load" => Some(EventType::BrowsingContextLoad),
-            "browsingContext.downloadWillBegin" => {
-                Some(EventType::BrowsingContextDownloadWillBegin)
-            }
-            "browsingContext.navigationAborted" => {
-                Some(EventType::BrowsingContextNavigationAborted)
-            }
+/// Simple error type for parsing EventType.
+#[derive(Debug)]
+pub struct ParseEventTypeError;
+
+impl fmt::Display for ParseEventTypeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Invalid EventType string")
+    }
+}
+
+impl Error for ParseEventTypeError {}
+
+impl FromStr for EventType {
+    type Err = ParseEventTypeError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "browsingContext.ContextCreated" => Ok(EventType::BrowsingContextContextCreated),
+            "browsingContext.contextDestroyed" => Ok(EventType::BrowsingContextContextDestroyed),
+            "browsingContext.navigationStarted" => Ok(EventType::BrowsingContextNavigationStarted),
+            "browsingContext.fragmentNavigated" => Ok(EventType::BrowsingContextFragmentNavigated),
+            "browsingContext.historyUpdated" => Ok(EventType::BrowsingContextHistoryUpdated),
+            "browsingContext.domContentLoaded" => Ok(EventType::BrowsingContextDomContentLoaded),
+            "browsingContext.load" => Ok(EventType::BrowsingContextLoad),
+            "browsingContext.downloadWillBegin" => Ok(EventType::BrowsingContextDownloadWillBegin),
+            "browsingContext.navigationAborted" => Ok(EventType::BrowsingContextNavigationAborted),
             "browsingContext.navigationCommitted" => {
-                Some(EventType::BrowsingContextNavigationCommitted)
+                Ok(EventType::BrowsingContextNavigationCommitted)
             }
-            "browsingContext.navigationFailed" => Some(EventType::BrowsingContextNavigationFailed),
-            "browsingContext.userPromptClosed" => Some(EventType::BrowsingContextUserPromptClosed),
-            "browsingContext.userPromptOpened" => Some(EventType::BrowsingContextUserPromptOpened),
-            "network.authRequired" => Some(EventType::NetworkAuthRequired),
-            "network.beforeRequestSent" => Some(EventType::NetworkBeforeRequestSent),
-            "network.fetchError" => Some(EventType::NetworkFetchError),
-            "network.responseCompleted" => Some(EventType::NetworkResponseCompleted),
-            "network.responseStarted" => Some(EventType::NetworkResponseStarted),
-            "script.message" => Some(EventType::ScriptMessage),
-            "script.realmCreated" => Some(EventType::ScriptRealmCreated),
-            "script.realmDestroyed" => Some(EventType::ScriptRealmDestroyed),
-            "log.entryAdded" => Some(EventType::LogEntryAdded),
-            _ => None,
+            "browsingContext.navigationFailed" => Ok(EventType::BrowsingContextNavigationFailed),
+            "browsingContext.userPromptClosed" => Ok(EventType::BrowsingContextUserPromptClosed),
+            "browsingContext.userPromptOpened" => Ok(EventType::BrowsingContextUserPromptOpened),
+            "network.authRequired" => Ok(EventType::NetworkAuthRequired),
+            "network.beforeRequestSent" => Ok(EventType::NetworkBeforeRequestSent),
+            "network.fetchError" => Ok(EventType::NetworkFetchError),
+            "network.responseCompleted" => Ok(EventType::NetworkResponseCompleted),
+            "network.responseStarted" => Ok(EventType::NetworkResponseStarted),
+            "script.message" => Ok(EventType::ScriptMessage),
+            "script.realmCreated" => Ok(EventType::ScriptRealmCreated),
+            "script.realmDestroyed" => Ok(EventType::ScriptRealmDestroyed),
+            "log.entryAdded" => Ok(EventType::LogEntryAdded),
+            _ => Err(ParseEventTypeError),
         }
     }
 }

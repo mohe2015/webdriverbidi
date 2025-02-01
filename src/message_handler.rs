@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::pin::Pin;
+use std::str::FromStr;
 use std::sync::Arc;
 
 // --------------------------------------------------
@@ -69,8 +70,8 @@ pub async fn handle_messages(
                             .get(METHOD_FIELD)
                             .and_then(|method| method.as_str())
                         {
-                            if let Some(event_type) = EventType::from_str(event_type_str) {
-                                let event_handlers = Arc::clone(&event_handlers); // event_handlers.clone();
+                            if let Ok(event_type) = EventType::from_str(event_type_str) {
+                                let event_handlers = Arc::clone(&event_handlers);
                                 let json = json.clone();
                                 tokio::spawn(async move {
                                     let handlers = event_handlers.lock().await;
