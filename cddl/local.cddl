@@ -81,7 +81,8 @@ ErrorCode = "invalid argument" /
 
 SessionResult = (
    session.NewResult /
-   session.StatusResult
+   session.StatusResult /
+   session.SubscribeResult
 )
 
 session.CapabilitiesRequest = {
@@ -177,7 +178,7 @@ session.NewResult = {
   }
 }
 
-session.SubscriptionRequestResult = {
+session.SubscribeResult = {
   subscription: session.Subscription,
 }
 
@@ -233,6 +234,7 @@ BrowsingContextEvent = (
   browsingContext.HistoryUpdated //
   browsingContext.Load //
   browsingContext.NavigationAborted //
+  browsingContext.NavigationCommitted //
   browsingContext.NavigationFailed //
   browsingContext.NavigationStarted //
   browsingContext.UserPromptClosed //
@@ -256,6 +258,7 @@ browsingContext.Info = {
 browsingContext.Locator = (
    browsingContext.AccessibilityLocator /
    browsingContext.CssLocator /
+   browsingContext.ContextLocator /
    browsingContext.InnerTextLocator /
    browsingContext.XPathLocator
 )
@@ -271,6 +274,13 @@ browsingContext.AccessibilityLocator = {
 browsingContext.CssLocator = {
    type: "css",
    value: text
+}
+
+browsingContext.ContextLocator = {
+  type: "context",
+  value: {
+    context: browsingContext.BrowsingContext,
+  }
 }
 
 browsingContext.InnerTextLocator = {
@@ -372,6 +382,11 @@ browsingContext.DownloadWillBegin = (
 
 browsingContext.NavigationAborted = (
  method: "browsingContext.navigationAborted",
+ params: browsingContext.NavigationInfo
+)
+
+browsingContext.NavigationCommitted = (
+ method: "browsingContext.navigationCommitted",
  params: browsingContext.NavigationInfo
 )
 

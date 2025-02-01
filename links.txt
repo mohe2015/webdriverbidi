@@ -3,3 +3,4 @@ WebDriver BiDi spec: https://w3c.github.io/webdriver-bidi/
 GitHub: https://github.com/w3c/webdriver-bidi
 Rust WebDriver crate: https://hg.mozilla.org/mozilla-central/file/tip/testing/webdriver/
 websocat: https://github.com/vi/websocat
+Web platform tests: https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi

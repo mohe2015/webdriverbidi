@@ -107,6 +107,7 @@ session.Subscription = text
 session.SubscriptionRequest = {
   events: [+text],
   ? contexts: [+browsingContext.BrowsingContext],
+  ? userContexts: [+browser.UserContext],
 }
 
 session.UnsubscribeByIDRequest = {
@@ -145,8 +146,10 @@ session.Subscribe = (
 
 session.Unsubscribe = (
   method: "session.unsubscribe",
-  params: session.UnsubscribeByAttributesRequest / session.UnsubscribeByIDRequest,
+  params: session.UnsubscribeParameters,
 )
+
+session.UnsubscribeParameters = session.UnsubscribeByAttributesRequest / session.UnsubscribeByIDRequest
 
 BrowserCommand = (
   browser.Close //
@@ -246,6 +249,7 @@ browsingContext.BrowsingContext = text;
 browsingContext.Locator = (
    browsingContext.AccessibilityLocator /
    browsingContext.CssLocator /
+   browsingContext.ContextLocator /
    browsingContext.InnerTextLocator /
    browsingContext.XPathLocator
 )
@@ -261,6 +265,13 @@ browsingContext.AccessibilityLocator = {
 browsingContext.CssLocator = {
    type: "css",
    value: text
+}
+
+browsingContext.ContextLocator = {
+  type: "context",
+  value: {
+    context: browsingContext.BrowsingContext,
+  }
 }
 
 browsingContext.InnerTextLocator = {
@@ -1045,6 +1056,7 @@ script.AddPreloadScriptParameters = {
   functionDeclaration: text,
   ? arguments: [*script.ChannelValue],
   ? contexts: [+browsingContext.BrowsingContext],
+  ? userContexts: [+browser.UserContext],
   ? sandbox: text
 }
 

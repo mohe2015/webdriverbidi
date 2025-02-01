@@ -1,3 +1,5 @@
+// browsingContext
+
 // browsingContext.activate
 echo '{"id": $ID, "method": "browsingContext.activate", "params": {"context": "$CONTEXT_ID"}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
@@ -17,13 +19,12 @@ echo '{"id": $ID, "method": "browsingContext.getTree", "params": {}}' | websocat
 echo '{"id": $ID, "method": "browsingContext.handleUserPrompt", "params": {"context": "$CONTEXT_ID", "accept": true}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
 // browsingContext.locateNodes
-// Not yet implemented
+echo '{"id": $ID, "method": "browsingContext.locateNodes", "params": {"context": "$CONTEXT_ID", "locator": {"type": "$TYPE", "value": "$VALUE"} }}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
 // browsingContext.navigate
 echo '{"id": $ID, "method": "browsingContext.navigate", "params": {"context": "$CONTEXT_ID", "url": "", "wait": "" }}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
 // browsingContext.print
-// Not yet implemented
 
 // browsingContext.reload
 echo '{"id": $ID, "method": "browsingContext.reload", "params": {"context": "$CONTEXT_ID", "wait": "complete" }}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
@@ -34,8 +35,26 @@ echo '{"id": $ID, "method": "browsingContext.setViewport", "params": {"context":
 // browsingContext.traverseHistory (back example)
 echo '{"id": $ID, "method": "browsingContext.traverseHistory", "params": {"context": "$CONTEXT_ID", "delta": -1}}' | websocat ws://127.0.0.1:9222/session/$SESSION_ID
 
+// --------------------------------------------------
+
+// input
 
 // --------------------------------------------------
 
+// network
 
+// --------------------------------------------------
 
+// script
+
+// --------------------------------------------------
+
+// session
+
+// --------------------------------------------------
+
+// storage
+
+// --------------------------------------------------
+
+// webExtension
