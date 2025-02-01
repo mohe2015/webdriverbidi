@@ -1,3 +1,4 @@
+use crate::remote::browser::UserContext;
 use crate::remote::browsing_context::BrowsingContext;
 use crate::remote::{EmptyParams, Extensible};
 use serde::{Deserialize, Serialize};
@@ -260,11 +261,21 @@ pub struct SubscriptionRequest {
     pub events: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<Vec<BrowsingContext>>,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "userContexts")]
+    pub user_contexts: Option<Vec<UserContext>>,
 }
 
 impl SubscriptionRequest {
-    pub fn new(events: Vec<String>, contexts: Option<Vec<BrowsingContext>>) -> Self {
-        Self { events, contexts }
+    pub fn new(
+        events: Vec<String>,
+        contexts: Option<Vec<BrowsingContext>>,
+        user_contexts: Option<Vec<UserContext>>,
+    ) -> Self {
+        Self {
+            events,
+            contexts,
+            user_contexts,
+        }
     }
 }
 
@@ -360,11 +371,11 @@ impl Subscribe {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Unsubscribe {
     pub method: String,
-    pub params: UnsubscribeRequest,
+    pub params: UnsubscribeParameters,
 }
 
 impl Unsubscribe {
-    pub fn new(params: UnsubscribeRequest) -> Self {
+    pub fn new(params: UnsubscribeParameters) -> Self {
         Self {
             method: "session.unsubscribe".to_string(),
             params,
@@ -374,7 +385,7 @@ impl Unsubscribe {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum UnsubscribeRequest {
+pub enum UnsubscribeParameters {
     UnsubscribeByAttributesRequest(UnsubscribeByAttributesRequest),
     UnsubscribeByIDRequest(UnsubscribeByIDRequest),
 }

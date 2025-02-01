@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub enum SessionResult {
     NewResult(NewResult),
     StatusResult(StatusResult),
+    SubscribeResult(SubscribeResult),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -174,7 +175,7 @@ pub struct Capabilities {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct SubscriptionRequestResult {
+pub struct SubscribeResult {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub subscription: Option<Subscription>,
 }

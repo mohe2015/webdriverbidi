@@ -27,6 +27,7 @@ pub enum BrowsingContextCommand {
 pub enum Locator {
     AccessibilityLocator(AccessibilityLocator),
     CssLocator(CssLocator),
+    ContextLocator(ContextLocator),
     InnerTextLocator(InnerTextLocator),
     XPathLocator(XPathLocator),
 }
@@ -74,6 +75,33 @@ impl CssLocator {
             locator_type: "css".to_string(),
             value,
         }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ContextLocator {
+    #[serde(rename = "type")]
+    pub locator_type: String,
+    pub value: ContextValue,
+}
+
+impl ContextLocator {
+    pub fn new(value: ContextValue) -> Self {
+        Self {
+            locator_type: "context".to_string(),
+            value,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ContextValue {
+    pub context: BrowsingContext,
+}
+
+impl ContextValue {
+    pub fn new(context: BrowsingContext) -> Self {
+        Self { context }
     }
 }
 

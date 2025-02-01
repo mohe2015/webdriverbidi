@@ -10,6 +10,7 @@ pub enum EventType {
     BrowsingContextLoad,
     BrowsingContextDownloadWillBegin,
     BrowsingContextNavigationAborted,
+    BrowsingContextNavigationCommitted,
     BrowsingContextNavigationFailed,
     BrowsingContextUserPromptClosed,
     BrowsingContextUserPromptOpened,
@@ -44,6 +45,9 @@ impl EventType {
             }
             "browsingContext.navigationAborted" => {
                 Some(EventType::BrowsingContextNavigationAborted)
+            }
+            "browsingContext.navigationCommitted" => {
+                Some(EventType::BrowsingContextNavigationCommitted)
             }
             "browsingContext.navigationFailed" => Some(EventType::BrowsingContextNavigationFailed),
             "browsingContext.userPromptClosed" => Some(EventType::BrowsingContextUserPromptClosed),

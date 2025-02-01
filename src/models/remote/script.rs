@@ -1,4 +1,5 @@
 use crate::remote::browsing_context::BrowsingContext;
+use crate::remote::browser::UserContext;
 use crate::remote::{Extensible, JsUint};
 use serde::{Deserialize, Serialize};
 
@@ -1205,6 +1206,8 @@ pub struct AddPreloadScriptParameters {
     pub arguments: Option<Vec<ChannelValue>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contexts: Option<Vec<BrowsingContext>>,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "userContexts")]
+    pub user_contexts: Option<Vec<UserContext>>,    
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sandbox: Option<String>,
 }
@@ -1214,12 +1217,14 @@ impl AddPreloadScriptParameters {
         function_declaration: String,
         arguments: Option<Vec<ChannelValue>>,
         contexts: Option<Vec<BrowsingContext>>,
+        user_contexts: Option<Vec<UserContext>>,
         sandbox: Option<String>,
     ) -> Self {
         Self {
             function_declaration,
             arguments,
             contexts,
+            user_contexts,
             sandbox,
         }
     }

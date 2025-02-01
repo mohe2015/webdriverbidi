@@ -24,6 +24,7 @@ pub enum BrowsingContextEvent {
     HistoryUpdated(HistoryUpdated),
     Load(Load),
     NavigationAborted(NavigationAborted),
+    NavigationCommitted(NavigationCommitted),
     NavigationFailed(NavigationFailed),
     NavigationStarted(NavigationStarted),
     UserPromptClosed(UserPromptClosed),
@@ -54,6 +55,7 @@ pub struct Info {
 pub enum Locator {
     AccessibilityLocator(AccessibilityLocator),
     CssLocator(CssLocator),
+    ContextLocator(ContextLocator),
     InnerTextLocator(InnerTextLocator),
     XPathLocator(XPathLocator),
 }
@@ -78,6 +80,18 @@ pub struct CssLocator {
     #[serde(rename = "type")]
     pub locator_type: String,
     pub value: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ContextLocator {
+    #[serde(rename = "type")]
+    pub locator_type: String,
+    pub value: ContextValue,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ContextValue {
+    pub context: BrowsingContext,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -216,6 +230,12 @@ pub struct DownloadWillBegin {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NavigationAborted {
+    pub method: String,
+    pub params: NavigationInfo,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct NavigationCommitted {
     pub method: String,
     pub params: NavigationInfo,
 }

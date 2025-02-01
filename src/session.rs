@@ -546,7 +546,7 @@ impl WebDriverBiDiSession {
     pub async fn session_subscribe(
         &mut self,
         params: SubscriptionRequest,
-    ) -> Result<SubscriptionRequestResult, CommandError> {
+    ) -> Result<SubscribeResult, CommandError> {
         commands::session::subscribe(self, params).await
     }
 
@@ -565,7 +565,7 @@ impl WebDriverBiDiSession {
     /// A result containing the `EmptyResult` or a `CommandError`.
     pub async fn session_unsubscribe(
         &mut self,
-        params: UnsubscribeRequest,
+        params: UnsubscribeParameters,
     ) -> Result<EmptyResult, CommandError> {
         commands::session::unsubscribe(self, params).await
     }

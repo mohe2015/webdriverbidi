@@ -35,7 +35,7 @@ define_command!(
     Subscribe,
     SubscriptionRequest,
     subscribe,
-    SubscriptionRequestResult
+    SubscribeResult
 );
 
 // --------------------------------------------------
@@ -44,7 +44,7 @@ define_command!(
 define_command!(
     UnsubscribeCommand,
     Unsubscribe,
-    UnsubscribeRequest,
+    UnsubscribeParameters,
     unsubscribe,
     EmptyResult
 );
