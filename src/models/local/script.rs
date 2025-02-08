@@ -162,12 +162,12 @@ pub type Realm = String;
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum PrimitiveProtocolValue {
-    UndefinedValue(UndefinedValue),
-    NullValue(NullValue),
     StringValue(StringValue),
     NumberValue(NumberValue),
     BooleanValue(BooleanValue),
     BigIntValue(BigIntValue),
+    NullValue(NullValue),
+    UndefinedValue(UndefinedValue),
 }
 
 #[derive(Serialize, Deserialize, Debug)]

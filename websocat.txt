@@ -1,3 +1,10 @@
+// browser
+
+// browser.createUserContext
+echo '{"id": 0, "method": "browser.createUserContext", "params": {}}' | websocat $WEBSOCKET_URL
+
+// --------------------------------------------------
+
 // browsingContext
 
 // browsingContext.activate
@@ -46,6 +53,24 @@ echo '{"id": $ID, "method": "browsingContext.traverseHistory", "params": {"conte
 // --------------------------------------------------
 
 // script
+
+script.CallFunction = (
+  method: "script.callFunction",
+  params: script.CallFunctionParameters
+)
+
+script.CallFunctionParameters = {
+  functionDeclaration: text,
+  awaitPromise: bool,
+  target: script.Target,
+  ? arguments: [*script.LocalValue],
+  ? resultOwnership: script.ResultOwnership,
+  ? serializationOptions: script.SerializationOptions,
+  ? this: script.LocalValue,
+  ? userActivation: bool .default false,
+}
+
+echo '{"id": $ID, "method": "script.callFunction", "params": {"functionDeclaration": "function() { return document.title; }", "awaitPromise": true, "target": {"type": "page", "pageId": "$PAGE_ID"}}}' | websocat ws://127.0.0.1:4444/session/$SESSION_ID
 
 // --------------------------------------------------
 
