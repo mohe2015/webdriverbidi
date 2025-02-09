@@ -1,4 +1,3 @@
-use log::debug;
 use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;
@@ -6,6 +5,7 @@ use std::sync::Arc;
 
 // --------------------------------------------------
 
+use log::debug;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use serde_json::Value;
@@ -22,15 +22,13 @@ use crate::error::{CommandError, SessionError};
 use crate::events::EventType;
 use crate::local::browser::ClientWindowInfo;
 use crate::local::browser::*;
-use crate::local::web_extension::*;
-use crate::remote::web_extension::*;
-
 use crate::local::browsing_context::*;
 use crate::local::network::*;
 use crate::local::script::EvaluateResult;
 use crate::local::script::*;
 use crate::local::session::*;
 use crate::local::storage::*;
+use crate::local::web_extension::*;
 use crate::message_handler;
 use crate::models::local::result_data::EmptyResult;
 use crate::remote::browser::*;
@@ -39,6 +37,7 @@ use crate::remote::network::*;
 use crate::remote::script::*;
 use crate::remote::session::*;
 use crate::remote::storage::*;
+use crate::remote::web_extension::*;
 use crate::remote::{browsing_context::*, EmptyParams};
 use crate::webdriver::capabilities::CapabilitiesRequest;
 use crate::webdriver::session;
@@ -48,8 +47,6 @@ use crate::webdriver::session;
 /// Type alias for the event handler functions.
 pub type EventHandler =
     Box<dyn Fn(Value) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
-
-// --------------------------------------------------
 
 /// Represents a WebDriver BiDi session.
 ///
@@ -81,8 +78,6 @@ pub struct WebDriverBiDiSession {
     event_handlers: Arc<Mutex<HashMap<EventType, EventHandler>>>,
 }
 
-// --------------------------------------------------
-
 impl WebDriverBiDiSession {
     /// Creates a new session.
     ///
@@ -106,8 +101,6 @@ impl WebDriverBiDiSession {
             event_handlers: Arc::new(Mutex::new(HashMap::new())),
         }
     }
-
-    // --------------------------------------------------
 
     /// Starts a WebDriver session, establishes a WebSocket connection and
     /// spawns a background task to handle incoming messages.
@@ -138,15 +131,11 @@ impl WebDriverBiDiSession {
         Ok(())
     }
 
-    // --------------------------------------------------
-
     /// Closes the WebDriver session.
     pub async fn close(&mut self) -> Result<(), SessionError> {
         session::close_session(&self.base_url, &self.session_id).await?;
         Ok(())
     }
-
-    // --------------------------------------------------
 
     /// Sends a WebDriver BiDi command.
     ///
@@ -175,8 +164,6 @@ impl WebDriverBiDiSession {
         }
     }
 
-    // --------------------------------------------------
-
     /// Spawns a background task to manage incoming WebSocket messages.
     ///
     /// This method creates a new asynchronous task that continuously listens for
@@ -194,8 +181,6 @@ impl WebDriverBiDiSession {
         ));
     }
 
-    // --------------------------------------------------
-
     /// Registers an event handler for a specific event type.
     ///
     /// # Arguments
@@ -211,8 +196,6 @@ impl WebDriverBiDiSession {
         handlers.insert(event_type, Box::new(move |event| Box::pin(handler(event))));
     }
 
-    // --------------------------------------------------
-
     /// Unregisters an event handler for a specific event type.
     ///
     /// # Arguments
@@ -223,8 +206,6 @@ impl WebDriverBiDiSession {
         handlers.remove(&event_type);
     }
 }
-
-// --------------------------------------------------
 
 // Browsing context commands
 impl WebDriverBiDiSession {
@@ -246,8 +227,6 @@ impl WebDriverBiDiSession {
         commands::browsing_context::activate(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-captureScreenshot
 
     /// Captures an image of the given navigable, and returns it as a Base64-encoded string.
@@ -265,8 +244,6 @@ impl WebDriverBiDiSession {
     ) -> Result<CaptureScreenshotResult, CommandError> {
         commands::browsing_context::capture_screenshot(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
 
@@ -286,8 +263,6 @@ impl WebDriverBiDiSession {
         commands::browsing_context::close(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
 
     /// Creates a new browsing context.
@@ -305,8 +280,6 @@ impl WebDriverBiDiSession {
     ) -> Result<CreateResult, CommandError> {
         commands::browsing_context::create(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-getTree
 
@@ -326,8 +299,6 @@ impl WebDriverBiDiSession {
         commands::browsing_context::get_tree(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-handleUserPrompt
 
     /// Allows closing an open prompt.
@@ -345,8 +316,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::browsing_context::handle_user_prompt(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
 
@@ -366,8 +335,6 @@ impl WebDriverBiDiSession {
         commands::browsing_context::locate_nodes(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-navigate
 
     /// Navigates to a URL in the browsing context.
@@ -385,8 +352,6 @@ impl WebDriverBiDiSession {
     ) -> Result<NavigateResult, CommandError> {
         commands::browsing_context::navigate(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-print
 
@@ -407,8 +372,6 @@ impl WebDriverBiDiSession {
         commands::browsing_context::print(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-reload
 
     /// Reloads the current page in the browsing context.
@@ -426,8 +389,6 @@ impl WebDriverBiDiSession {
     ) -> Result<NavigateResult, CommandError> {
         commands::browsing_context::reload(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-setViewport
 
@@ -447,8 +408,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::browsing_context::set_viewport(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browsingContext-traverseHistory
 
@@ -496,8 +455,6 @@ impl WebDriverBiDiSession {
         commands::session::status(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-session-new
 
     /// Creates a new session.
@@ -513,8 +470,6 @@ impl WebDriverBiDiSession {
         commands::session::new(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-session-end
 
     /// Ends the current session.
@@ -529,8 +484,6 @@ impl WebDriverBiDiSession {
     pub async fn session_end(&mut self, params: EmptyParams) -> Result<EmptyResult, CommandError> {
         commands::session::end(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-session-subscribe
 
@@ -549,8 +502,6 @@ impl WebDriverBiDiSession {
     ) -> Result<SubscribeResult, CommandError> {
         commands::session::subscribe(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-session-unsubscribe
 
@@ -593,8 +544,6 @@ impl WebDriverBiDiSession {
         commands::browser::close(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browser-createUserContext
 
     /// Creates a new user context.
@@ -612,8 +561,6 @@ impl WebDriverBiDiSession {
     ) -> Result<CreateUserContextResult, CommandError> {
         commands::browser::create_user_context(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browser-getClientWindows
 
@@ -633,8 +580,6 @@ impl WebDriverBiDiSession {
         commands::browser::get_client_windows(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browser-getUserContexts
 
     /// Retrieves the list of user contexts.
@@ -653,8 +598,6 @@ impl WebDriverBiDiSession {
         commands::browser::get_user_contexts(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-browser-removeUserContext
 
     /// Closes a user context and all navigables in it.
@@ -672,8 +615,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::browser::remove_user_context(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-browser-setClientWindowState
 
@@ -716,8 +657,6 @@ impl WebDriverBiDiSession {
         commands::network::add_intercept(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-network-continueRequest
 
     /// Continues a request that’s blocked by a network intercept.
@@ -735,8 +674,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::network::continue_request(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-network-continueResponse
 
@@ -756,8 +693,6 @@ impl WebDriverBiDiSession {
         commands::network::continue_response(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-network-continueWithAuth
 
     /// Continues a request that’s blocked by a network intercept at the authRequired phase.
@@ -775,8 +710,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::network::continue_with_auth(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-network-failRequest
 
@@ -796,8 +729,6 @@ impl WebDriverBiDiSession {
         commands::network::fail_request(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-network-provideResponse
 
     /// Continues a request that’s blocked by a network intercept, by providing a complete response.
@@ -816,8 +747,6 @@ impl WebDriverBiDiSession {
         commands::network::provide_response(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-network-removeIntercept
 
     /// Removes a network intercept.
@@ -835,8 +764,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::network::remove_intercept(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-network-setCacheBehavior
 
@@ -879,8 +806,6 @@ impl WebDriverBiDiSession {
         commands::script::add_preload_script(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-script-disown
 
     /// Disowns the given handles.
@@ -898,8 +823,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::script::disown(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-script-callFunction
 
@@ -919,8 +842,6 @@ impl WebDriverBiDiSession {
         commands::script::call_function(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-script-evaluate
 
     /// Evaluates the given script in the given realm.
@@ -938,8 +859,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EvaluateResult, CommandError> {
         commands::script::evaluate(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-script-getRealms
 
@@ -959,8 +878,6 @@ impl WebDriverBiDiSession {
     ) -> Result<GetRealmsResult, CommandError> {
         commands::script::get_realms(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-script-removePreloadScript
 
@@ -1003,8 +920,6 @@ impl WebDriverBiDiSession {
         commands::storage::get_cookies(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-storage-setCookie
 
     /// Creates a new cookie in a cookie store.
@@ -1022,8 +937,6 @@ impl WebDriverBiDiSession {
     ) -> Result<SetCookieResult, CommandError> {
         commands::storage::set_cookie(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-storage-deleteCookies
 
@@ -1066,8 +979,6 @@ impl WebDriverBiDiSession {
         commands::input::perform_actions(self, params).await
     }
 
-    // --------------------------------------------------
-
     // https://w3c.github.io/webdriver-bidi/#command-input-releaseActions
 
     /// Resets the input state associated with the current session.
@@ -1085,8 +996,6 @@ impl WebDriverBiDiSession {
     ) -> Result<EmptyResult, CommandError> {
         commands::input::release_actions(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-input-setFiles
 
@@ -1129,8 +1038,6 @@ impl WebDriverBiDiSession {
     ) -> Result<InstallResult, CommandError> {
         commands::web_extension::install(self, params).await
     }
-
-    // --------------------------------------------------
 
     // https://w3c.github.io/webdriver-bidi/#command-webExtension-uninstall
 

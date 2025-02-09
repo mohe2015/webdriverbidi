@@ -1,7 +1,10 @@
 // browser
 
 // browser.createUserContext
-echo '{"id": 0, "method": "browser.createUserContext", "params": {}}' | websocat $WEBSOCKET_URL
+echo '{"id": $ID, "method": "browser.createUserContext", "params": {}}' | websocat $WEBSOCKET_URL
+
+// browser.getClientWindows
+echo '{"id": $ID, "method": "browser.getClientWindows", "params": {}}' | websocat $WEBSOCKET_URL
 
 // --------------------------------------------------
 

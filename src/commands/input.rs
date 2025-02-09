@@ -21,8 +21,6 @@ define_command!(
     EmptyResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-input-releaseActions
 define_command!(
     ReleaseActionsCommand,
@@ -31,8 +29,6 @@ define_command!(
     release_actions,
     EmptyResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-input-setFiles
 define_command!(

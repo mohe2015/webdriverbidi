@@ -18,8 +18,6 @@ use crate::session::WebDriverBiDiSession;
 // https://w3c.github.io/webdriver-bidi/#command-browser-close
 define_command!(CloseCommand, Close, EmptyParams, close, EmptyResult);
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browser-createUserContext
 define_command!(
     CreateUserContextCommand,
@@ -28,8 +26,6 @@ define_command!(
     create_user_context,
     CreateUserContextResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browser-getClientWindows
 define_command!(
@@ -40,8 +36,6 @@ define_command!(
     GetClientWindowsResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browser-getUserContexts
 define_command!(
     GetUserContextsCommand,
@@ -51,8 +45,6 @@ define_command!(
     GetUserContextsResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browser-removeUserContext
 define_command!(
     RemoveUserContextCommand,
@@ -61,8 +53,6 @@ define_command!(
     remove_user_context,
     EmptyResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browser-setClientWindowState
 define_command!(

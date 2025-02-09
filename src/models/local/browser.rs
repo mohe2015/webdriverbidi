@@ -10,7 +10,7 @@ pub enum BrowserResult {
 
 pub type ClientWindow = String;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct ClientWindowInfo {
     pub active: bool,
     #[serde(rename = "clientWindow")]
@@ -22,7 +22,7 @@ pub struct ClientWindowInfo {
     pub y: JsInt,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum ClientWindowInfoState {
     Fullscreen,
@@ -41,7 +41,7 @@ pub struct UserContextInfo {
 
 pub type CreateUserContextResult = UserContextInfo;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct GetClientWindowsResult {
     #[serde(rename = "clientWindows")]
     pub client_windows: Vec<ClientWindowInfo>,

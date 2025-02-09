@@ -22,8 +22,6 @@ define_command!(
     InstallResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-webExtension-uninstall
 define_command!(
     UninstallCommand,

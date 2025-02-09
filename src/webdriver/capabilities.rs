@@ -103,8 +103,6 @@ impl CapabilitiesRequest {
         }
     }
 
-    // --------------------------------------------------
-
     /// Adds a firstMatch capability to the Capabilities instance.
     ///
     /// # Arguments
@@ -121,8 +119,6 @@ impl CapabilitiesRequest {
             self.first_match = Some(vec![first_match]);
         }
     }
-
-    // --------------------------------------------------
 
     /// Adds a non standard alwaysMatch capability if the key is not `webSocketUrl`.
     ///
@@ -142,8 +138,6 @@ impl CapabilitiesRequest {
         }
     }
 
-    // --------------------------------------------------
-
     /// Builds the Capabilities instance into a serde_json::Value ready for serialization.
     pub fn build(&self) -> Value {
         let json = json!({
@@ -151,8 +145,6 @@ impl CapabilitiesRequest {
         });
         json
     }
-
-    // --------------------------------------------------
 
     /// Constructs a new CapabilitiesRequest instance with default values.
     pub fn default() -> Self {

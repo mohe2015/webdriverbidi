@@ -21,8 +21,6 @@ define_command!(
     GetCookiesResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-storage-setCookie
 define_command!(
     SetCookieCommand,
@@ -31,8 +29,6 @@ define_command!(
     set_cookie,
     SetCookieResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-storage-deleteCookies
 define_command!(

@@ -21,8 +21,6 @@ define_command!(
     AddInterceptResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-network-continueRequest
 define_command!(
     ContinueRequestCommand,
@@ -31,8 +29,6 @@ define_command!(
     continue_request,
     EmptyResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-network-continueResponse
 define_command!(
@@ -43,8 +39,6 @@ define_command!(
     EmptyResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-network-continueWithAuth
 define_command!(
     ContinueWithAuthCommand,
@@ -53,8 +47,6 @@ define_command!(
     continue_with_auth,
     EmptyResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-network-failRequest
 define_command!(
@@ -65,8 +57,6 @@ define_command!(
     EmptyResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-network-provideResponse
 define_command!(
     ProvideResponseCommand,
@@ -76,8 +66,6 @@ define_command!(
     EmptyResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-network-removeIntercept
 define_command!(
     RemoveInterceptCommand,
@@ -86,8 +74,6 @@ define_command!(
     remove_intercept,
     EmptyResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-network-setCacheBehavior
 define_command!(

@@ -25,6 +25,6 @@ mod error;
 pub mod events;
 mod message_handler;
 
-// Re-export key functionality
+// Re-export key structs and enums
 pub use models::local;
 pub use models::remote;

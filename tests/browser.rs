@@ -2,6 +2,10 @@ use actix_web::{web, App, HttpServer};
 
 // --------------------------------------------------
 
+use webdriverbidi::remote::EmptyParams;
+
+// --------------------------------------------------
+
 mod utils;
 use utils::*;
 
@@ -133,4 +137,87 @@ mod create_user_context {
         close_session(&mut bidi_session).await.unwrap();
         server_handle.abort();
     }
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browser-getClientWindows
+
+mod get_client_windows {
+
+    use webdriverbidi::remote::browsing_context::CloseParameters;
+
+    use super::*;
+    #[tokio::test]
+    async fn test_open_and_close() {
+        let mut bidi_session = init_session().await.unwrap();
+
+        let initial_windows = bidi_session
+            .browser_get_client_windows(EmptyParams::new())
+            .await
+            .unwrap();
+        assert_eq!(initial_windows.client_windows.len(), 1);
+
+        let new_browsing_context = new_window(&mut bidi_session).await.unwrap();
+
+        let updated_windows = bidi_session
+            .browser_get_client_windows(EmptyParams::new())
+            .await
+            .unwrap();
+        assert_eq!(updated_windows.client_windows.len(), 2);
+        assert_ne!(
+            updated_windows.client_windows[0].client_window,
+            updated_windows.client_windows[1].client_window
+        );
+
+        bidi_session
+            .browsing_context_close(CloseParameters::new(new_browsing_context, None))
+            .await
+            .unwrap();
+
+        let final_windows = bidi_session
+            .browser_get_client_windows(EmptyParams::new())
+            .await
+            .unwrap();
+        assert_eq!(final_windows, initial_windows);
+
+        close_session(&mut bidi_session).await.unwrap();
+    }
+
+    // async def test_activate_client_windows(bidi_session):
+    //     initial_windows = await bidi_session.browser.get_client_windows()
+    //     assert len(initial_windows) == 1
+    //     initial_window = initial_windows[0]
+    //     initial_window_id = initial_window["clientWindow"]
+
+    //     initial_contexts = await bidi_session.browsing_context.get_tree()
+    //     assert len(initial_contexts) == 1
+    //     initial_context_id = initial_contexts[0]["context"]
+
+    //     try:
+    //         new_browsing_context = await bidi_session.browsing_context.create(type_hint="window")
+    //         all_windows = await bidi_session.browser.get_client_windows()
+    //         assert len(all_windows) == 2
+
+    //         first_window = next(window for window in all_windows if window["clientWindow"] == initial_window_id)
+    //         second_window = next(window for window in all_windows if window["clientWindow"] != initial_window_id)
+
+    //         assert second_window["active"]
+    //         assert not first_window["active"]
+
+    //         await bidi_session.browsing_context.activate(context=initial_context_id)
+
+    //         all_windows = await bidi_session.browser.get_client_windows()
+
+    //         first_window = next(window for window in all_windows if window["clientWindow"] == initial_window_id)
+    //         second_window = next(window for window in all_windows if window["clientWindow"] != initial_window_id)
+
+    //         assert first_window["active"]
+    //         assert not second_window["active"]
+    //     finally:
+    //         await bidi_session.browsing_context.close(context=new_browsing_context["context"])
+
+    //     final_windows = await bidi_session.browser.get_client_windows()
+    //     assert(final_windows[0]["active"]) == True
+    //     assert final_windows[0]["clientWindow"] == initial_window_id
 }

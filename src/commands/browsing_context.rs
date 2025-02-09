@@ -22,8 +22,6 @@ define_command!(
     EmptyResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-captureScreenshot
 define_command!(
     CaptureScreenshotCommand,
@@ -33,12 +31,8 @@ define_command!(
     CaptureScreenshotResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-close
 define_command!(CloseCommand, Close, CloseParameters, close, EmptyResult);
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-create
 define_command!(
@@ -49,8 +43,6 @@ define_command!(
     CreateResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-getTree
 define_command!(
     GetTreeCommand,
@@ -59,8 +51,6 @@ define_command!(
     get_tree,
     GetTreeResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-handleUserPrompt
 define_command!(
@@ -71,8 +61,6 @@ define_command!(
     EmptyResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-locateNodes
 define_command!(
     LocateNodesCommand,
@@ -81,8 +69,6 @@ define_command!(
     locate_nodes,
     LocateNodesResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-navigate
 define_command!(
@@ -93,12 +79,8 @@ define_command!(
     NavigateResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-print
 define_command!(PrintCommand, Print, PrintParameters, print, PrintResult);
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-reload
 define_command!(
@@ -109,8 +91,6 @@ define_command!(
     NavigateResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-setViewport
 define_command!(
     SetViewportCommand,
@@ -119,8 +99,6 @@ define_command!(
     set_viewport,
     EmptyResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-browsingContext-traverseHistory
 define_command!(

@@ -17,8 +17,6 @@ pub struct SessionResponse {
     pub websocket_url: String,
 }
 
-// --------------------------------------------------
-
 /// Starts a WebDriver session through HTTP.
 pub async fn start_session(
     base_url: &str,
@@ -74,8 +72,6 @@ pub async fn start_session(
     Ok(session_response)
 }
 
-// --------------------------------------------------
-
 /// Closes a WebDriver session through HTTP.
 pub async fn close_session(base_url: &str, session_id: &str) -> Result<(), SessionError> {
     let url = format!("{}/session/{}", base_url, session_id);
@@ -89,8 +85,6 @@ pub async fn close_session(base_url: &str, session_id: &str) -> Result<(), Sessi
     debug!("Session {} closed successfully", session_id);
     Ok(())
 }
-
-// --------------------------------------------------
 
 /// Creates a new reqwest HTTP client.
 fn create_http_client() -> Client {

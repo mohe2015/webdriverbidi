@@ -127,7 +127,7 @@ pub async fn get_local_storage(
     );
     let eval_result = bidi_session.script_call_function(params).await?;
 
-    let res = match eval_result {
+    match eval_result {
         EvaluateResult::EvaluateResultSuccess(eval_rslt_success) => {
             let remote_value = eval_rslt_success.result;
             match remote_value {
@@ -138,8 +138,7 @@ pub async fn get_local_storage(
             }
         }
         _ => Ok(None),
-    };
-    res
+    }
 }
 
 // --------------------------------------------------
@@ -192,6 +191,17 @@ pub async fn new_tab_in_user_context(
     Ok(context)
 }
 
+/// Open a new tab.
+pub async fn new_window(
+    session: &mut WebDriverBiDiSession,
+) -> Result<String> {
+    let create_params = CreateParameters::new(CreateType::Window, None, None, None);
+    let context = session
+        .browsing_context_create(create_params)
+        .await?
+        .context;
+    Ok(context)
+}
 // // --------------------------------------------------
 
 /// Initialize a simplelog TermLogger.

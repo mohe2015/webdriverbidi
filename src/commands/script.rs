@@ -23,12 +23,8 @@ define_command!(
     AddPreloadScriptResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-script-disown
 define_command!(DisownCommand, Disown, DisownParameters, disown, EmptyResult);
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-script-callFunction
 define_command!(
@@ -39,8 +35,6 @@ define_command!(
     EvaluateResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-script-evaluate
 define_command!(
     EvaluateCommand,
@@ -50,8 +44,6 @@ define_command!(
     EvaluateResult
 );
 
-// --------------------------------------------------
-
 // https://w3c.github.io/webdriver-bidi/#command-script-getRealms
 define_command!(
     GetRealmsCommand,
@@ -60,8 +52,6 @@ define_command!(
     get_realms,
     GetRealmsResult
 );
-
-// --------------------------------------------------
 
 // https://w3c.github.io/webdriver-bidi/#command-script-removePreloadScript
 define_command!(
