@@ -2,10 +2,6 @@ use actix_web::{web, App, HttpServer};
 
 // --------------------------------------------------
 
-use webdriverbidi::remote::EmptyParams;
-
-// --------------------------------------------------
-
 mod utils;
 use utils::*;
 
@@ -145,29 +141,25 @@ mod create_user_context {
 
 mod get_client_windows {
 
-    use webdriverbidi::remote::browsing_context::CloseParameters;
+    use webdriverbidi::remote::browsing_context::{
+        ActivateParameters, CloseParameters, GetTreeParameters,
+    };
 
     use super::*;
     #[tokio::test]
     async fn test_open_and_close() {
         let mut bidi_session = init_session().await.unwrap();
 
-        let initial_windows = bidi_session
-            .browser_get_client_windows(EmptyParams::new())
-            .await
-            .unwrap();
-        assert_eq!(initial_windows.client_windows.len(), 1);
+        let initial_windows = get_client_windows(&mut bidi_session).await.unwrap();
+        assert_eq!(initial_windows.len(), 1);
 
         let new_browsing_context = new_window(&mut bidi_session).await.unwrap();
 
-        let updated_windows = bidi_session
-            .browser_get_client_windows(EmptyParams::new())
-            .await
-            .unwrap();
-        assert_eq!(updated_windows.client_windows.len(), 2);
+        let updated_windows = get_client_windows(&mut bidi_session).await.unwrap();
+        assert_eq!(updated_windows.len(), 2);
         assert_ne!(
-            updated_windows.client_windows[0].client_window,
-            updated_windows.client_windows[1].client_window
+            updated_windows[0].client_window,
+            updated_windows[1].client_window
         );
 
         bidi_session
@@ -175,49 +167,72 @@ mod get_client_windows {
             .await
             .unwrap();
 
-        let final_windows = bidi_session
-            .browser_get_client_windows(EmptyParams::new())
-            .await
-            .unwrap();
+        let final_windows = get_client_windows(&mut bidi_session).await.unwrap();
         assert_eq!(final_windows, initial_windows);
 
         close_session(&mut bidi_session).await.unwrap();
     }
 
-    // async def test_activate_client_windows(bidi_session):
-    //     initial_windows = await bidi_session.browser.get_client_windows()
-    //     assert len(initial_windows) == 1
-    //     initial_window = initial_windows[0]
-    //     initial_window_id = initial_window["clientWindow"]
+    #[tokio::test]
+    async fn test_activate_client_windows() {
+        let mut bidi_session = init_session().await.unwrap();
 
-    //     initial_contexts = await bidi_session.browsing_context.get_tree()
-    //     assert len(initial_contexts) == 1
-    //     initial_context_id = initial_contexts[0]["context"]
+        let initial_windows = get_client_windows(&mut bidi_session).await.unwrap();
+        assert_eq!(initial_windows.len(), 1);
+        let initial_window = &initial_windows[0];
+        let initial_window_id = &initial_window.client_window;
 
-    //     try:
-    //         new_browsing_context = await bidi_session.browsing_context.create(type_hint="window")
-    //         all_windows = await bidi_session.browser.get_client_windows()
-    //         assert len(all_windows) == 2
+        let initial_contexts = bidi_session
+            .browsing_context_get_tree(GetTreeParameters::new(None, None))
+            .await
+            .unwrap()
+            .contexts;
+        assert_eq!(initial_contexts.len(), 1);
+        let initial_context_id = &initial_contexts[0].context;
 
-    //         first_window = next(window for window in all_windows if window["clientWindow"] == initial_window_id)
-    //         second_window = next(window for window in all_windows if window["clientWindow"] != initial_window_id)
+        let new_browsing_context = new_window(&mut bidi_session).await.unwrap();
 
-    //         assert second_window["active"]
-    //         assert not first_window["active"]
+        let all_windows = get_client_windows(&mut bidi_session).await.unwrap();
+        assert_eq!(all_windows.len(), 2);
 
-    //         await bidi_session.browsing_context.activate(context=initial_context_id)
+        let first_window = all_windows
+            .iter()
+            .find(|&window| window.client_window == *initial_window_id)
+            .unwrap();
+        let second_window = all_windows
+            .iter()
+            .find(|&window| window.client_window != *initial_window_id)
+            .unwrap();
+        assert!(second_window.active);
+        assert!(!first_window.active);
 
-    //         all_windows = await bidi_session.browser.get_client_windows()
+        bidi_session
+            .browsing_context_activate(ActivateParameters::new(initial_context_id.to_string()))
+            .await
+            .unwrap();
 
-    //         first_window = next(window for window in all_windows if window["clientWindow"] == initial_window_id)
-    //         second_window = next(window for window in all_windows if window["clientWindow"] != initial_window_id)
+        let all_windows = get_client_windows(&mut bidi_session).await.unwrap();
 
-    //         assert first_window["active"]
-    //         assert not second_window["active"]
-    //     finally:
-    //         await bidi_session.browsing_context.close(context=new_browsing_context["context"])
+        let first_window = all_windows
+            .iter()
+            .find(|&window| window.client_window == *initial_window_id)
+            .unwrap();
+        let second_window = all_windows
+            .iter()
+            .find(|&window| window.client_window != *initial_window_id)
+            .unwrap();
+        assert!(first_window.active);
+        assert!(!second_window.active);
 
-    //     final_windows = await bidi_session.browser.get_client_windows()
-    //     assert(final_windows[0]["active"]) == True
-    //     assert final_windows[0]["clientWindow"] == initial_window_id
+        bidi_session
+            .browsing_context_close(CloseParameters::new(new_browsing_context, None))
+            .await
+            .unwrap();
+
+        let final_windows = get_client_windows(&mut bidi_session).await.unwrap();
+        assert!(final_windows[0].active);
+        assert_eq!(final_windows[0].client_window, *initial_window_id);
+
+        close_session(&mut bidi_session).await.unwrap();
+    }
 }

@@ -8,6 +8,7 @@ use simplelog::*;
 
 // --------------------------------------------------
 
+use webdriverbidi::local::browser::ClientWindowInfo;
 use webdriverbidi::local::script::{EvaluateResult, RemoteValue};
 use webdriverbidi::remote::browsing_context::{
     CreateParameters,
@@ -141,6 +142,19 @@ pub async fn get_local_storage(
     }
 }
 
+/// Retrieves the list of client windows.
+pub async fn get_client_windows(
+    bidi_session: &mut WebDriverBiDiSession,
+) -> Result<Vec<ClientWindowInfo>> {
+    let client_windows = bidi_session
+        .browser_get_client_windows(EmptyParams::new())
+        .await
+        .unwrap()
+        .client_windows;
+
+    Ok(client_windows)
+}
+
 // --------------------------------------------------
 
 // /// Sleep for a given number of seconds.
@@ -192,9 +206,7 @@ pub async fn new_tab_in_user_context(
 }
 
 /// Open a new tab.
-pub async fn new_window(
-    session: &mut WebDriverBiDiSession,
-) -> Result<String> {
+pub async fn new_window(session: &mut WebDriverBiDiSession) -> Result<String> {
     let create_params = CreateParameters::new(CreateType::Window, None, None, None);
     let context = session
         .browsing_context_create(create_params)
