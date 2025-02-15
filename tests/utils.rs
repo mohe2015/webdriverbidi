@@ -10,12 +10,13 @@ use simplelog::*;
 
 use webdriverbidi::local::browser::ClientWindowInfo;
 use webdriverbidi::local::script::{EvaluateResult, RemoteValue};
+use webdriverbidi::remote::browser::RemoveUserContextParameters;
 use webdriverbidi::remote::browsing_context::{
     CreateParameters,
     CreateType,
+    // GetTreeParameters,
     NavigateParameters,
-    ReadinessState,
-    // GetTreeParameters,  TraverseHistoryParameters,
+    ReadinessState, // GetTreeParameters,  TraverseHistoryParameters,
 };
 use webdriverbidi::remote::script::{
     CallFunctionParameters, ContextTarget, LocalValue, PrimitiveProtocolValue, StringValue, Target,
@@ -68,6 +69,18 @@ pub async fn create_user_context(bidi_session: &mut WebDriverBiDiSession) -> Res
         .await?
         .user_context;
     Ok(user_context)
+}
+
+/// Removes a user context.
+pub async fn remove_user_context(
+    bidi_session: &mut WebDriverBiDiSession,
+    user_context: String,
+) -> Result<()> {
+    bidi_session
+        .browser_remove_user_context(RemoveUserContextParameters::new(user_context.clone()))
+        .await
+        .unwrap();
+    Ok(())
 }
 
 fn local_value(str: &str) -> LocalValue {

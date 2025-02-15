@@ -2,8 +2,18 @@ use actix_web::{web, App, HttpServer};
 
 // --------------------------------------------------
 
+use webdriverbidi::remote::browsing_context::{
+    ActivateParameters, CloseParameters, GetTreeParameters,
+};
+
+// --------------------------------------------------
+
 mod utils;
 use utils::*;
+
+// --------------------------------------------------
+
+const DEFAULT_USER_CONTEXT: &str = "default";
 
 // --------------------------------------------------
 
@@ -141,11 +151,8 @@ mod create_user_context {
 
 mod get_client_windows {
 
-    use webdriverbidi::remote::browsing_context::{
-        ActivateParameters, CloseParameters, GetTreeParameters,
-    };
-
     use super::*;
+
     #[tokio::test]
     async fn test_open_and_close() {
         let mut bidi_session = init_session().await.unwrap();
@@ -235,4 +242,186 @@ mod get_client_windows {
 
         close_session(&mut bidi_session).await.unwrap();
     }
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browser-getUserContexts
+
+mod get_user_contexts {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_default() {
+        let mut bidi_session = init_session().await.unwrap();
+
+        let user_context_ids = get_user_context_ids(&mut bidi_session).await.unwrap();
+
+        assert!(!user_context_ids.is_empty());
+        assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
+
+        close_session(&mut bidi_session).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_create_remove_contexts() {
+        let mut bidi_session = init_session().await.unwrap();
+
+        // create two user contexts
+        let user_context_1 = create_user_context(&mut bidi_session).await.unwrap();
+        let user_context_2 = create_user_context(&mut bidi_session).await.unwrap();
+
+        // get_user_contexts should return at least 3 contexts:
+        // the default context and the 2 newly created contexts
+        let user_context_ids = get_user_context_ids(&mut bidi_session).await.unwrap();
+        assert!(user_context_ids.len() >= 3);
+        assert!(user_context_ids.contains(&user_context_1));
+        assert!(user_context_ids.contains(&user_context_2));
+        assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
+
+        // remove user context 1
+        remove_user_context(&mut bidi_session, user_context_1.clone())
+            .await
+            .unwrap();
+
+        // assert that user context 1 is not returned by browser.getUserContexts
+        let user_context_ids = get_user_context_ids(&mut bidi_session).await.unwrap();
+        assert!(!user_context_ids.contains(&user_context_1));
+        assert!(user_context_ids.contains(&user_context_2));
+        assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
+
+        // remove user context 2
+        remove_user_context(&mut bidi_session, user_context_2.clone())
+            .await
+            .unwrap();
+
+        // assert that user context 2 is not returned by browser.getUserContexts
+        let user_context_ids = get_user_context_ids(&mut bidi_session).await.unwrap();
+        assert!(!user_context_ids.contains(&user_context_2));
+        assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
+
+        close_session(&mut bidi_session).await.unwrap();
+    }
+}
+
+// --------------------------------------------------
+
+// https://w3c.github.io/webdriver-bidi/#command-browser-removeUserContext
+
+mod remove_user_context {
+    use super::*;
+
+    const USER_PROMPT_OPENED_EVENT: &str = "browsingContext.userPromptOpened";
+
+    #[tokio::test]
+    async fn test_remove_context() {
+        let mut bidi_session = init_session().await.unwrap();
+
+        let user_context = create_user_context(&mut bidi_session).await.unwrap();
+        let user_context_ids = get_user_context_ids(&mut bidi_session).await.unwrap();
+        assert!(user_context_ids.contains(&user_context));
+
+        remove_user_context(&mut bidi_session, user_context.clone())
+            .await
+            .unwrap();
+
+        let user_context_ids = get_user_context_ids(&mut bidi_session).await.unwrap();
+        assert!(!user_context_ids.contains(&user_context));
+        assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
+
+        close_session(&mut bidi_session).await.unwrap();
+    }
+
+    // @pytest.mark.parametrize("type_hint", ["tab", "window"])
+    // @pytest.mark.asyncio
+    // async def test_remove_context_closes_contexts(
+    //     bidi_session, subscribe_events, create_user_context, type_hint
+    // ):
+    //     await subscribe_events(events=["browsingContext.contextDestroyed"])
+
+    //     user_context_1 = await create_user_context()
+    //     user_context_2 = await create_user_context()
+
+    //     # context 1 and 2 are owned by user context 1
+    //     context_1 = await bidi_session.browsing_context.create(
+    //         user_context=user_context_1, type_hint=type_hint
+    //     )
+    //     context_2 = await bidi_session.browsing_context.create(
+    //         user_context=user_context_1, type_hint=type_hint
+    //     )
+    //     # context 3 and 4 are owned by user context 2
+    //     context_3 = await bidi_session.browsing_context.create(
+    //         user_context=user_context_2, type_hint=type_hint
+    //     )
+    //     context_4 = await bidi_session.browsing_context.create(
+    //         user_context=user_context_2, type_hint=type_hint
+    //     )
+
+    //     # Track all received browsingContext.contextDestroyed events in the events array
+    //     events = []
+
+    //     async def on_event(method, data):
+    //         events.append(data)
+
+    //     remove_listener = bidi_session.add_event_listener("browsingContext.contextDestroyed", on_event)
+
+    //     # destroy user context 1 and wait for context 1 and 2 to be destroyed
+    //     await bidi_session.browser.remove_user_context(user_context=user_context_1)
+
+    //     wait = AsyncPoll(bidi_session, timeout=2)
+    //     await wait.until(lambda _: len(events) >= 2)
+
+    //     assert len(events) == 2
+    //     destroyed_contexts = [event["context"] for event in events]
+    //     assert context_1["context"] in destroyed_contexts
+    //     assert context_2["context"] in destroyed_contexts
+
+    //     # destroy user context 1 and wait for context 3 and 4 to be destroyed
+    //     await bidi_session.browser.remove_user_context(user_context=user_context_2)
+
+    //     wait = AsyncPoll(bidi_session, timeout=2)
+    //     await wait.until(lambda _: len(events) >= 4)
+
+    //     assert len(events) == 4
+    //     destroyed_contexts = [event["context"] for event in events]
+    //     assert context_3["context"] in destroyed_contexts
+    //     assert context_4["context"] in destroyed_contexts
+
+    //     remove_listener()
+
+    // @pytest.mark.parametrize("type_hint", ["tab", "window"])
+    // @pytest.mark.asyncio
+    // async def test_remove_context_skips_beforeunload_prompt(
+    //     bidi_session,
+    //     subscribe_events,
+    //     create_user_context,
+    //     setup_beforeunload_page,
+    //     type_hint,
+    // ):
+    //     await subscribe_events(events=[USER_PROMPT_OPENED_EVENT])
+
+    //     events = []
+
+    //     async def on_event(method, data):
+    //         if data["type"] == "beforeunload":
+    //             events.append(method)
+
+    //     remove_listener = bidi_session.add_event_listener(
+    //         USER_PROMPT_OPENED_EVENT, on_event)
+
+    //     user_context = await create_user_context()
+
+    //     context = await bidi_session.browsing_context.create(
+    //         user_context=user_context, type_hint=type_hint
+    //     )
+
+    //     await setup_beforeunload_page(context)
+
+    //     await bidi_session.browser.remove_user_context(user_context=user_context)
+
+    //     wait = AsyncPoll(bidi_session, timeout=0.5)
+    //     with pytest.raises(TimeoutException):
+    //         await wait.until(lambda _: len(events) > 0)
+
+    //     remove_listener()
 }
