@@ -55,6 +55,7 @@ pub async fn handle_messages(
         match message {
             Some(Ok(Message::Text(text))) => match serde_json::from_str::<Value>(&text) {
                 Ok(json) => {
+                    // debug!("Raw message JSON: {:?}", json);
                     // Command response message
                     if let Some(id) = json.get(ID_FIELD).and_then(|id| id.as_u64()) {
                         // This is a command response

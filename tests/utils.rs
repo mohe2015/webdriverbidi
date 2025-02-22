@@ -1,10 +1,13 @@
+use std::path::PathBuf;
+
+use actix_files::NamedFile;
 use anyhow::Result;
 // use base64::prelude::*;
 use ctor::ctor;
 use simplelog::*;
 // use std::fs::File;
 // use std::io::Write;
-// use tokio::time;
+use tokio::time;
 
 // --------------------------------------------------
 
@@ -168,12 +171,15 @@ pub async fn get_client_windows(
     Ok(client_windows)
 }
 
-// --------------------------------------------------
+/// Sleep for a given number of seconds.
+pub async fn sleep_for_secs(secs: u64) {
+    time::sleep(time::Duration::from_secs(secs)).await
+}
 
-// /// Sleep for a given number of seconds.
-// pub async fn sleep_for_secs(secs: u64) {
-//     time::sleep(time::Duration::from_secs(secs)).await
-// }
+/// Sleep for a given number of seconds.
+pub async fn sleep_for_millis(millis: u64) {
+    time::sleep(time::Duration::from_millis(millis)).await
+}
 
 // // --------------------------------------------------
 
@@ -241,8 +247,6 @@ fn init() {
     .unwrap();
 }
 
-// // --------------------------------------------------
-
 /// Navigates to the specified URL waiting for the document to completely load.
 pub async fn navigate(
     session: &mut WebDriverBiDiSession,
@@ -253,6 +257,7 @@ pub async fn navigate(
     session.browsing_context_navigate(navigate_params).await?;
     Ok(())
 }
+
 
 // // --------------------------------------------------
 
@@ -265,10 +270,12 @@ pub async fn navigate(
 // }
 
 pub mod inline {
+    use std::collections::HashMap;
+
     use actix_web::{web, HttpResponse, Responder};
     use serde::Deserialize;
-    use std::collections::HashMap;
     use url::form_urlencoded;
+
 
     /// A helper function that “inlines” a document by wrapping the given source
     /// in a boilerplate template and then building a URL with the resulting document
@@ -347,9 +354,8 @@ pub mod inline {
         charset: Option<String>,
     }
 
-    /// This function is our request handler. It mimics the Python `main()` function
-    /// by reading the query parameters (looking for “doc”, “mime”, and “charset”),
-    /// constructing a `Content-Type` header if appropriate, and returning the document
+    /// This function reads the query parameters (looking for “doc”, “mime”, and “charset”),
+    /// constructs a `Content-Type` header if appropriate, and returns the document
     /// or an error message if “doc” is missing.
     pub async fn inline_handler(query: web::Query<InlineQuery>) -> impl Responder {
         // If the "doc" parameter is missing, return a 404 error.
@@ -378,3 +384,9 @@ pub mod inline {
         response.body(doc)
     }
 }
+
+pub async fn serve_static_html(path: &str) -> NamedFile {
+    let path: PathBuf = path.parse().unwrap();
+    NamedFile::open(path).unwrap()
+}
+

@@ -192,6 +192,7 @@ impl WebDriverBiDiSession {
         F: Fn(Value) -> Fut + Send + Sync + 'static,
         Fut: Future<Output = ()> + Send + 'static,
     {
+        debug!("Registring event handler for event: {:?}", event_type);
         let mut handlers = self.event_handlers.lock().await;
         handlers.insert(event_type, Box::new(move |event| Box::pin(handler(event))));
     }

@@ -48,7 +48,7 @@ impl FromStr for EventType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "browsingContext.ContextCreated" => Ok(EventType::BrowsingContextContextCreated),
+            "browsingContext.contextCreated" => Ok(EventType::BrowsingContextContextCreated),
             "browsingContext.contextDestroyed" => Ok(EventType::BrowsingContextContextDestroyed),
             "browsingContext.navigationStarted" => Ok(EventType::BrowsingContextNavigationStarted),
             "browsingContext.fragmentNavigated" => Ok(EventType::BrowsingContextFragmentNavigated),
