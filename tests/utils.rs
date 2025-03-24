@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use actix_files::NamedFile;
 use anyhow::Result;
+use log::debug;
 // use base64::prelude::*;
 use ctor::ctor;
 use simplelog::*;
@@ -13,18 +14,20 @@ use tokio::time;
 
 use webdriverbidi::local::browser::ClientWindowInfo;
 use webdriverbidi::local::script::{EvaluateResult, RemoteValue};
+use webdriverbidi::remote::EmptyParams;
 use webdriverbidi::remote::browser::RemoveUserContextParameters;
 use webdriverbidi::remote::browsing_context::{
     CreateParameters,
     CreateType,
+    GetTreeParameters,
     // GetTreeParameters,
     NavigateParameters,
-    ReadinessState, // GetTreeParameters,  TraverseHistoryParameters,
+    ReadinessState,
+    TraverseHistoryParameters,
 };
 use webdriverbidi::remote::script::{
     CallFunctionParameters, ContextTarget, LocalValue, PrimitiveProtocolValue, StringValue, Target,
 };
-use webdriverbidi::remote::EmptyParams;
 use webdriverbidi::session::WebDriverBiDiSession;
 use webdriverbidi::webdriver::capabilities::CapabilitiesRequest;
 
@@ -171,10 +174,10 @@ pub async fn get_client_windows(
     Ok(client_windows)
 }
 
-/// Sleep for a given number of seconds.
-pub async fn sleep_for_secs(secs: u64) {
-    time::sleep(time::Duration::from_secs(secs)).await
-}
+// /// Sleep for a given number of seconds.
+// pub async fn sleep_for_secs(secs: u64) {
+//     time::sleep(time::Duration::from_secs(secs)).await
+// }
 
 /// Sleep for a given number of seconds.
 pub async fn sleep_for_millis(millis: u64) {
@@ -200,6 +203,16 @@ pub async fn sleep_for_millis(millis: u64) {
 
 // // --------------------------------------------------
 
+/// Get the browsing context at the specified index.
+pub async fn get_nth_context(
+    session: &mut WebDriverBiDiSession,
+    index: usize,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let get_tree_params = GetTreeParameters::new(None, None);
+    let get_tree_rslt = session.browsing_context_get_tree(get_tree_params).await?;
+    Ok(get_tree_rslt.contexts[index].context.clone())
+}
+
 // /// Get the first browsing context from the browsing context tree.
 // pub async fn get_first_context(
 //     session: &mut WebDriverBiDiSession,
@@ -209,9 +222,17 @@ pub async fn sleep_for_millis(millis: u64) {
 //     Ok(get_tree_rslt.contexts[0].context.clone())
 // }
 
-// // --------------------------------------------------
-
 /// Open a new tab.
+pub async fn new_tab(session: &mut WebDriverBiDiSession) -> Result<String> {
+    let create_params = CreateParameters::new(CreateType::Tab, None, None, None);
+    let context = session
+        .browsing_context_create(create_params)
+        .await?
+        .context;
+    Ok(context)
+}
+
+/// Open a new tab in the specified user context.
 pub async fn new_tab_in_user_context(
     session: &mut WebDriverBiDiSession,
     user_context: String,
@@ -224,7 +245,7 @@ pub async fn new_tab_in_user_context(
     Ok(context)
 }
 
-/// Open a new tab.
+/// Open a new window.
 pub async fn new_window(session: &mut WebDriverBiDiSession) -> Result<String> {
     let create_params = CreateParameters::new(CreateType::Window, None, None, None);
     let context = session
@@ -235,7 +256,7 @@ pub async fn new_window(session: &mut WebDriverBiDiSession) -> Result<String> {
 }
 // // --------------------------------------------------
 
-/// Initialize a simplelog TermLogger.
+///Initialize a simplelog TermLogger.
 #[ctor]
 fn init() {
     TermLogger::init(
@@ -258,7 +279,6 @@ pub async fn navigate(
     Ok(())
 }
 
-
 // // --------------------------------------------------
 
 // pub async fn traverse_history(session: &mut WebDriverBiDiSession, context: String, delta: i64) {
@@ -272,10 +292,9 @@ pub async fn navigate(
 pub mod inline {
     use std::collections::HashMap;
 
-    use actix_web::{web, HttpResponse, Responder};
+    use actix_web::{HttpResponse, Responder, web};
     use serde::Deserialize;
     use url::form_urlencoded;
-
 
     /// A helper function that “inlines” a document by wrapping the given source
     /// in a boilerplate template and then building a URL with the resulting document
@@ -390,3 +409,184 @@ pub async fn serve_static_html(path: &str) -> NamedFile {
     NamedFile::open(path).unwrap()
 }
 
+pub async fn is_element_focused(
+    bidi_session: &mut WebDriverBiDiSession,
+    context: &str,
+    selector: &str,
+) -> Result<bool> {
+    let function_declaration = "(selector) => {
+        return document.querySelector(selector) === document.activeElement;
+    }"
+    .to_string();
+    let selector_local_value = local_value(selector);
+    let args = Some(vec![selector_local_value]);
+    let params = CallFunctionParameters::new(
+        function_declaration,
+        false,
+        target_context(context),
+        args,
+        None,
+        None,
+        None,
+        None,
+    );
+    let rslt = bidi_session.script_call_function(params).await?;
+    debug!("is_element_focused result: {:?}", rslt);
+    Ok(true)
+}
+
+// async def is_element_focused(bidi_session, context: Mapping[str, Any], selector: str) -> bool:
+//     result = await bidi_session.script.call_function(
+//         function_declaration="""(selector) => {
+//         return document.querySelector(selector) === document.activeElement;
+//     }""",
+//         arguments=[
+//             {"type": "string", "value": selector},
+//         ],
+//         target=ContextTarget(context["context"]),
+//         await_promise=False)
+
+//     return result["value"]
+
+pub async fn assert_document_status(
+    bidi_session: &mut WebDriverBiDiSession,
+    context: &str,
+) -> Result<bool> {
+    let visibility_state = get_visibility_state(bidi_session, context).await?;
+    let doc_focus = get_document_focus(bidi_session, context).await?;
+
+    Ok(visibility_state == "visible" && doc_focus)
+    // assert_eq!(visibility_state, "visible");
+    // assert_eq!(doc_focus, true);
+
+    // true
+}
+
+// async def assert_document_status(bidi_session, context, visible, focused):
+//     state = "visible" if visible else "hidden"
+
+//     assert await get_visibility_state(bidi_session, context) == state
+//     assert await get_document_focus(bidi_session, context) is focused
+//
+//
+
+pub async fn get_visibility_state(
+    bidi_session: &mut WebDriverBiDiSession,
+    context: &str,
+) -> Result<String> {
+    let function_declaration = r#"() => {
+        return document.visibilityState;
+    }"#
+    .to_string();
+    let params = CallFunctionParameters::new(
+        function_declaration,
+        false,
+        target_context(context),
+        None,
+        None,
+        None,
+        None,
+        None,
+    );
+    let rslt = bidi_session.script_call_function(params).await?;
+    match rslt {
+        EvaluateResult::EvaluateResultSuccess(eval_rslt_success) => {
+            match eval_rslt_success.result {
+                RemoteValue::PrimitiveProtocolValue(
+                    webdriverbidi::local::script::PrimitiveProtocolValue::StringValue(string_value),
+                ) => {
+                    debug!("get_visibility_state result: {:?}", string_value);
+                    Ok(string_value.value)
+                }
+                remote_val => Err(anyhow::anyhow!(
+                    "Received EvaluateResultSuccess but not a string value, actual remote value: {:?}",
+                    remote_val
+                )),
+            }
+        }
+        eval_rslt => Err(anyhow::anyhow!(
+            "Received unexpected EvaluateResult: {:?}",
+            eval_rslt
+        )),
+    }
+    // debug!("get_visibility_state result: {:?}", rslt);
+    // // browsing_context::utils: get_visibility_state result: EvaluateResultSuccess(EvaluateResultSuccess { result_type: "success", result: PrimitiveProtocolValue(StringValue(StringValue { value_type: "string", value: "visible" })), realm: "030a41fd-d74b-4747-a4b1-5064432a2aeb" })
+
+    // Ok(String::from(""))
+}
+
+// async def get_visibility_state(bidi_session, context: Mapping[str, Any]) -> str:
+//     result = await bidi_session.script.call_function(
+//         function_declaration="""() => {
+//         return document.visibilityState;
+//     }""",
+//         target=ContextTarget(context["context"]),
+//         await_promise=False)
+//     return result["value"]
+
+pub async fn get_document_focus(
+    bidi_session: &mut WebDriverBiDiSession,
+    context: &str,
+) -> Result<bool> {
+    let function_declaration = r#"() => {
+        return document.hasFocus();
+    }"#
+    .to_string();
+    let params = CallFunctionParameters::new(
+        function_declaration,
+        false,
+        target_context(context),
+        None,
+        None,
+        None,
+        None,
+        None,
+    );
+    let rslt = bidi_session.script_call_function(params).await?;
+    match rslt {
+        EvaluateResult::EvaluateResultSuccess(eval_rslt_success) => {
+            match eval_rslt_success.result {
+                RemoteValue::PrimitiveProtocolValue(
+                    webdriverbidi::local::script::PrimitiveProtocolValue::BooleanValue(bool_value),
+                ) => {
+                    debug!("get_document_focus result: {:?}", bool_value);
+                    Ok(bool_value.value)
+                }
+                remote_val => Err(anyhow::anyhow!(
+                    "Received EvaluateResultSuccess but not a boolean value, actual remote value: {:?}",
+                    remote_val
+                )),
+            }
+        }
+        eval_rslt => Err(anyhow::anyhow!(
+            "Received unexpected EvaluateResult: {:?}",
+            eval_rslt
+        )),
+    }
+
+    // debug!("get_document_focus result: {:?}", rslt);
+    // // browsing_context::utils: get_document_focus result: EvaluateResultSuccess(EvaluateResultSuccess { result_type: "success", result: PrimitiveProtocolValue(BooleanValue(BooleanValue { value_type: "boolean", value: true })), realm: "030a41fd-d74b-4747-a4b1-5064432a2aeb" })
+    // Ok(String::from(""))
+}
+
+// async def get_document_focus(bidi_session, context: Mapping[str, Any]) -> str:
+//     result = await bidi_session.script.call_function(
+//         function_declaration="""() => {
+//         return document.hasFocus();
+//     }""",
+//         target=ContextTarget(context["context"]),
+//         await_promise=False)
+//     return result["value"]
+
+// async def is_element_focused(bidi_session, context: Mapping[str, Any], selector: str) -> bool:
+//     result = await bidi_session.script.call_function(
+//         function_declaration="""(selector) => {
+//         return document.querySelector(selector) === document.activeElement;
+//     }""",
+//         arguments=[
+//             {"type": "string", "value": selector},
+//         ],
+//         target=ContextTarget(context["context"]),
+//         await_promise=False)
+
+//     return result["value"]
