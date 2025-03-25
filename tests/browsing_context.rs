@@ -3,7 +3,7 @@
 
 // // --------------------------------------------------
 
-// use actix_web::{App, HttpServer, web};
+use actix_web::{web, App, HttpServer};
 // use tokio::sync::Mutex;
 
 // // --------------------------------------------------
@@ -16,6 +16,7 @@
 // use webdriverbidi::remote::session::SubscriptionRequest;
 
 use webdriverbidi::remote::browsing_context::ActivateParameters;
+use webdriverbidi::remote::script::EvaluateParameters;
 
 // --------------------------------------------------
 
@@ -29,6 +30,8 @@ mod utils;
 
 // https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browsing_context/activate
 mod activate {
+
+    use webdriverbidi::remote::script::{ContextTarget, Target};
 
     use super::*;
 
@@ -75,24 +78,81 @@ mod activate {
         assert!(final_new_context_status);
     }
 
-    // async def test_keeps_element_focused(bidi_session, inline, new_tab, top_context):
-    //     await bidi_session.browsing_context.navigate(
-    //         context=new_tab["context"],
-    //         url=inline("<textarea autofocus></textarea><input>"),
-    //         wait="complete")
+    #[tokio::test]
+    async fn test_keeps_element_focused() {
+        let mut bidi_session = utils::init_session().await.unwrap();
 
-    //     await bidi_session.script.evaluate(
-    //         expression="""document.querySelector("input").focus()""",
-    //         target=ContextTarget(new_tab["context"]),
-    //         await_promise=False)
+        let top_context = utils::get_nth_context(&mut bidi_session, 0).await.unwrap();
 
-    //     assert await is_element_focused(bidi_session, new_tab, "input")
+        let addr = format!("{}:0", utils::HOST);
+        let server = HttpServer::new(|| {
+            App::new().route(
+                utils::TMP_ROUTE,
+                web::get().to(utils::inline::inline_handler),
+            )
+        })
+        .bind(addr)
+        .unwrap();
 
-    //     await bidi_session.browsing_context.activate(context=top_context["context"])
-    //     assert await is_element_focused(bidi_session, new_tab, "input")
+        let addr = server.addrs()[0];
+        let server_handle = tokio::spawn(server.run());
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 
-    //     await bidi_session.browsing_context.activate(context=new_tab["context"])
-    //     assert await is_element_focused(bidi_session, new_tab, "input")
+        let inline_url = utils::inline::build_inline(
+            |path, query| format!("http://{}{}?{}", addr, path, query),
+            "<textarea autofocus></textarea><input>",
+            Some("html"),
+            None,
+            None,
+            None,
+        );
+
+        let new_tab = utils::new_tab(&mut bidi_session).await.unwrap();
+
+        utils::navigate(&mut bidi_session, new_tab.clone(), inline_url.clone())
+            .await
+            .unwrap();
+
+        let params = EvaluateParameters::new(
+            r#"document.querySelector("input").focus()"#.to_string(),
+            Target::ContextTarget(ContextTarget::new(new_tab.clone(), None)),
+            false,
+            None,
+            None,
+            None,
+        );
+
+        bidi_session.script_evaluate(params).await.unwrap();
+
+        let is_focused_1 = utils::is_element_focused(&mut bidi_session, new_tab.as_str(), "input")
+            .await
+            .unwrap();
+
+        bidi_session
+            .browsing_context_activate(ActivateParameters::new(top_context))
+            .await
+            .unwrap();
+
+        let is_focused_2 = utils::is_element_focused(&mut bidi_session, new_tab.as_str(), "input")
+            .await
+            .unwrap();
+
+        bidi_session
+            .browsing_context_activate(ActivateParameters::new(new_tab.clone()))
+            .await
+            .unwrap();
+
+        let is_focused_3 = utils::is_element_focused(&mut bidi_session, new_tab.as_str(), "input")
+            .await
+            .unwrap();
+
+        utils::close_session(&mut bidi_session).await.unwrap();
+        server_handle.abort();
+
+        assert!(is_focused_1);
+        assert!(is_focused_2);
+        assert!(is_focused_3);
+    }
 
     // async def test_multiple_activation(bidi_session, inline, new_tab):
     //     await bidi_session.browsing_context.navigate(
