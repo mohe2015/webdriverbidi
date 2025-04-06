@@ -3,17 +3,14 @@
 use anyhow::Result;
 // use log::debug;
 // use tokio::sync::Mutex;
-
 // use webdriverbidi::events::EventType;
 // use webdriverbidi::remote::browser::RemoveUserContextParameters;
-// use webdriverbidi::remote::browsing_context::{
-//     ActivateParameters, CloseParameters, GetTreeParameters,
-// };
+use webdriverbidi::remote::browsing_context::{
+    ActivateParameters, CloseParameters, GetTreeParameters,
+};
 // use webdriverbidi::remote::session::SubscriptionRequest;
 
 mod utils;
-
-// const DEFAULT_USER_CONTEXT: &str = "default";
 
 // --------------------------------------------------
 
@@ -64,20 +61,20 @@ mod create_user_context {
         let second_context = utils::browser::create_user_context(&mut bidi_session).await?;
 
         let tab_first_context =
-            utils::brwosing_context::new_tab_in_user_context(&mut bidi_session, first_context)
+            utils::browsing_context::new_tab_in_user_context(&mut bidi_session, first_context)
                 .await?;
         let tab_second_context =
-            utils::brwosing_context::new_tab_in_user_context(&mut bidi_session, second_context)
+            utils::browsing_context::new_tab_in_user_context(&mut bidi_session, second_context)
                 .await?;
 
-        utils::brwosing_context::navigate(
+        utils::browsing_context::navigate(
             &mut bidi_session,
             tab_first_context.clone(),
             url.clone(),
         )
         .await?;
 
-        utils::brwosing_context::navigate(&mut bidi_session, tab_second_context.clone(), url)
+        utils::browsing_context::navigate(&mut bidi_session, tab_second_context.clone(), url)
             .await?;
 
         let test_key = "test";
@@ -125,168 +122,157 @@ mod create_user_context {
 // --------------------------------------------------
 
 // https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browser/get_client_windows
-// mod get_client_windows {
+mod get_client_windows {
+    use super::*;
 
-//     use super::*;
+    #[tokio::test]
+    async fn test_open_and_close() -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
 
-//     #[tokio::test]
-//     async fn test_open_and_close() {
-//         let mut bidi_session = utils::init_session().await?;
+        let initial_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
+        let new_browsing_context = utils::browsing_context::new_window(&mut bidi_session).await?;
+        let updated_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
 
-//         let initial_windows = utils::get_client_windows(&mut bidi_session).await?;
+        bidi_session
+            .browsing_context_close(CloseParameters::new(new_browsing_context, None))
+            .await?;
 
-//         let new_browsing_context = utils::new_window(&mut bidi_session).await?;
+        let final_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
 
-//         let updated_windows = utils::get_client_windows(&mut bidi_session).await?;
+        utils::session::close(&mut bidi_session).await?;
 
-//         bidi_session
-//             .browsing_context_close(CloseParameters::new(new_browsing_context, None))
-//             .await
-//             ?;
+        assert_eq!(initial_windows.len(), 1);
+        assert_eq!(updated_windows.len(), 2);
+        assert_ne!(
+            updated_windows[0].client_window,
+            updated_windows[1].client_window
+        );
+        assert_eq!(final_windows, initial_windows);
 
-//         let final_windows = utils::get_client_windows(&mut bidi_session).await?;
-//         utils::close_session(&mut bidi_session).await?;
+        Ok(())
+    }
 
-//         assert_eq!(initial_windows.len(), 1);
-//         assert_eq!(updated_windows.len(), 2);
-//         assert_ne!(
-//             updated_windows[0].client_window,
-//             updated_windows[1].client_window
-//         );
-//         assert_eq!(final_windows, initial_windows);
-//     }
+    #[tokio::test]
+    async fn test_activate_client_windows() -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
 
-//     #[tokio::test]
-//     async fn test_activate_client_windows() {
-//         let mut bidi_session = utils::init_session().await?;
+        let initial_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
+        let initial_window = &initial_windows[0];
+        let initial_window_id = &initial_window.client_window;
 
-//         let initial_windows = utils::get_client_windows(&mut bidi_session).await?;
-//         let initial_window = &initial_windows[0];
-//         let initial_window_id = &initial_window.client_window;
+        let initial_contexts = bidi_session
+            .browsing_context_get_tree(GetTreeParameters::new(None, None))
+            .await?
+            .contexts;
+        let initial_context_id = &initial_contexts[0].context;
 
-//         let initial_contexts = bidi_session
-//             .browsing_context_get_tree(GetTreeParameters::new(None, None))
-//             .await
-//             ?
-//             .contexts;
+        let new_browsing_context = utils::browsing_context::new_window(&mut bidi_session).await?;
 
-//         let initial_context_id = &initial_contexts[0].context;
+        let initial_all_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
+        let initial_first_window = initial_all_windows
+            .iter()
+            .find(|&window| window.client_window == *initial_window_id)
+            .ok_or_else(|| anyhow::anyhow!("initial first window not found"))?;
+        let initial_second_window = initial_all_windows
+            .iter()
+            .find(|&window| window.client_window != *initial_window_id)
+            .ok_or_else(|| anyhow::anyhow!("initial second window not found"))?;
 
-//         let new_browsing_context = utils::new_window(&mut bidi_session).await?;
+        bidi_session
+            .browsing_context_activate(ActivateParameters::new(initial_context_id.to_string()))
+            .await?;
 
-//         let initial_all_windows = utils::get_client_windows(&mut bidi_session).await?;
+        let final_all_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
+        let final_first_window = final_all_windows
+            .iter()
+            .find(|&window| window.client_window == *initial_window_id)
+            .ok_or_else(|| anyhow::anyhow!("final first window not found"))?;
+        let final_second_window = final_all_windows
+            .iter()
+            .find(|&window| window.client_window != *initial_window_id)
+            .ok_or_else(|| anyhow::anyhow!("final second window not found"))?;
 
-//         let initial_first_window = initial_all_windows
-//             .iter()
-//             .find(|&window| window.client_window == *initial_window_id)
-//             ?;
+        bidi_session
+            .browsing_context_close(CloseParameters::new(new_browsing_context, None))
+            .await?;
 
-//         let initial_second_window = initial_all_windows
-//             .iter()
-//             .find(|&window| window.client_window != *initial_window_id)
-//             ?;
+        let final_windows = utils::browser::get_client_windows(&mut bidi_session).await?;
 
-//         bidi_session
-//             .browsing_context_activate(ActivateParameters::new(initial_context_id.to_string()))
-//             .await
-//             ?;
+        utils::session::close(&mut bidi_session).await?;
 
-//         let final_all_windows = utils::get_client_windows(&mut bidi_session).await?;
+        assert_eq!(initial_windows.len(), 1);
+        assert_eq!(initial_contexts.len(), 1);
 
-//         let final_first_window = final_all_windows
-//             .iter()
-//             .find(|&window| window.client_window == *initial_window_id)
-//             ?;
-//         let final_second_window = final_all_windows
-//             .iter()
-//             .find(|&window| window.client_window != *initial_window_id)
-//             ?;
+        assert_eq!(initial_all_windows.len(), 2);
+        assert!(initial_second_window.active);
+        assert!(!initial_first_window.active);
 
-//         bidi_session
-//             .browsing_context_close(CloseParameters::new(new_browsing_context, None))
-//             .await
-//             ?;
+        assert!(final_first_window.active);
+        assert!(!final_second_window.active);
 
-//         let final_windows = utils::get_client_windows(&mut bidi_session).await?;
+        assert!(final_windows[0].active);
+        assert_eq!(final_windows[0].client_window, *initial_window_id);
 
-//         utils::close_session(&mut bidi_session).await?;
+        Ok(())
+    }
+}
 
-//         assert_eq!(initial_windows.len(), 1);
-//         assert_eq!(initial_contexts.len(), 1);
+// --------------------------------------------------
 
-//         assert_eq!(initial_all_windows.len(), 2);
-//         assert!(initial_second_window.active);
-//         assert!(!initial_first_window.active);
+// https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browser/get_user_contexts
+mod get_user_contexts {
+    use super::*;
 
-//         assert!(final_first_window.active);
-//         assert!(!final_second_window.active);
+    const DEFAULT_USER_CONTEXT: &str = "default";
 
-//         assert!(final_windows[0].active);
-//         assert_eq!(final_windows[0].client_window, *initial_window_id);
-//     }
-// }
+    #[tokio::test]
+    async fn test_default() -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
 
-// // --------------------------------------------------
+        let user_context_ids = utils::browser::get_user_context_ids(&mut bidi_session).await?;
 
-// // https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browser/get_user_contexts
-// mod get_user_contexts {
-//     use super::*;
+        utils::session::close(&mut bidi_session).await?;
 
-//     #[tokio::test]
-//     async fn test_default() {
-//         let mut bidi_session = utils::init_session().await?;
+        assert!(!user_context_ids.is_empty());
+        assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
 
-//         let user_context_ids = utils::get_user_context_ids(&mut bidi_session)
-//             .await
-//             ?;
+        Ok(())
+    }
 
-//         utils::close_session(&mut bidi_session).await?;
+    #[tokio::test]
+    async fn test_create_remove_contexts() -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
 
-//         assert!(!user_context_ids.is_empty());
-//         assert!(user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
-//     }
+        let user_context_1 = utils::browser::create_user_context(&mut bidi_session).await?;
+        let user_context_2 = utils::browser::create_user_context(&mut bidi_session).await?;
 
-//     #[tokio::test]
-//     async fn test_create_remove_contexts() {
-//         let mut bidi_session = utils::init_session().await?;
+        let user_context_ids_1 = utils::browser::get_user_context_ids(&mut bidi_session).await?;
 
-//         let user_context_1 = utils::create_user_context(&mut bidi_session).await?;
-//         let user_context_2 = utils::create_user_context(&mut bidi_session).await?;
-//         let user_context_ids_1 = utils::get_user_context_ids(&mut bidi_session)
-//             .await
-//             ?;
+        utils::browser::remove_user_context(&mut bidi_session, user_context_1.clone()).await?;
 
-//         utils::remove_user_context(&mut bidi_session, user_context_1.clone())
-//             .await
-//             ?;
+        let user_context_ids_2 = utils::browser::get_user_context_ids(&mut bidi_session).await?;
 
-//         let user_context_ids_2 = utils::get_user_context_ids(&mut bidi_session)
-//             .await
-//             ?;
+        utils::browser::remove_user_context(&mut bidi_session, user_context_2.clone()).await?;
 
-//         utils::remove_user_context(&mut bidi_session, user_context_2.clone())
-//             .await
-//             ?;
+        let user_context_ids_3 = utils::browser::get_user_context_ids(&mut bidi_session).await?;
 
-//         let user_context_ids_3 = utils::get_user_context_ids(&mut bidi_session)
-//             .await
-//             ?;
+        utils::session::close(&mut bidi_session).await?;
 
-//         utils::close_session(&mut bidi_session).await?;
+        assert!(user_context_ids_1.len() >= 3);
+        assert!(user_context_ids_1.contains(&user_context_1));
+        assert!(user_context_ids_1.contains(&user_context_2));
+        assert!(user_context_ids_1.contains(&DEFAULT_USER_CONTEXT.to_string()));
 
-//         assert!(user_context_ids_1.len() >= 3);
-//         assert!(user_context_ids_1.contains(&user_context_1));
-//         assert!(user_context_ids_1.contains(&user_context_2));
-//         assert!(user_context_ids_1.contains(&DEFAULT_USER_CONTEXT.to_string()));
+        assert!(!user_context_ids_2.contains(&user_context_1));
+        assert!(user_context_ids_2.contains(&user_context_2));
+        assert!(user_context_ids_2.contains(&DEFAULT_USER_CONTEXT.to_string()));
 
-//         assert!(!user_context_ids_2.contains(&user_context_1));
-//         assert!(user_context_ids_2.contains(&user_context_2));
-//         assert!(user_context_ids_2.contains(&DEFAULT_USER_CONTEXT.to_string()));
+        assert!(!user_context_ids_3.contains(&user_context_2));
+        assert!(user_context_ids_3.contains(&DEFAULT_USER_CONTEXT.to_string()));
 
-//         assert!(!user_context_ids_3.contains(&user_context_2));
-//         assert!(user_context_ids_3.contains(&DEFAULT_USER_CONTEXT.to_string()));
-//     }
-// }
+        Ok(())
+    }
+}
 
 // // --------------------------------------------------
 

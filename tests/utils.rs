@@ -17,12 +17,12 @@ use tokio::task::JoinHandle;
 use tower_http::services::ServeDir;
 // --------------------------------------------------
 
-// use webdriverbidi::local::browser::ClientWindowInfo;
+use webdriverbidi::local::browser::ClientWindowInfo;
 use webdriverbidi::local::script::{
     EvaluateResult,
     RemoteValue, // NumberOrSpecialNumber, NumberValue
 };
-// use webdriverbidi::remote::browser::RemoveUserContextParameters;
+use webdriverbidi::remote::browser::RemoveUserContextParameters;
 use webdriverbidi::remote::browsing_context::{
     CreateParameters,
     CreateType,
@@ -99,9 +99,33 @@ pub mod browser {
 
         Ok(user_context)
     }
+
+    /// Retrieve the list of client windows.
+    pub async fn get_client_windows(
+        bidi_session: &mut WebDriverBiDiSession,
+    ) -> Result<Vec<ClientWindowInfo>> {
+        let client_windows = bidi_session
+            .browser_get_client_windows(EmptyParams::new())
+            .await?
+            .client_windows;
+
+        Ok(client_windows)
+    }
+
+    /// Remove a user context.
+    pub async fn remove_user_context(
+        bidi_session: &mut WebDriverBiDiSession,
+        user_context: String,
+    ) -> Result<()> {
+        bidi_session
+            .browser_remove_user_context(RemoveUserContextParameters::new(user_context.clone()))
+            .await?;
+
+        Ok(())
+    }
 }
 
-pub mod brwosing_context {
+pub mod browsing_context {
     use super::*;
 
     /// Open a new tab in the specified user context.
@@ -128,6 +152,16 @@ pub mod brwosing_context {
         session.browsing_context_navigate(navigate_params).await?;
 
         Ok(())
+    }
+
+    /// Open a new window.
+    pub async fn new_window(session: &mut WebDriverBiDiSession) -> Result<String> {
+        let create_params = CreateParameters::new(CreateType::Window, None, None, None);
+        let context = session
+            .browsing_context_create(create_params)
+            .await?
+            .context;
+        Ok(context)
     }
 }
 
@@ -229,31 +263,6 @@ pub mod axum_utils {
     }
 }
 
-// /// Removes a user context.
-// pub async fn remove_user_context(
-//     bidi_session: &mut WebDriverBiDiSession,
-//     user_context: String,
-// ) -> Result<()> {
-//     bidi_session
-//         .browser_remove_user_context(RemoveUserContextParameters::new(user_context.clone()))
-//         .await
-//         .unwrap();
-//     Ok(())
-// }
-
-// /// Retrieves the list of client windows.
-// pub async fn get_client_windows(
-//     bidi_session: &mut WebDriverBiDiSession,
-// ) -> Result<Vec<ClientWindowInfo>> {
-//     let client_windows = bidi_session
-//         .browser_get_client_windows(EmptyParams::new())
-//         .await
-//         .unwrap()
-//         .client_windows;
-
-//     Ok(client_windows)
-// }
-
 // // /// Sleep for a given number of seconds.
 // // pub async fn sleep_for_secs(secs: u64) {
 // //     time::sleep(time::Duration::from_secs(secs)).await
@@ -312,15 +321,6 @@ pub mod axum_utils {
 //     Ok(context)
 // }
 
-// /// Open a new window.
-// pub async fn new_window(session: &mut WebDriverBiDiSession) -> Result<String> {
-//     let create_params = CreateParameters::new(CreateType::Window, None, None, None);
-//     let context = session
-//         .browsing_context_create(create_params)
-//         .await?
-//         .context;
-//     Ok(context)
-// }
 // // // --------------------------------------------------
 
 // ///Initialize a simplelog TermLogger.
