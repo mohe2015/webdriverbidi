@@ -12,6 +12,8 @@ use webdriverbidi::remote::browsing_context::{
 
 mod utils;
 
+const DEFAULT_USER_CONTEXT: &str = "default";
+
 // --------------------------------------------------
 
 // https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browser/create_user_context
@@ -223,8 +225,6 @@ mod get_client_windows {
 mod get_user_contexts {
     use super::*;
 
-    const DEFAULT_USER_CONTEXT: &str = "default";
-
     #[tokio::test]
     async fn test_default() -> Result<()> {
         let mut bidi_session = utils::session::init().await?;
@@ -276,143 +276,143 @@ mod get_user_contexts {
 
 // // --------------------------------------------------
 
-// // https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browser/remove_user_context
-// mod remove_user_context {
-//     use super::*;
+// https://github.com/web-platform-tests/wpt/tree/master/webdriver/tests/bidi/browser/remove_user_context
+mod remove_user_context {
+    use super::*;
 
-//     const BROWSING_CTX_DESTROYED_EVENT: &str = "browsingContext.contextDestroyed";
-//     const USER_PROMPT_OPENED_EVENT: &str = "browsingContext.userPromptOpened";
+    // const BROWSING_CTX_DESTROYED_EVENT: &str = "browsingContext.contextDestroyed";
+    // const USER_PROMPT_OPENED_EVENT: &str = "browsingContext.userPromptOpened";
 
-//     #[tokio::test]
-//     async fn test_remove_context() {
-//         let mut bidi_session = utils::init_session().await?;
+    #[tokio::test]
+    async fn test_remove_context() -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
 
-//         let user_context = utils::create_user_context(&mut bidi_session).await?;
-//         let initial_user_context_ids = utils::get_user_context_ids(&mut bidi_session)
-//             .await
-//             ?;
+        let user_context = utils::browser::create_user_context(&mut bidi_session).await?;
+        let initial_user_context_ids =
+            utils::browser::get_user_context_ids(&mut bidi_session).await?;
 
-//         utils::remove_user_context(&mut bidi_session, user_context.clone())
-//             .await
-//             ?;
+        utils::browser::remove_user_context(&mut bidi_session, user_context.clone()).await?;
 
-//         let final_user_context_ids = utils::get_user_context_ids(&mut bidi_session)
-//             .await
-//             ?;
+        let final_user_context_ids =
+            utils::browser::get_user_context_ids(&mut bidi_session).await?;
 
-//         utils::close_session(&mut bidi_session).await?;
+        utils::session::close(&mut bidi_session).await?;
 
-//         assert!(initial_user_context_ids.contains(&user_context));
+        assert!(initial_user_context_ids.contains(&user_context));
 
-//         assert!(!final_user_context_ids.contains(&user_context));
-//         assert!(final_user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
-//     }
+        assert!(!final_user_context_ids.contains(&user_context));
+        assert!(final_user_context_ids.contains(&DEFAULT_USER_CONTEXT.to_string()));
 
-//     #[tokio::test]
-//     async fn test_remove_context_closes_contexts() {
-//         let mut bidi_session = utils::init_session().await?;
+        Ok(())
+    }
 
-//         let events = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
+    #[tokio::test]
+    async fn test_remove_context_closes_contexts()  -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
 
-//         {
-//             let events = events.clone();
+        let events = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
 
-//             bidi_session
-//                 .register_event_handler(
-//                     EventType::BrowsingContextContextDestroyed,
-//                     move |event: serde_json::Value| {
-//                         let events = events.clone();
-//                         async move {
-//                             debug!(
-//                                 "Received browsingContext.contextDestroyed event: {:?}",
-//                                 event
-//                             );
-//                             events.lock().await.push(event);
-//                         }
-//                     },
-//                 )
-//                 .await;
-//         }
+        {
+            let events = events.clone();
 
-//         bidi_session
-//             .session_subscribe(SubscriptionRequest::new(
-//                 vec![String::from(BROWSING_CTX_DESTROYED_EVENT)],
-//                 None,
-//                 None,
-//             ))
-//             .await
-//             ?;
+            bidi_session
+                .register_event_handler(
+                    EventType::BrowsingContextContextDestroyed,
+                    move |event: serde_json::Value| {
+                        let events = events.clone();
+                        async move {
+                            debug!(
+                                "Received browsingContext.contextDestroyed event: {:?}",
+                                event
+                            );
+                            events.lock().await.push(event);
+                        }
+                    },
+                )
+                .await;
+        }
 
-//         let user_context_1 = utils::create_user_context(&mut bidi_session).await?;
-//         let user_context_2 = utils::create_user_context(&mut bidi_session).await?;
+        bidi_session
+            .session_subscribe(SubscriptionRequest::new(
+                vec![String::from(BROWSING_CTX_DESTROYED_EVENT)],
+                None,
+                None,
+            ))
+            .await
+            ?;
 
-//         let context_1 = utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone())
-//             .await
-//             ?;
+        let user_context_1 = utils::create_user_context(&mut bidi_session).await?;
+        let user_context_2 = utils::create_user_context(&mut bidi_session).await?;
 
-//         let context_2 = utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone())
-//             .await
-//             ?;
+        let context_1 = utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone())
+            .await
+            ?;
 
-//         let context_3 = utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone())
-//             .await
-//             ?;
+        let context_2 = utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone())
+            .await
+            ?;
 
-//         let context_4 = utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone())
-//             .await
-//             ?;
+        let context_3 = utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone())
+            .await
+            ?;
 
-//         bidi_session
-//             .browser_remove_user_context(RemoveUserContextParameters::new(user_context_1))
-//             .await
-//             ?;
+        let context_4 = utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone())
+            .await
+            ?;
 
-//         let initial_events_len = events.lock().await.len();
+        bidi_session
+            .browser_remove_user_context(RemoveUserContextParameters::new(user_context_1))
+            .await
+            ?;
 
-//         let initial_destroyed_contexts = events
-//             .lock()
-//             .await
-//             .iter()
-//             .map(|event| {
-//                 event.clone()["params"]["context"]
-//                     .as_str()
-//                     ?
-//                     .to_string()
-//             })
-//             .collect::<Vec<_>>();
+        let initial_events_len = events.lock().await.len();
 
-//         bidi_session
-//             .browser_remove_user_context(RemoveUserContextParameters::new(user_context_2))
-//             .await
-//             ?;
+        let initial_destroyed_contexts = events
+            .lock()
+            .await
+            .iter()
+            .map(|event| {
+                event.clone()["params"]["context"]
+                    .as_str()
+                    ?
+                    .to_string()
+            })
+            .collect::<Vec<_>>();
 
-//         utils::close_session(&mut bidi_session).await?;
+        bidi_session
+            .browser_remove_user_context(RemoveUserContextParameters::new(user_context_2))
+            .await
+            ?;
 
-//         let final_events_len = events.lock().await.len();
+        utils::close_session(&mut bidi_session).await?;
 
-//         let final_destroyed_contexts = events
-//             .lock()
-//             .await
-//             .iter()
-//             .map(|event| {
-//                 event.clone()["params"]["context"]
-//                     .as_str()
-//                     ?
-//                     .to_string()
-//             })
-//             .collect::<Vec<_>>();
+        let final_events_len = events.lock().await.len();
 
-//         assert!(initial_events_len == 2);
+        let final_destroyed_contexts = events
+            .lock()
+            .await
+            .iter()
+            .map(|event| {
+                event.clone()["params"]["context"]
+                    .as_str()
+                    ?
+                    .to_string()
+            })
+            .collect::<Vec<_>>();
 
-//         assert!(initial_destroyed_contexts.contains(&context_1));
-//         assert!(initial_destroyed_contexts.contains(&context_2));
+        assert!(initial_events_len == 2);
 
-//         assert!(final_events_len == 4);
+        assert!(initial_destroyed_contexts.contains(&context_1));
+        assert!(initial_destroyed_contexts.contains(&context_2));
 
-//         assert!(final_destroyed_contexts.contains(&context_3));
-//         assert!(final_destroyed_contexts.contains(&context_4));
-//     }
+        assert!(final_events_len == 4);
 
+        assert!(final_destroyed_contexts.contains(&context_3));
+        assert!(final_destroyed_contexts.contains(&context_4));
+
+        Ok(())
+    }
+}
 //     #[tokio::test]
 //     async fn test_remove_context_skips_beforeunload_prompt() {
 //         let mut bidi_session = utils::init_session().await?;
