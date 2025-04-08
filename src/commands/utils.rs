@@ -16,7 +16,6 @@ where
     C: Serialize,
     R: for<'de> Deserialize<'de>,
 {
-    
     match session.send_command::<C, R>(command).await {
         Ok(rslt) => {
             // debug!("Command with id: {} succeeded", command_id); // Log success

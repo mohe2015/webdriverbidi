@@ -16,8 +16,8 @@ use tokio_tungstenite::{MaybeTlsStream, WebSocketStream};
 
 // --------------------------------------------------
 
-use crate::session::EventHandler;
 use crate::events::EventType;
+use crate::session::EventHandler;
 
 // --------------------------------------------------
 
@@ -67,9 +67,8 @@ pub async fn handle_messages(
                     } else if json.get(TYPE_FIELD).and_then(|t| t.as_str())
                         == Some(EVENT_TYPE_VALUE)
                     {
-                        if let Some(event_type_str) = json
-                            .get(METHOD_FIELD)
-                            .and_then(|method| method.as_str())
+                        if let Some(event_type_str) =
+                            json.get(METHOD_FIELD).and_then(|method| method.as_str())
                         {
                             if let Ok(event_type) = EventType::from_str(event_type_str) {
                                 let event_handlers = Arc::clone(&event_handlers);
