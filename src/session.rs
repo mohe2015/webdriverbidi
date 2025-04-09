@@ -6,13 +6,13 @@ use std::sync::Arc;
 // --------------------------------------------------
 
 use log::debug;
-use serde::de::DeserializeOwned;
 use serde::Serialize;
+use serde::de::DeserializeOwned;
 use serde_json::Value;
 use tokio::net::TcpStream;
-use tokio::sync::{oneshot, Mutex};
+use tokio::sync::{Mutex, oneshot};
 use tokio::task;
-use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
+use tokio_tungstenite::{MaybeTlsStream, WebSocketStream, connect_async};
 
 // --------------------------------------------------
 
@@ -38,7 +38,7 @@ use crate::remote::script::*;
 use crate::remote::session::*;
 use crate::remote::storage::*;
 use crate::remote::web_extension::*;
-use crate::remote::{browsing_context::*, EmptyParams};
+use crate::remote::{EmptyParams, browsing_context::*};
 use crate::webdriver::capabilities::CapabilitiesRequest;
 use crate::webdriver::session;
 
@@ -66,6 +66,7 @@ pub type EventHandler =
 /// * `websocket_stream` - The WebSocket stream for communication protected by an `Arc` wrapped `Mutex`.
 /// * `pending_commands` - A map of pending commands awaiting responses protected by an `Arc` wrapped `Mutex`.
 /// * `event_handlers` - A map of events and their handlers protected by an `Arc` wrapped `Mutex`.
+#[derive(Clone)]
 pub struct WebDriverBiDiSession {
     pub host: String,
     pub port: u16,
