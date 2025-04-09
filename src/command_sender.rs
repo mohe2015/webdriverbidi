@@ -84,9 +84,8 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
             CommandError::OneshotReceiverError(e)
         })?;
 
-    
     debug!("Received response: {:?}", response);
-    
+
     let rslt = response.get(RESULT_KEY).ok_or_else(|| {
         error!("Missing result in the response: {:?}", response);
         CommandError::MissingResult

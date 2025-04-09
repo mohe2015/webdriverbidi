@@ -307,7 +307,7 @@ mod remove_user_context {
     }
 
     #[tokio::test]
-    async fn test_remove_context_closes_contexts()  -> Result<()> {
+    async fn test_remove_context_closes_contexts() -> Result<()> {
         let mut bidi_session = utils::session::init().await?;
 
         let events = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
@@ -338,32 +338,26 @@ mod remove_user_context {
                 None,
                 None,
             ))
-            .await
-            ?;
+            .await?;
 
         let user_context_1 = utils::create_user_context(&mut bidi_session).await?;
         let user_context_2 = utils::create_user_context(&mut bidi_session).await?;
 
-        let context_1 = utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone())
-            .await
-            ?;
+        let context_1 =
+            utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone()).await?;
 
-        let context_2 = utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone())
-            .await
-            ?;
+        let context_2 =
+            utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone()).await?;
 
-        let context_3 = utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone())
-            .await
-            ?;
+        let context_3 =
+            utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone()).await?;
 
-        let context_4 = utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone())
-            .await
-            ?;
+        let context_4 =
+            utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone()).await?;
 
         bidi_session
             .browser_remove_user_context(RemoveUserContextParameters::new(user_context_1))
-            .await
-            ?;
+            .await?;
 
         let initial_events_len = events.lock().await.len();
 
@@ -371,18 +365,12 @@ mod remove_user_context {
             .lock()
             .await
             .iter()
-            .map(|event| {
-                event.clone()["params"]["context"]
-                    .as_str()
-                    ?
-                    .to_string()
-            })
+            .map(|event| event.clone()["params"]["context"].as_str()?.to_string())
             .collect::<Vec<_>>();
 
         bidi_session
             .browser_remove_user_context(RemoveUserContextParameters::new(user_context_2))
-            .await
-            ?;
+            .await?;
 
         utils::close_session(&mut bidi_session).await?;
 
@@ -392,12 +380,7 @@ mod remove_user_context {
             .lock()
             .await
             .iter()
-            .map(|event| {
-                event.clone()["params"]["context"]
-                    .as_str()
-                    ?
-                    .to_string()
-            })
+            .map(|event| event.clone()["params"]["context"].as_str()?.to_string())
             .collect::<Vec<_>>();
 
         assert!(initial_events_len == 2);

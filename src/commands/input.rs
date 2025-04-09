@@ -6,8 +6,8 @@ use super::id;
 use super::utils;
 use crate::define_command;
 use crate::error::CommandError;
-use crate::remote::input::*;
 use crate::local::result_data::EmptyResult;
+use crate::remote::input::*;
 use crate::session::WebDriverBiDiSession;
 
 // --------------------------------------------------
