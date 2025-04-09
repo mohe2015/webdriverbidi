@@ -1,14 +1,14 @@
-// use std::sync::Arc;
+use std::sync::Arc;
 
 use anyhow::Result;
-// use log::debug;
-// use tokio::sync::Mutex;
-// use webdriverbidi::events::EventType;
-// use webdriverbidi::remote::browser::RemoveUserContextParameters;
+use log::debug;
+use tokio::sync::Mutex;
+use webdriverbidi::events::EventType;
+use webdriverbidi::remote::browser::RemoveUserContextParameters;
 use webdriverbidi::remote::browsing_context::{
     ActivateParameters, CloseParameters, GetTreeParameters,
 };
-// use webdriverbidi::remote::session::SubscriptionRequest;
+use webdriverbidi::remote::session::SubscriptionRequest;
 
 mod utils;
 
@@ -52,6 +52,7 @@ mod create_user_context {
 
         Ok(())
     }
+
     #[tokio::test]
     async fn test_storage_isolation() -> Result<()> {
         let (url, server_handle) =
@@ -280,7 +281,7 @@ mod get_user_contexts {
 mod remove_user_context {
     use super::*;
 
-    // const BROWSING_CTX_DESTROYED_EVENT: &str = "browsingContext.contextDestroyed";
+    const BROWSING_CTX_DESTROYED_EVENT: &str = "browsingContext.contextDestroyed";
     // const USER_PROMPT_OPENED_EVENT: &str = "browsingContext.userPromptOpened";
 
     #[tokio::test]
@@ -340,20 +341,32 @@ mod remove_user_context {
             ))
             .await?;
 
-        let user_context_1 = utils::create_user_context(&mut bidi_session).await?;
-        let user_context_2 = utils::create_user_context(&mut bidi_session).await?;
+        let user_context_1 = utils::browser::create_user_context(&mut bidi_session).await?;
+        let user_context_2 = utils::browser::create_user_context(&mut bidi_session).await?;
 
-        let context_1 =
-            utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone()).await?;
+        let context_1 = utils::browsing_context::new_tab_in_user_context(
+            &mut bidi_session,
+            user_context_1.clone(),
+        )
+        .await?;
 
-        let context_2 =
-            utils::new_tab_in_user_context(&mut bidi_session, user_context_1.clone()).await?;
+        let context_2 = utils::browsing_context::new_tab_in_user_context(
+            &mut bidi_session,
+            user_context_1.clone(),
+        )
+        .await?;
 
-        let context_3 =
-            utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone()).await?;
+        let context_3 = utils::browsing_context::new_tab_in_user_context(
+            &mut bidi_session,
+            user_context_2.clone(),
+        )
+        .await?;
 
-        let context_4 =
-            utils::new_tab_in_user_context(&mut bidi_session, user_context_2.clone()).await?;
+        let context_4 = utils::browsing_context::new_tab_in_user_context(
+            &mut bidi_session,
+            user_context_2.clone(),
+        )
+        .await?;
 
         bidi_session
             .browser_remove_user_context(RemoveUserContextParameters::new(user_context_1))
@@ -365,14 +378,14 @@ mod remove_user_context {
             .lock()
             .await
             .iter()
-            .map(|event| event.clone()["params"]["context"].as_str()?.to_string())
+            .filter_map(|event| event["parasm"]["context"].as_str().map(String::from))
             .collect::<Vec<_>>();
 
         bidi_session
             .browser_remove_user_context(RemoveUserContextParameters::new(user_context_2))
             .await?;
 
-        utils::close_session(&mut bidi_session).await?;
+        utils::session::close(&mut bidi_session).await?;
 
         let final_events_len = events.lock().await.len();
 
@@ -380,22 +393,21 @@ mod remove_user_context {
             .lock()
             .await
             .iter()
-            .map(|event| event.clone()["params"]["context"].as_str()?.to_string())
+            .filter_map(|event| event["parasm"]["context"].as_str().map(String::from))
             .collect::<Vec<_>>();
 
         assert!(initial_events_len == 2);
-
         assert!(initial_destroyed_contexts.contains(&context_1));
         assert!(initial_destroyed_contexts.contains(&context_2));
 
         assert!(final_events_len == 4);
-
         assert!(final_destroyed_contexts.contains(&context_3));
         assert!(final_destroyed_contexts.contains(&context_4));
 
         Ok(())
     }
 }
+
 //     #[tokio::test]
 //     async fn test_remove_context_skips_beforeunload_prompt() {
 //         let mut bidi_session = utils::init_session().await?;
