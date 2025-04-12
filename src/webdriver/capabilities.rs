@@ -14,7 +14,7 @@ use serde_json::{json, Value};
 pub type Extensible = HashMap<String, Value>;
 
 /// Standard WebDriver capabilities https://w3c.github.io/webdriver/#capabilities.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct CapabilityRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -77,7 +77,7 @@ impl CapabilityRequest {
 // --------------------------------------------------
 
 /// Capabilities struct to represent the standard capabilities JSON object.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CapabilitiesRequest {
     #[serde(rename = "alwaysMatch", skip_serializing_if = "Option::is_none")]
     always_match: Option<CapabilityRequest>,

@@ -66,6 +66,7 @@ pub type EventHandler =
 /// * `websocket_stream` - The WebSocket stream for communication protected by an `Arc` wrapped `Mutex`.
 /// * `pending_commands` - A map of pending commands awaiting responses protected by an `Arc` wrapped `Mutex`.
 /// * `event_handlers` - A map of events and their handlers protected by an `Arc` wrapped `Mutex`.
+#[derive(Clone)]
 pub struct WebDriverBiDiSession {
     pub host: String,
     pub port: u16,
