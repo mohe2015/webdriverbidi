@@ -12,6 +12,23 @@ use webdriverbidi::remote::session::SubscriptionRequest;
 
 mod utils;
 
+mod install_extension {
+    use webdriverbidi::remote::web_extension::{ExtensionArchivePath, ExtensionData, InstallParameters};
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_nonexistent_extension() -> Result<()> {
+        let mut bidi_session = utils::session::init().await?;
+
+        bidi_session.web_extension_install(InstallParameters::new(ExtensionData::ExtensionArchivePath(ExtensionArchivePath::new("doesnotexist".to_owned())))).await?;
+
+        utils::session::close(&mut bidi_session).await?;
+
+        Ok(())
+    }
+}
+
 const DEFAULT_USER_CONTEXT: &str = "default";
 
 // --------------------------------------------------
