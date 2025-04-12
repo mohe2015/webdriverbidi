@@ -86,10 +86,15 @@ pub async fn send_command<T: Serialize, U: DeserializeOwned>(
 
     debug!("Received response: {:?}", response);
 
-    let rslt = response.get(RESULT_KEY).ok_or_else(|| {
-        error!("Missing result in the response: {:?}", response);
-        CommandError::MissingResult
-    })?;
+    let Some(rslt) = response.get(RESULT_KEY) else {
+        if response.get("error").is_some() {
+            error!("Command returned error response: {:?}", response);
+            return Err(CommandError::Error(response));
+        } else {
+            error!("Missing result in the response: {:?}", response);
+            return Err(CommandError::MissingResult);
+        }
+    };
     let rslt = serde_json::from_value(rslt.to_owned()).map_err(|e| {
         error!("Deserialization error: {:?} for JSON: {:?}", e, rslt);
         CommandError::SerdeError(e)

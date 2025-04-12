@@ -21,7 +21,7 @@ mod commands {
     pub mod web_extension;
 }
 mod command_sender;
-mod error;
+pub mod error;
 pub mod events;
 mod message_handler;
 

@@ -21,6 +21,10 @@ pub enum CommandError {
     #[error("Missing result field.")]
     MissingResult,
 
+    // Command returned an error.
+    #[error("Command returned error: {0}")]
+    Error(serde_json::Value),
+
     /// Timeout when waiting for a receiver response
     #[error("Timeout waiting for receiver response")]
     TimeoutError,
